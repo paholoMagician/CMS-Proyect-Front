@@ -1,0 +1,83 @@
+.nav-side{
+    width: 300px;
+    height: 100%;
+    background-color: rgb(54, 66, 52);
+    transition: ease all 1s;
+}
+
+.nav {
+    background-color: rgba(33, 44, 33, 0.57);
+    transition: ease all 1s;
+    
+}
+
+.bodynavSide {
+    overflow: auto;
+    height: 83vh;
+    // border: solid 1px white;
+    padding: 8px;
+}
+
+.nav:hover {
+    transition: ease all 0.5s;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: rgb(36, 54, 32);
+    color: yellowgreen;
+}
+
+.module {
+    transition: ease all 0.5s;
+    color: white;
+}
+.module:hover {
+    transition: ease all 0.5s;
+    color: yellowgreen;
+}
+
+.cerrar {
+    font-size: 9pt;
+    padding: 5px;
+}
+
+.btnsplit {
+    background-color: rgb(40, 204, 22);
+    color: white;
+    height: 30px;
+    width: 30px;
+    border-radius: 100%;
+    position: absolute;
+    top: 0;
+    left: 270px;
+    transition: ease all 0.5s;
+    animation: ease-in-out 1s 1;
+}
+
+@keyframes btnMoveLeft {
+
+    0% {
+        transform: translateX(0px);
+    }
+    100% {
+        transform: translateX(-200px);
+    }
+
+}
+
+@keyframes btnMoveRight {
+
+    0% {
+        transform: translateX(-200px);
+    }
+    100% {
+        transform: translateX(0px);
+    }
+
+}
+
+.btnsplit:hover {
+    transition: ease all 0.5s;
+    cursor: pointer;
+    background-color: orange;
+    box-shadow: 3px 3px 10px rgba($color: #000000, $alpha: 0.5);
+}

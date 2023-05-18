@@ -1,0 +1,41 @@
+
+<div class="cont d-flex justify-content-between" >
+    <div style="height: 100%">
+        <app-navside (modulo)="recibirModulo($event)"></app-navside>
+    </div>
+
+    <div class="workarea p-4">
+        <div *ngIf="_dashboard">
+        <h1 class="text-success"> Bienvenido a CMS System</h1>
+        <mat-accordion>
+            <mat-expansion-panel (opened)="panelOpenState = true; obtenerVersionamiento(versionCMS.version)" *ngFor="let versionCMS of versionCMSLista;"
+                           (closed)="panelOpenState = false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{ versionCMS.version }} 
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        Fecha de inicio:
+                        {{ versionCMS.fechainicial | date: 'dd-MM-yyyy' }}
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="w-100">
+                    <div *ngFor="let versionDetalle of versionlista" >
+                        <span>
+                            <ul>
+                                <li><span class="text-info">Modulo:               </span> {{ versionDetalle.nombre }}</li>
+                                <li><span class="text-info"> Descripción:         </span> {{ versionDetalle.descripcion }}</li>
+                                <li><span class="text-info"> Fecha de desarrollo: </span> {{versionDetalle.fechamodular | date: 'dd-MM-YYYY' }}</li>
+                                <li><span class="text-info"> Fecha final: </span> {{versionDetalle.fechafinal | date: 'dd-MM-YYYY' }}</li>
+                            </ul>
+                            
+                        </span>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+        </div>
+        <app-usuario *ngIf="_usuario" [modulo]="moduloEmitter"></app-usuario>
+    </div>
+</div>
+
