@@ -48,10 +48,12 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacion-provincias/asignacion-provincias.component';
 
 @NgModule({
   declarations: [
-    UsuarioComponent
+    UsuarioComponent,
+    AsignacionProvinciasComponent
   ],
   imports: [
     CommonModule,
@@ -105,7 +107,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserAnimationsModule,
   ],
   exports: [
-    UsuarioComponent
+    UsuarioComponent,
+    AsignacionProvinciasComponent
   ]
 })
 export class AppdashModule { }

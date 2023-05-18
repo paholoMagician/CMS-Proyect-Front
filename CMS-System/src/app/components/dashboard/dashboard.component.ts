@@ -10,6 +10,7 @@ export class DashboardComponent implements OnInit {
 
   moduloEmitter: any = {};
   _usuario: boolean = false;
+  _asignacion: boolean = false;
   _dashboard: boolean = true;
   _version: string = '1.0.0 en desarrollo';
   _date: any = '';
@@ -27,6 +28,12 @@ export class DashboardComponent implements OnInit {
       case 'Usuario':
         this._usuario = true;
         this._dashboard = false;
+        this._asignacion = false;
+        break;
+      case 'Cobertura Técnica':
+        this._usuario    = false;
+        this._dashboard  = false;
+        this._asignacion = true;
         break;
     }
   }
