@@ -49,11 +49,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacion-provincias/asignacion-provincias.component';
+import { ModalProvicComponent } from '../asignacionprovincias/modal/modal-provic/modal-provic.component';
 
 @NgModule({
   declarations: [
     UsuarioComponent,
-    AsignacionProvinciasComponent
+    AsignacionProvinciasComponent,
+    ModalProvicComponent
   ],
   imports: [
     CommonModule,

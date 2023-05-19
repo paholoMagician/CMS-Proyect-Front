@@ -300,6 +300,7 @@ export class UsuarioComponent implements OnInit {
       }
     })
   }
+  
   codUserCatch: string = '';
   catchData(data: any) {
 

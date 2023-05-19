@@ -53,6 +53,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {OverlayModule} from '@angular/cdk/overlay';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashboardmods.module';
+import { ModalProvicComponent } from './components/dashboard/app-dashboards/asignacionprovincias/modal/modal-provic/modal-provic.component';
 
 @NgModule({
   declarations: [
