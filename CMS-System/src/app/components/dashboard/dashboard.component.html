@@ -39,8 +39,7 @@
                                     <span class="text-info"> Fecha final:         </span>
                                     {{versionDetalle.fechafinal | date: 'dd-MM-YYYY' }}
                                 </li>
-                            </ul>
-                            
+                            </ul>                            
                         </span>
                     </div>
                 </div>
@@ -49,6 +48,7 @@
         </div>
         <app-usuario *ngIf="_usuario" [modulo]="moduloEmitter"></app-usuario>
         <app-asignacion-provincias *ngIf="_asignacion" [modulo]="moduloEmitter"></app-asignacion-provincias>
+        <app-clientes *ngIf="_clientes" [modulo]="moduloEmitter"></app-clientes>
     </div>
 </div>
 

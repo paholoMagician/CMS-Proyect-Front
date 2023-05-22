@@ -12,6 +12,7 @@ export class DashboardComponent implements OnInit {
   _usuario: boolean = false;
   _asignacion: boolean = false;
   _dashboard: boolean = true;
+  _clientes: boolean = false;
   _version: string = '1.0.0 en desarrollo';
   _date: any = '';
   panelOpenState = false;
@@ -26,14 +27,22 @@ export class DashboardComponent implements OnInit {
     this.moduloEmitter = modulo;
     switch (this.moduloEmitter.nombre) {
       case 'Usuario':
-        this._usuario = true;
-        this._dashboard = false;
+        this._usuario    = true;
+        this._dashboard  = false;
         this._asignacion = false;
+        this._clientes   = false;
         break;
       case 'Cobertura Técnica':
         this._usuario    = false;
         this._dashboard  = false;
         this._asignacion = true;
+        this._clientes   = false;
+        break;
+      case 'Clientes':
+        this._usuario    = false;
+        this._dashboard  = false;
+        this._asignacion = false;
+        this._clientes   = true;
         break;
     }
   }

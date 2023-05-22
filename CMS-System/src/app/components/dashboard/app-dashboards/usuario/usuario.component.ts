@@ -288,15 +288,18 @@ export class UsuarioComponent implements OnInit {
 
   listUsuarios:any = [];
   obtenerUsuario() {
+    this._show_spinner = true;
     this.us.obtenerUsuarios(this.ccia).subscribe({
       next: (usuarios) => {
         this.listUsuarios = usuarios;
         console.warn(this.listUsuarios);
       }, error: (e) => {
         console.error(e);
+        this._show_spinner = false;
       },complete: () => {
         this.dataSource = new MatTableDataSource(this.listUsuarios);
         this.dataSource.paginator = this.paginator;
+        this._show_spinner = false;
       }
     })
   }

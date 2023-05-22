@@ -50,12 +50,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacion-provincias/asignacion-provincias.component';
 import { ModalProvicComponent } from '../asignacionprovincias/modal/modal-provic/modal-provic.component';
+import { ClientesComponent } from '../clientes/clientes.component';
 
 @NgModule({
   declarations: [
     UsuarioComponent,
     AsignacionProvinciasComponent,
-    ModalProvicComponent
+    ModalProvicComponent,
+    ClientesComponent
   ],
   imports: [
     CommonModule,
@@ -110,7 +112,8 @@ import { ModalProvicComponent } from '../asignacionprovincias/modal/modal-provic
   ],
   exports: [
     UsuarioComponent,
-    AsignacionProvinciasComponent
+    AsignacionProvinciasComponent,
+    ClientesComponent
   ]
 })
 export class AppdashModule { }

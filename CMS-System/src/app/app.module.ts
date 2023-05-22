@@ -54,6 +54,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashboardmods.module';
 import { ModalProvicComponent } from './components/dashboard/app-dashboards/asignacionprovincias/modal/modal-provic/modal-provic.component';
+import { ClientesComponent } from './components/dashboard/app-dashboards/clientes/clientes.component';
 
 @NgModule({
   declarations: [
