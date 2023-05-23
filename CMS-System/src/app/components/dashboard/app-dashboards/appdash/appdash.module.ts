@@ -51,13 +51,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacion-provincias/asignacion-provincias.component';
 import { ModalProvicComponent } from '../asignacionprovincias/modal/modal-provic/modal-provic.component';
 import { ClientesComponent } from '../clientes/clientes.component';
+import { AgenciasComponent } from '../agencias/agencias.component';
 
 @NgModule({
   declarations: [
     UsuarioComponent,
     AsignacionProvinciasComponent,
     ModalProvicComponent,
-    ClientesComponent
+    ClientesComponent,
+    AgenciasComponent
   ],
   imports: [
     CommonModule,
@@ -113,7 +115,8 @@ import { ClientesComponent } from '../clientes/clientes.component';
   exports: [
     UsuarioComponent,
     AsignacionProvinciasComponent,
-    ClientesComponent
+    ClientesComponent,
+    AgenciasComponent
   ]
 })
 export class AppdashModule { }

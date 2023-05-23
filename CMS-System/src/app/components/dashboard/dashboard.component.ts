@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   _version: string = '1.0.0 en desarrollo';
   _date: any = '';
   panelOpenState = false;
+  _agencias: boolean = false;
 
   constructor( private dash: DashboardService ) { }
 
@@ -31,18 +32,28 @@ export class DashboardComponent implements OnInit {
         this._dashboard  = false;
         this._asignacion = false;
         this._clientes   = false;
+        this._agencias   = false;
         break;
       case 'Cobertura Técnica':
         this._usuario    = false;
         this._dashboard  = false;
         this._asignacion = true;
         this._clientes   = false;
+        this._agencias   = false;
         break;
       case 'Clientes':
         this._usuario    = false;
         this._dashboard  = false;
         this._asignacion = false;
         this._clientes   = true;
+        this._agencias   = false;
+        break;
+      case 'Agencias':
+        this._usuario    = false;
+        this._dashboard  = false;
+        this._asignacion = false;
+        this._clientes   = false;
+        this._agencias   = true;
         break;
     }
   }

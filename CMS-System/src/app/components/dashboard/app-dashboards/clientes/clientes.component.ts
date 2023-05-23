@@ -34,7 +34,7 @@ export class ClientesComponent implements OnInit {
   _action_butto:      string = 'Crear';
   tipoEmpresaLista:   any = [];
   _show_spinner:      boolean = false; 
-  columnHead:         any = [ 'edit', 'nombre', 'R.U.C.', 'replegal', 'descripcion', 'observacion', 'fechas' ];
+  columnHead:         any = [ 'edit', 'N.Agen.', 'nombre', 'R.U.C.', 'replegal', 'descripcion', 'fechas' ];
   public dataSource!: MatTableDataSource<any>;
 
   @Input() modulo: any = [];

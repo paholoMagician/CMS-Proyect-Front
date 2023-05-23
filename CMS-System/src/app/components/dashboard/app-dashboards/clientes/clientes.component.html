@@ -181,8 +181,20 @@
                   </span>
                 </td>
     
-              </ng-container>
+              </ng-container>    
     
+            <ng-container matColumnDef="N.Agen." >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    N.Agen.
+                </th>
+                <td style="cursor: pointer;" mat-cell 
+                    *matCellDef="let row"
+                    >
+                    <button mat-mini-fab color="accent" >
+                        {{row.numeroAgencia}}
+                    </button>
+                </td>
+            </ng-container>    
     
             <ng-container matColumnDef="nombre" >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -190,7 +202,7 @@
                 </th>
                 <td style="cursor: pointer;" mat-cell 
                     *matCellDef="let row" 
-                    [matTooltip]="'Telf Mant.: ' + row.telfclimanteni +'  Correo: '+ row.correomantenimiento +'   Telf. Cobro: ' + row.telfpago + '    Correo: ' + row.correopago">
+                    [matTooltip]="'Telf Mant.: ' + row.telfclimanteni +'  Correo: '+ row.correomantenimiento +'   Telf. Cobro: ' + row.telfpago + '    Correo: ' + row.correopago + ' Observacion: ' + row.observacion">
                   {{row.nombre}}
                 </td>
             </ng-container>
@@ -221,16 +233,6 @@
                   {{row.descripcion}}
                 </td>
             </ng-container>
-    
-            <ng-container matColumnDef="observacion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Observacion
-                </th>
-                <td mat-cell *matCellDef="let row" >
-                  {{row.observacion}}
-                </td>
-            </ng-container>
-    
             <ng-container matColumnDef="fechas">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Fechas Contratación

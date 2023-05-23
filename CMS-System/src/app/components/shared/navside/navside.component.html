@@ -24,9 +24,11 @@
     </section>
     <mat-divider></mat-divider>
     <div class="bodynavSide mt-2 p-1">
-        <div *ngFor="let modulos of modulosLista" class="nav w-100 mt-1 p-2" [matTooltip]="modulos.moduleName"
+        <div *ngFor="let modulos of modulosLista"
+             class="nav w-100 mt-1 p-2"
+             [matTooltip]="modulos.moduleName"
              matTooltipPosition="after"
-             [ngStyle]="{'width': _width}" (click)="botonClick(modulos);"  >
+             [ngStyle]="{'width': _width, 'border-right': 'solid 4px ' + modulos.color}" (click)="botonClick(modulos);">
             <span class=" module d-flex justify-content-start align-items-center"    >
                 <mat-icon [ngStyle]="{'font-size': _fontSize}" >
                     {{modulos.icon}}
