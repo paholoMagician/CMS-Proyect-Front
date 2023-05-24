@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
 
   }
 
-  textoCompleto = 'Bienvenido a CASH MACHINE SERVICE... \n Estado: ' + this.estado_servidor;
+  textoCompleto = 'Bienvenido a CASH MACHINES SERVICE... \n Estado: ' + this.estado_servidor;
   textoMostrado = '';
   mostrarLetrasPorConsola() {
     const intervalId = setInterval(() => {

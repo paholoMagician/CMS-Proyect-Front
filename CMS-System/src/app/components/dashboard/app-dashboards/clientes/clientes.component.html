@@ -15,22 +15,27 @@
         <form [formGroup]="clienteForm" class="mb-2" (ngSubmit)="onSubmit()">
             <div class=" d-flex justify-content-between  flex-wrap    ">
                 <div class="mb-3 col-2 ">
-                    <label for="ruc" class="form-label   ">
+                    <label for="ruc" class="form-label">
                         R.U.C.: <span class="text-danger">*</span>
                     </label>
-                    <input type="text" maxlength="13" class="form-control" formControlName="ruc" #ruc id="ruc" placeholder="099955221001">
+                    <input type="text" class="form-control"
+                           formControlName="ruc" #ruc id="ruc" 
+                           (keyup)="validarCadena($event, 'ruc', 'N')">
+                        
                 </div>
                 <div class="mb-3 col-5 ">
                     <label for="nombre" class="form-label   ">
                         Nombre del Cliente (Empresa):<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="form-control" formControlName="nombre" #nombre id="nombre" placeholder="Corporación Naranja S.A.">
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombre', 'L')" formControlName="nombre" #nombre id="nombre" placeholder="Corporación Naranja S.A.">
                 </div>
                 <div class="mb-3 col-4 ">
                     <label for="replegal" class="form-label   ">
                         Representante Legal:<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="form-control" formControlName="replegal" #replegal id="replegal" placeholder="Abg. Mauricio Pimentel">
+                    <input type="text"  class="form-control" 
+                           (keyup)="validarCadena($event, 'ruc', 'L')"
+                           formControlName="replegal" #replegal id="replegal" placeholder="Abg. Mauricio Pimentel">
                 </div>
             </div>
             <div  class=" d-flex justify-content-between  flex-wrap    "  >
@@ -38,13 +43,13 @@
                 <label for="descripcion" class="form-label   ">
                     Descripcion:
                 </label>
-                <input type="text" class="form-control" formControlName="descripcion" #descripcion id="descripcion" placeholder="Empresa dedicada a elaborar...">
+                <input type="text" class="form-control" (keyup)="validarCadena($event, 'descripcion', 'L')"  formControlName="descripcion" #descripcion id="descripcion" placeholder="Empresa dedicada a elaborar...">
             </div>
             <div class="mb-3 col-6 ">
                 <label for="observacion" class="form-label   ">
                     Observacion:
                 </label>
-                <input type="text" class="form-control" formControlName="observacion" 
+                <input type="text" class="form-control" (keyup)="validarCadena($event, 'observacion', 'L')"  formControlName="observacion" 
                        #observacion id="observacion" placeholder="La persona que se encarga de dar paso se llama Juan Mendoza guardia de seguridad...">
             </div>
             </div>
@@ -55,7 +60,7 @@
                         <br>
                         <small class="text-secondary">Teléfono de la persona encargada del mantenimiento por parte del cliente.</small>
                     </label>
-                    <input type="text" class="form-control" formControlName="telfclimanteni" #telfclimanteni id="telfclimanteni" placeholder="0987654321">
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfclimanteni', 'N')"  formControlName="telfclimanteni" #telfclimanteni id="telfclimanteni" placeholder="0987654321">
                 </div>
                 <div class="m-2 col-4 ">
                     <label for="correomantenimiento" class="form-label   ">
@@ -73,7 +78,7 @@
                         <br>
                         <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small>
                     </label>
-                    <input type="text" class="form-control" formControlName="telfpago" #telfpago id="telfpago" placeholder="0987654321">
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'ruc', 'N')"  formControlName="telfpago" #telfpago id="telfpago" placeholder="0987654321">
                 </div>
                 <div class="m-2 col-4 ">
                     <label for="telfpago" class="form-label   ">

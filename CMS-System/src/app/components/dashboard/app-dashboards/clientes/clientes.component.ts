@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { ClienteService } from './services/cliente.service';
@@ -43,7 +43,7 @@ export class ClientesComponent implements OnInit {
   paginator!: MatPaginator;
 
   public clienteForm = new FormGroup({
-    ruc:                  new FormControl(''),
+    ruc:                  new FormControl('', [Validators.pattern('[0-9]+')]),
     replegal:             new FormControl(''),
     fechacontinicio:      new FormControl(),
     fechacontfinal:       new FormControl(),
@@ -54,7 +54,7 @@ export class ClientesComponent implements OnInit {
     telfpago:             new FormControl(''),
     correopago:           new FormControl(''),
     nombre:               new FormControl(''),
-    tipo:                 new FormControl(''),
+    tipo:                 new FormControl('')
   })
 
   constructor( private client: ClienteService,private DataMaster: SharedService  ) { }
@@ -67,6 +67,20 @@ export class ClientesComponent implements OnInit {
     this.obtenerCliente();
 
   }
+
+  validarCadena(event:any, controlname:any, tipo: string) {
+
+    switch(tipo) {
+      case 'L':
+        this.DataMaster.validarLetras(event, controlname, this.clienteForm);
+        break;
+      case 'N':
+        this.DataMaster.validarNumeros(event, controlname, this.clienteForm);
+        break;
+    }
+
+  }
+  
 
   limpiar() {
     this.clienteForm.controls['ruc'].setValue('');
@@ -162,7 +176,7 @@ export class ClientesComponent implements OnInit {
         next: (x) => {
           this._show_spinner = false;
             Swal.fire(
-              'Cliente generado',
+              'Cliente: ' +this.clienteForm.controls['nombre'].value + ' generado',
               'El cliente se ha guardado con éxito',
               'success'
             )
@@ -171,7 +185,7 @@ export class ClientesComponent implements OnInit {
           this._show_spinner = false;
           Swal.fire(
             'Oops!',
-            'No hemos podido guardar el cliente',
+            'No hemos podido guardar el cliente: RUC REPETIDO',
             'error'
           )
         },
@@ -232,7 +246,7 @@ export class ClientesComponent implements OnInit {
             this._show_spinner = false;
             Swal.fire(
               'Deleted!',
-              'Cliente eliminado',
+              'Cliente: '+this.clienteForm.controls['nombre'].value+' eliminado',
               'success'
             )
           }, error: (e) => {
@@ -309,7 +323,7 @@ export class ClientesComponent implements OnInit {
         next: (x) => {
           this._show_spinner = false;
             Swal.fire(
-              'Cliente editado',
+              'Cliente: '+ this.clienteForm.controls['nombre'].value +' editado',
               'El cliente se ha editado con éxito',
               'success'
             )
@@ -318,7 +332,7 @@ export class ClientesComponent implements OnInit {
           this._show_spinner = false;
           Swal.fire(
             'Oops!',
-            'No hemos podido editar este cliente',
+            'No hemos podido editar este cliente: RUC REPETIDO',
             'error'
           )
         },

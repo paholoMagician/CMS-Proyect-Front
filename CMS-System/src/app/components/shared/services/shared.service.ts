@@ -27,6 +27,25 @@ export class SharedService {
   }
 
 
+  public validarNumeros(event: KeyboardEvent, controlName: string, clientForm: any): void {
+    const input = event.target as HTMLInputElement;
+    const control = clientForm.get(controlName);
+  
+    if (control && input.value && isNaN(Number(input.value))) {
+      control.setValue('');
+    }
+  }
+
+  public validarLetras(event: KeyboardEvent, controlName: string, clientForm: any): void {
+    const input = event.target as HTMLInputElement;
+    const control = clientForm.get(controlName);
+  
+    if (control && input.value && /[0-9!@#$%^&*()_+\-=\[\]{};':"\\|,<>\/?]/.test(input.value)) {
+      control.setValue('');
+    }
+  }
+
+
 
 
 }

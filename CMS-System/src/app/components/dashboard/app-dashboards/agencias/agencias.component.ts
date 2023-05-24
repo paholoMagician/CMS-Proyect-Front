@@ -86,6 +86,20 @@ export class AgenciasComponent implements OnInit {
     this.obtenerAgencias();
   }
 
+  validarCadena(event:any, controlname:any, tipo: string) {
+
+    switch(tipo) {
+      case 'L':
+        this.DataMaster.validarLetras(event, controlname, this.agenciaForm);
+        break;
+      case 'N':
+        this.DataMaster.validarNumeros(event, controlname, this.agenciaForm);
+        break;
+    }
+
+  }
+
+
   limpiar() {
 
     this.agenciaForm.controls['nombre'].setValue('');
@@ -247,23 +261,23 @@ export class AgenciasComponent implements OnInit {
 
   editarAgencias() {
     if( this.agenciaForm.controls['codcliente'].value == undefined || this.agenciaForm.controls['codcliente'].value == null || this.agenciaForm.controls['codcliente'].value == '' ) Toast.fire({ icon: 'warning', title: 'Debes escoger un cliente a quien asigar sus agencias' })
-    if( this.agenciaForm.controls['nombre'].value == undefined || this.agenciaForm.controls['nombre'].value == null || this.agenciaForm.controls['nombre'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
-    if( this.agenciaForm.controls['tipo'].value == undefined || this.agenciaForm.controls['tipo'].value == null || this.agenciaForm.controls['tipo'].value == '' ) Toast.fire({ icon: 'warning', title: 'Necesitas definir si tu agencia es Matríz o Sucursal' })
-    if( this.agenciaForm.controls['codProv'].value == undefined || this.agenciaForm.controls['codProv'].value == null || this.agenciaForm.controls['codProv'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Provincia no puede ir vacío' })
-    if( this.agenciaForm.controls['codCanton'].value == undefined || this.agenciaForm.controls['codCanton'].value == null || this.agenciaForm.controls['codCanton'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Cantón no puede ir vacío' })
-    if( this.agenciaForm.controls['codfrecuencia'].value == undefined || this.agenciaForm.controls['codfrecuencia'].value == null || this.agenciaForm.controls['codfrecuencia'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Frecuencia de Manetnimiento no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencion1'].value == undefined && this.agenciaForm.controls['horarioatencion2'].value == undefined
-     || this.agenciaForm.controls['horarioatencion1'].value == null && this.agenciaForm.controls['horarioatencion2'].value == null 
-     || this.agenciaForm.controls['horarioatencion1'].value == '' && this.agenciaForm.controls['horarioatencion2'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( DESDE ) no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencion3'].value == undefined && this.agenciaForm.controls['horarioatencion4'].value == undefined
-    || this.agenciaForm.controls['horarioatencion3'].value == null && this.agenciaForm.controls['horarioatencion4'].value == null 
-    || this.agenciaForm.controls['horarioatencion3'].value == '' && this.agenciaForm.controls['horarioatencion4'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( HASTA ) no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencionM1'].value == undefined && this.agenciaForm.controls['horarioatencionM2'].value == undefined
-     || this.agenciaForm.controls['horarioatencionM1'].value == null && this.agenciaForm.controls['horarioatencionM2'].value == null 
-     || this.agenciaForm.controls['horarioatencionM1'].value == '' && this.agenciaForm.controls['horarioatencionM2'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( DESDE ) no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencionM3'].value == undefined && this.agenciaForm.controls['horarioatencionM4'].value == undefined
-    || this.agenciaForm.controls['horarioatencionM3'].value == null && this.agenciaForm.controls['horarioatencionM4'].value == null 
-    || this.agenciaForm.controls['horarioatencionM3'].value == '' && this.agenciaForm.controls['horarioatencionM4'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( HASTA ) no puede estar vacío' })
+    else if( this.agenciaForm.controls['nombre'].value == undefined || this.agenciaForm.controls['nombre'].value == null || this.agenciaForm.controls['nombre'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
+    else if( this.agenciaForm.controls['tipo'].value == undefined || this.agenciaForm.controls['tipo'].value == null || this.agenciaForm.controls['tipo'].value == '' ) Toast.fire({ icon: 'warning', title: 'Necesitas definir si tu agencia es Matríz o Sucursal' })
+    else if( this.agenciaForm.controls['codProv'].value == undefined || this.agenciaForm.controls['codProv'].value == null || this.agenciaForm.controls['codProv'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Provincia no puede ir vacío' })
+    else if( this.agenciaForm.controls['codCanton'].value == undefined || this.agenciaForm.controls['codCanton'].value == null || this.agenciaForm.controls['codCanton'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Cantón no puede ir vacío' })
+    else if( this.agenciaForm.controls['codfrecuencia'].value == undefined || this.agenciaForm.controls['codfrecuencia'].value == null || this.agenciaForm.controls['codfrecuencia'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Frecuencia de Manetnimiento no puede estar vacío' })
+    // if( this.agenciaForm.controls['horarioatencion1'].value == undefined && this.agenciaForm.controls['horarioatencion2'].value == undefined
+    //  || this.agenciaForm.controls['horarioatencion1'].value == null && this.agenciaForm.controls['horarioatencion2'].value == null 
+    //  || this.agenciaForm.controls['horarioatencion1'].value == '' && this.agenciaForm.controls['horarioatencion2'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( DESDE ) no puede estar vacío' })
+    // if( this.agenciaForm.controls['horarioatencion3'].value == undefined && this.agenciaForm.controls['horarioatencion4'].value == undefined
+    // || this.agenciaForm.controls['horarioatencion3'].value == null && this.agenciaForm.controls['horarioatencion4'].value == null 
+    // || this.agenciaForm.controls['horarioatencion3'].value == '' && this.agenciaForm.controls['horarioatencion4'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( HASTA ) no puede estar vacío' })
+    // if( this.agenciaForm.controls['horarioatencionM1'].value == undefined && this.agenciaForm.controls['horarioatencionM2'].value == undefined
+    //  || this.agenciaForm.controls['horarioatencionM1'].value == null && this.agenciaForm.controls['horarioatencionM2'].value == null 
+    //  || this.agenciaForm.controls['horarioatencionM1'].value == '' && this.agenciaForm.controls['horarioatencionM2'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( DESDE ) no puede estar vacío' })
+    // if( this.agenciaForm.controls['horarioatencionM3'].value == undefined && this.agenciaForm.controls['horarioatencionM4'].value == undefined
+    // || this.agenciaForm.controls['horarioatencionM3'].value == null && this.agenciaForm.controls['horarioatencionM4'].value == null 
+    // || this.agenciaForm.controls['horarioatencionM3'].value == '' && this.agenciaForm.controls['horarioatencionM4'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( HASTA ) no puede estar vacío' })
     else {
     const cliente = this.agenciaForm.controls['nombre'].value.toString().replace(' ', '_').slice(0,6);
     const token: string = 'AGE-'+cliente+'-'+this.DataMaster.generateRandomString(15);
@@ -297,7 +311,7 @@ export class AgenciasComponent implements OnInit {
       next: () => {
         this._show_spinner = false;
         Swal.fire(
-          'Agencia agregada',
+          'Agencia: '+this.agenciaForm.controls['nombre'].value+' agregada',
           'La agencia se ha actualizado con éxito',
           'success'
         )
@@ -319,24 +333,24 @@ export class AgenciasComponent implements OnInit {
 
   modelAgencia: any = [];
   guardarAgencias() {
-    if( this.agenciaForm.controls['codcliente'].value == undefined || this.agenciaForm.controls['codcliente'].value == null || this.agenciaForm.controls['codcliente'].value == '' ) Toast.fire({ icon: 'warning', title: 'Debes escoger un cliente a quien asigar sus agencias' })
-    if( this.agenciaForm.controls['nombre'].value == undefined || this.agenciaForm.controls['nombre'].value == null || this.agenciaForm.controls['nombre'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
-    if( this.agenciaForm.controls['tipo'].value == undefined || this.agenciaForm.controls['tipo'].value == null || this.agenciaForm.controls['tipo'].value == '' ) Toast.fire({ icon: 'warning', title: 'Necesitas definir si tu agencia es Matríz o Sucursal' })
-    if( this.agenciaForm.controls['codProv'].value == undefined || this.agenciaForm.controls['codProv'].value == null || this.agenciaForm.controls['codProv'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Provincia no puede ir vacío' })
-    if( this.agenciaForm.controls['codCanton'].value == undefined || this.agenciaForm.controls['codCanton'].value == null || this.agenciaForm.controls['codCanton'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Cantón no puede ir vacío' })
-    if( this.agenciaForm.controls['codfrecuencia'].value == undefined || this.agenciaForm.controls['codfrecuencia'].value == null || this.agenciaForm.controls['codfrecuencia'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Frecuencia de Manetnimiento no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencion1'].value == undefined && this.agenciaForm.controls['horarioatencion2'].value == undefined
-     || this.agenciaForm.controls['horarioatencion1'].value == null && this.agenciaForm.controls['horarioatencion2'].value == null 
-     || this.agenciaForm.controls['horarioatencion1'].value == '' && this.agenciaForm.controls['horarioatencion2'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( DESDE ) no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencion3'].value == undefined && this.agenciaForm.controls['horarioatencion4'].value == undefined
-    || this.agenciaForm.controls['horarioatencion3'].value == null && this.agenciaForm.controls['horarioatencion4'].value == null 
-    || this.agenciaForm.controls['horarioatencion3'].value == '' && this.agenciaForm.controls['horarioatencion4'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( HASTA ) no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencionM1'].value == undefined && this.agenciaForm.controls['horarioatencionM2'].value == undefined
-     || this.agenciaForm.controls['horarioatencionM1'].value == null && this.agenciaForm.controls['horarioatencionM2'].value == null 
-     || this.agenciaForm.controls['horarioatencionM1'].value == '' && this.agenciaForm.controls['horarioatencionM2'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( DESDE ) no puede estar vacío' })
-    if( this.agenciaForm.controls['horarioatencionM3'].value == undefined && this.agenciaForm.controls['horarioatencionM4'].value == undefined
-    || this.agenciaForm.controls['horarioatencionM3'].value == null && this.agenciaForm.controls['horarioatencionM4'].value == null 
-    || this.agenciaForm.controls['horarioatencionM3'].value == '' && this.agenciaForm.controls['horarioatencionM4'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( HASTA ) no puede estar vacío' })
+    if( this.agenciaForm.controls['codcliente'].value == undefined || this.agenciaForm.controls['codcliente'].value == null || this.agenciaForm.controls['codcliente'].value == '' ) Toast.fire({ icon: 'warning', title: 'Debes escoger un cliente a quien asignar sus agencias' })
+    else if( this.agenciaForm.controls['nombre'].value == undefined || this.agenciaForm.controls['nombre'].value == null || this.agenciaForm.controls['nombre'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
+    else if( this.agenciaForm.controls['tipo'].value == undefined || this.agenciaForm.controls['tipo'].value == null || this.agenciaForm.controls['tipo'].value == '' ) Toast.fire({ icon: 'warning', title: 'Necesitas definir el tipo de agencia, si es Matríz o Sucursal' })
+    else if( this.agenciaForm.controls['codProv'].value == undefined || this.agenciaForm.controls['codProv'].value == null || this.agenciaForm.controls['codProv'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Provincia no puede ir vacío' })
+    else if( this.agenciaForm.controls['codCanton'].value == undefined || this.agenciaForm.controls['codCanton'].value == null || this.agenciaForm.controls['codCanton'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Cantón no puede ir vacío' })
+    else if( this.agenciaForm.controls['codfrecuencia'].value == undefined || this.agenciaForm.controls['codfrecuencia'].value == null || this.agenciaForm.controls['codfrecuencia'].value == '' ) Toast.fire({ icon: 'warning', title: 'El campo Frecuencia de Manetnimiento no puede estar vacío' })
+    // else if( this.agenciaForm.controls['horarioatencion1'].value == undefined && this.agenciaForm.controls['horarioatencion2'].value == undefined
+    //  || this.agenciaForm.controls['horarioatencion1'].value == null && this.agenciaForm.controls['horarioatencion2'].value == null 
+    //   ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( DESDE ) no puede estar vacío' })
+    // if( this.agenciaForm.controls['horarioatencion3'].value == undefined && this.agenciaForm.controls['horarioatencion4'].value == undefined
+    // || this.agenciaForm.controls['horarioatencion3'].value == null && this.agenciaForm.controls['horarioatencion4'].value == null 
+    //  ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la agencia ( HASTA ) no puede estar vacío' })
+    // if( this.agenciaForm.controls['horarioatencionM1'].value == undefined && this.agenciaForm.controls['horarioatencionM2'].value == undefined
+    //  || this.agenciaForm.controls['horarioatencionM1'].value == null && this.agenciaForm.controls['horarioatencionM2'].value == null 
+    //  ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de mantenimiento ( DESDE ) no puede estar vacío' })
+    // if( this.agenciaForm.controls['horarioatencionM3'].value == undefined && this.agenciaForm.controls['horarioatencionM4'].value == undefined
+    // || this.agenciaForm.controls['horarioatencionM3'].value == null && this.agenciaForm.controls['horarioatencionM4'].value == null 
+    //  ) Toast.fire({ icon: 'warning', title: 'El campo Horario de atención de la mantenimiento ( HASTA ) no puede estar vacío' })
     else {
     const cliente = this.agenciaForm.controls['nombre'].value.toString().replace(' ', '_').slice(0,6);
     const token: string = 'AGE-'+cliente+'-'+this.DataMaster.generateRandomString(15);
@@ -352,23 +366,23 @@ export class AgenciasComponent implements OnInit {
       campoA :              this.agenciaForm.controls['campoA'].value,
       campoB :              this.agenciaForm.controls['campoB'].value,
       codcliente :          this.agenciaForm.controls['codcliente'].value,
-      Horarioatenciond:     this.agenciaForm.controls['horarioatencion1'].value + ':' + this.agenciaForm.controls['horarioatencion2'].value,
+      Horarioatenciond:     (this.agenciaForm.controls['horarioatencion1'].value || 0 ) + ':' + (this.agenciaForm.controls['horarioatencion2'].value || 0 ),
       codfrecuencia:        this.agenciaForm.controls['codfrecuencia'].value,
       codcia : this.ccia,
       estado : 1,
       codmachine : '-sn-',
       codProv:              this.agenciaForm.controls['codProv'].value,
       codCanton:            this.agenciaForm.controls['codCanton'].value,
-      Horarioatencionh:     this.agenciaForm.controls['horarioatencion3'].value+':'+this.agenciaForm.controls['horarioatencion4'].value,
-      Horarioatenciondm:    this.agenciaForm.controls['horarioatencionM1'].value+':'+this.agenciaForm.controls['horarioatencionM2'].value,
-      Horarioatencionhm:    this.agenciaForm.controls['horarioatencionM3'].value+':'+this.agenciaForm.controls['horarioatencionM4'].value,
+      Horarioatencionh:     (this.agenciaForm.controls['horarioatencion3'].value || 0)+':'+(this.agenciaForm.controls['horarioatencion4'].value || 0),
+      Horarioatenciondm:    (this.agenciaForm.controls['horarioatencionM1'].value || 0)+':'+(this.agenciaForm.controls['horarioatencionM2'].value || 0),
+      Horarioatencionhm:    (this.agenciaForm.controls['horarioatencionM3'].value || 0)+':'+(this.agenciaForm.controls['horarioatencionM4'].value || 0),
     }
 
     this.client.guardarAgencia(this.modelAgencia).subscribe({
       next: () => {
         this._show_spinner = false;
         Swal.fire(
-          'Agencia agregada',
+          'Agencia: '+ this.agenciaForm.controls['nombre'].value +' agregada',
           'La agencia se ha agregado al cliente con éxito',
           'success'
         )
@@ -412,7 +426,7 @@ export class AgenciasComponent implements OnInit {
             this._show_spinner = false;
             Swal.fire(
               'Deleted!',
-              'Agencia eliminada',
+              'Agencia: '+ this.agenciaForm.controls['nombre'].value +' eliminada',
               'success'
             )
           }, error: (e) => {
