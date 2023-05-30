@@ -168,13 +168,16 @@ export class MaquinariaComponent implements OnInit {
   }
 
   obtenerMaquinaria() {
+    this._show_spinner = true;
     this.maquinaria.obtenerMaquinaria( this.ccia ).subscribe({
       next: (maquinas) => {
         this.maquinariaLista = maquinas
         console.log('LISTA MAQUINARIA GUARDADO');
         console.log(this.maquinariaLista);
+        this._show_spinner = false;
       },
       error: (e) => {
+        this._show_spinner = false;
         console.error(e);
       },
       complete: () => {

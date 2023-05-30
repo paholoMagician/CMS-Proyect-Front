@@ -53,6 +53,7 @@ import { ModalProvicComponent } from '../asignacionprovincias/modal/modal-provic
 import { ClientesComponent } from '../clientes/clientes.component';
 import { AgenciasComponent } from '../agencias/agencias.component';
 import { MaquinariaComponent } from '../maquinaria/maquinaria.component';
+import { SharedModuleModule } from 'src/app/components/shared/shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import { MaquinariaComponent } from '../maquinaria/maquinaria.component';
     OverlayModule,
     PortalModule,
     ScrollingModule,
+    SharedModuleModule,
     //#endregion
     FormsModule,
     HttpClientModule,

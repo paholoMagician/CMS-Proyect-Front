@@ -3,7 +3,19 @@
       <mat-spinner></mat-spinner>
     </div>
 </div>
-<div class="mini-module-workarea p-4 ">
+<div class="d-flex" >
+<div class="mini-module-workarea w-25 p-4 m-1">
+
+    <div class="text-secondary d-flex align-item-center m-0 p-0">
+        <mat-icon>add_a_photo</mat-icon><span class="fs-7 p-1" > Añade una foto a {{modulo.nombre}} </span>
+    </div>
+
+    <hr>
+
+    <app-image-control></app-image-control>
+
+</div>
+<div class="mini-module-workarea w-75 p-4 m-1">
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
          <mat-icon>{{modulo.icono}}</mat-icon>
@@ -20,7 +32,7 @@
                     <input type="text" class="form-control" 
                            formControlName="nombremaquina" 
                            #nombremaquina id="nombremaquina"
-                            placeholder="Newton R12...">
+                           placeholder="Newton R12...">
                 </div>
                 <div class="mb-3 col-3 ">
                     <label for="modelo" class="form-label   ">
@@ -53,8 +65,8 @@
                 </div>
             
                 <div class="mb-3 col-2 ">
-                    <label for="nombre" class="form-label   ">
-                        Número de Inventario 
+                    <label for="nombre" class="form-label" title="Número de Inventario" >
+                        Número de Inv. 
                     </label>
                     <input type="text" class="form-control" 
                            formControlName="ninventario" 
@@ -108,6 +120,7 @@
             
         </form>
     </div>
+</div>
 </div>
 
 
