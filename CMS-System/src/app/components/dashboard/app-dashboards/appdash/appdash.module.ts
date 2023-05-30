@@ -52,6 +52,7 @@ import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacio
 import { ModalProvicComponent } from '../asignacionprovincias/modal/modal-provic/modal-provic.component';
 import { ClientesComponent } from '../clientes/clientes.component';
 import { AgenciasComponent } from '../agencias/agencias.component';
+import { MaquinariaComponent } from '../maquinaria/maquinaria.component';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { AgenciasComponent } from '../agencias/agencias.component';
     AsignacionProvinciasComponent,
     ModalProvicComponent,
     ClientesComponent,
-    AgenciasComponent
+    AgenciasComponent,
+    MaquinariaComponent
   ],
   imports: [
     CommonModule,
@@ -116,7 +118,8 @@ import { AgenciasComponent } from '../agencias/agencias.component';
     UsuarioComponent,
     AsignacionProvinciasComponent,
     ClientesComponent,
-    AgenciasComponent
+    AgenciasComponent,
+    MaquinariaComponent
   ]
 })
 export class AppdashModule { }

@@ -59,7 +59,7 @@ import { HttpInterceptorServices } from './components/shared/http-interceptor/ht
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
+    LoginComponent
   ],
   imports: [
     //#region 

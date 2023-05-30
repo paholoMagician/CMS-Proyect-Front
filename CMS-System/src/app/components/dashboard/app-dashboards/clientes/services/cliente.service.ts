@@ -1,16 +1,35 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
+import * as signalR from '@microsoft/signalr';  
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
-
+  private hubConnection!: signalR.HubConnection;
   public url: string = environment.deploy_url;
 
-  constructor( private http: HttpClient) { }
+  constructor( private http: HttpClient) { 
 
+    this.initializeSignalR();
+
+  }
+
+  private initializeSignalR() {
+    this.hubConnection = new signalR.HubConnectionBuilder()
+      .withUrl('https://localhost:7106/chatHub') // Reemplaza la URL con tu propia configuración de SignalR
+      .build();
+
+    this.hubConnection.start().catch(err => console.error(err));
+
+    // Suscribirse al evento "NuevoClienteCreado" del hub
+    this.hubConnection.on('NuevoClienteCreado', (cliente: any) => {
+      console.log('Nuevo cliente creado:', cliente);
+      // Realizar las acciones necesarias con el nuevo cliente en tu aplicación
+    });
+  }
 
   /** CLIENTES */
   guardarClientes( model: any [] ) {

@@ -54,7 +54,9 @@ export class ClientesComponent implements OnInit {
     telfpago:             new FormControl(''),
     correopago:           new FormControl(''),
     nombre:               new FormControl(''),
-    tipo:                 new FormControl('')
+    tipo:                 new FormControl(''),
+    nombreMantenimiento:  new FormControl(''),
+    nombrePago:          new FormControl(''),
   })
 
   constructor( private client: ClienteService,private DataMaster: SharedService  ) { }
@@ -95,6 +97,8 @@ export class ClientesComponent implements OnInit {
     this.clienteForm.controls['correopago'].setValue('');    
     this.clienteForm.controls['nombre'].setValue('');
     this.clienteForm.controls['tipo'].setValue('');
+    this.clienteForm.controls['nombreMantenimiento'].setValue('');
+    this.clienteForm.controls['nombrePago'].setValue('');
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;
@@ -150,7 +154,8 @@ export class ClientesComponent implements OnInit {
     const cliente = this.clienteForm.controls['ruc'].value;
     const token: string = 'CLI-'+cliente+'-'+this.DataMaster.generateRandomString(10);
     const userSession: any = sessionStorage.getItem('UserCod');
-
+    
+    
     this.modelCliente = {
       Codcliente : token,
       Ruc :                 this.clienteForm.controls['ruc'].value,
@@ -165,6 +170,8 @@ export class ClientesComponent implements OnInit {
       Correopago :          this.clienteForm.controls['correopago'].value,
       Coduser :             userSession,
       Codcia :              this.ccia,
+      NombreMantenimiento : this.clienteForm.controls['nombreMantenimiento'].value,
+      nombrePago :         this.clienteForm.controls['nombrePago'].value,
       Nombre :              this.clienteForm.controls['nombre'].value,
       Tipo :                this.clienteForm.controls['tipo'].value
     }
@@ -285,6 +292,8 @@ export class ClientesComponent implements OnInit {
     this.clienteForm.controls['correopago']         .setValue(data.correopago);
     this.clienteForm.controls['nombre']             .setValue(data.nombre);
     this.clienteForm.controls['tipo']               .setValue(data.tipo);
+    this.clienteForm.controls['nombreMantenimiento'].setValue(data.nombreMantenimiento),
+    this.clienteForm.controls['nombrePago']        .setValue(data.nombrePago),
     this.codcli         = data.codcliente;
     this._icon_button   = 'sync_alt';
     this._action_butto  = 'Actualizar';
@@ -313,6 +322,8 @@ export class ClientesComponent implements OnInit {
         Correomantenimiento : this.clienteForm.controls['correomantenimiento'].value,
         Telfpago :            this.clienteForm.controls['telfpago'].value,
         Correopago :          this.clienteForm.controls['correopago'].value,
+        NombreMantenimiento : this.clienteForm.controls['nombreMantenimiento'].value,
+        nombrePago :         this.clienteForm.controls['nombrePago'].value,
         Coduser :             userSession,
         Codcia :              this.ccia,
         Nombre :              this.clienteForm.controls['nombre'].value,

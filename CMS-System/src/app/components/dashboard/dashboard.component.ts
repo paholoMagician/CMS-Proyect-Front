@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit {
   _asignacion: boolean = false;
   _dashboard: boolean = true;
   _clientes: boolean = false;
+  _maquinaria: boolean = false;
   _version: string = '1.0.0 en desarrollo';
   _date: any = '';
   panelOpenState = false;
@@ -33,6 +34,7 @@ export class DashboardComponent implements OnInit {
         this._asignacion = false;
         this._clientes   = false;
         this._agencias   = false;
+        this._maquinaria = false;
         break;
       case 'Cobertura Técnica':
         this._usuario    = false;
@@ -40,6 +42,7 @@ export class DashboardComponent implements OnInit {
         this._asignacion = true;
         this._clientes   = false;
         this._agencias   = false;
+        this._maquinaria = false;
         break;
       case 'Clientes':
         this._usuario    = false;
@@ -47,6 +50,7 @@ export class DashboardComponent implements OnInit {
         this._asignacion = false;
         this._clientes   = true;
         this._agencias   = false;
+        this._maquinaria = false;
         break;
       case 'Agencias':
         this._usuario    = false;
@@ -54,6 +58,15 @@ export class DashboardComponent implements OnInit {
         this._asignacion = false;
         this._clientes   = false;
         this._agencias   = true;
+        this._maquinaria = false;
+        break;
+      case 'Maquinaria':
+        this._usuario    = false;
+        this._dashboard  = false;
+        this._asignacion = false;
+        this._clientes   = false;
+        this._agencias   = false;
+        this._maquinaria = true;
         break;
     }
   }

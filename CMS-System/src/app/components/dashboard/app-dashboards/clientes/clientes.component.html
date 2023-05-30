@@ -21,13 +21,15 @@
                     <input type="text" class="form-control"
                            formControlName="ruc" #ruc id="ruc" 
                            (keyup)="validarCadena($event, 'ruc', 'N')">
-                        
                 </div>
-                <div class="mb-3 col-5 ">
-                    <label for="nombre" class="form-label   ">
+                <div class="mb-3 col-5">
+                    <label for="nombre" class="form-label">
                         Nombre del Cliente (Empresa):<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombre', 'L')" formControlName="nombre" #nombre id="nombre" placeholder="Corporación Naranja S.A.">
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombre', 'L')"
+                           formControlName="nombre" 
+                           #nombre id="nombre"
+                           placeholder="Corporación Naranja S.A.">
                 </div>
                 <div class="mb-3 col-4 ">
                     <label for="replegal" class="form-label   ">
@@ -55,6 +57,14 @@
             </div>
             <div  class=" d-flex justify-content-start  flex-wrap    "  >
                 <div class="m-2 col-3 ">
+                    <label for="telfpago" class="form-label   ">
+                        Nombre persona mantenimiento: 
+                        <br>
+                        <!-- <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small> -->
+                    </label>
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombreMantenimiento', 'L')"  formControlName="nombreMantenimiento" #nombreMantenimiento id="nombreMantenimiento" placeholder="Carlos Vera">
+                </div>
+                <div class="m-2 col-3 ">
                     <label for="telfclimanteni" class="form-label   ">
                         Telefono mantenimiento: <span class="text-danger">*</span>
                         <br>
@@ -72,6 +82,14 @@
                 </div>
             </div>
             <div  class=" d-flex justify-content-start  flex-wrap    "  >
+                <div class="m-2 col-3 ">
+                    <label for="telfpago" class="form-label   ">
+                        Nombre persona cobro: 
+                        <br>
+                        <!-- <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small> -->
+                    </label>
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombrePago', 'L')"  formControlName="nombrePago" #nombrePago id="nombrePago" placeholder="Paola Gonzabay">
+                </div>
                 <div class="m-2 col-3 ">
                     <label for="telfpago" class="form-label   ">
                         Telf. cobro: <span class="text-danger">*</span>
@@ -207,7 +225,7 @@
                 </th>
                 <td style="cursor: pointer;" mat-cell 
                     *matCellDef="let row" 
-                    [matTooltip]="'Telf Mant.: ' + row.telfclimanteni +'  Correo: '+ row.correomantenimiento +'   Telf. Cobro: ' + row.telfpago + '    Correo: ' + row.correopago + ' Observacion: ' + row.observacion">
+                    [matTooltip]="'Nombre Mant.: ' +row.nombreMantenimiento+ '  Telf Mant.: ' + row.telfclimanteni +'  Correo: '+ row.correomantenimiento +'Nombre Cobro:  ' +row.nombrePago+  '   Telf. Cobro: ' + row.telfpago + '    Correo: ' + row.correopago + ' Observacion: ' + row.observacion">
                   {{row.nombre}}
                 </td>
             </ng-container>
