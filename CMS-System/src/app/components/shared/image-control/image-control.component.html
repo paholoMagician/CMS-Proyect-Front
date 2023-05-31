@@ -1,9 +1,21 @@
+<div class="spinner-overlay" *ngIf="_show_spinner" >
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+</div>
+
 <section class="w-100">
+        <label for="fileUp" id="imageUp" class="d-flex justify-content-center">
+            <!-- <img src="C:\Users\USUARIO\Documents\projects-cms\CMS-Proyect-Back\CMS-System\CMS-System\fileModel\Assets\maquina1\maquina1.jpg" -->
+                 <!-- alt="Imagen no ha sido cargada"> -->
+            <div class="imagen-container shadow" [ngStyle]="{'background-image': 'url('+_IMGE+')', 'background-size': '100% 100%'}" >
+            </div>
+        </label>
+        <input type="file" id="fileUp" (change)="encodeImageFileAsURL(); onFileSelected($event)">
+        <button mat-raised-button color="warn" (click)="mostrarDatosEnConsola()"><mat-icon>add</mat-icon> Guardar imagen </button>
 
-    <div class="imagen-container shadow">
+        <!-- <a href="file:///C:/Users/USUARIO/Documents/projects-cms/CMS-Proyect-Back/CMS-System/CMS-System/fileModel/Assets/maquina1/maquina1.jpg" target="_blank">link image</a> -->
 
-
-
-    </div>    
+        <!-- <img src="file:///C:/Users/USUARIO/Documents/projects-cms/CMS-Proyect-Back/CMS-System/CMS-System/fileModel/Assets/maquina1/maquina1.jpg" alt="Image"> -->
 
 </section>

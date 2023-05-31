@@ -39,7 +39,8 @@ export class MaquinariaComponent implements OnInit {
   public dataSource!: MatTableDataSource<any>;
 
   @Input() modulo: any = [];
-
+  
+  dataEmitter: any = {};
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
@@ -188,7 +189,12 @@ export class MaquinariaComponent implements OnInit {
   }
 
   codmaquinaria: string = '';
+  maquinariaModel: any = [];
+  
   catchData(data: any) {
+
+    this.maquinariaModel = data;
+    
     this.maquinariaForm.controls['nombremaquina'].setValue(data.nombremaquina);
     this.maquinariaForm.controls['codtipomaquina'].setValue(data.codtipomaquina.trim());
     this.maquinariaForm.controls['observacion'].setValue(data.observacion);

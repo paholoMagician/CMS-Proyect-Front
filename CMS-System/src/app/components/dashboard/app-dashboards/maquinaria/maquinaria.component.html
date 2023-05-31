@@ -4,17 +4,6 @@
     </div>
 </div>
 <div class="d-flex" >
-<div class="mini-module-workarea w-25 p-4 m-1">
-
-    <div class="text-secondary d-flex align-item-center m-0 p-0">
-        <mat-icon>add_a_photo</mat-icon><span class="fs-7 p-1" > Añade una foto a {{modulo.nombre}} </span>
-    </div>
-
-    <hr>
-
-    <app-image-control></app-image-control>
-
-</div>
 <div class="mini-module-workarea w-75 p-4 m-1">
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
@@ -87,7 +76,7 @@
                 <div class="mb-3 col-4  ">
                     <label for="codtipomaquina" class="form-label ">
                         Tipo de Maquinaria:<span class="text-danger">*</span> <br>
-                        <small class="text-secondary" > Ayudanos a categorizar la máquina seleccionando un tipo. </small>
+                        <!-- <small class="text-secondary" > Categoriza la máquina seleccionando un tipo. </small>   -->
                     </label>
                     <select class="inpForms form-select   w-100"
                             formControlName="codtipomaquina" #codtipomaquina id="codtipomaquina" aria-label="">
@@ -105,7 +94,8 @@
                            #observacion id="observacion"
                            placeholder="Esta máquina viene con los rodillos a parte...">
                 </div>
-                    <div class="mini-floating-button">
+                </div>
+                <div class="mini-floating-button">
 
                         <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
                             <mat-icon>cancel</mat-icon>
@@ -114,12 +104,23 @@
                             <mat-icon>{{_icon_button}}</mat-icon> {{_action_butto}} {{modulo.nombre}}
                         </button>
         
-                    </div>
+                </div>
 
-                </div> 
+                 
             
         </form>
     </div>
+</div>
+<div id="foto-area" class="mini-module-workarea w-25 p-4 m-1 d-flex justify-content-center flex-column align-items-center ">
+
+    <div class="text-secondary d-flex align-item-center m-0 p-0">
+        <mat-icon>add_a_photo</mat-icon><span class="fs-7 p-1" > Añade una foto a {{modulo.nombre}} </span>
+    </div>
+
+    <hr>
+
+    <app-image-control [maquinariaDatos]="maquinariaModel"></app-image-control>
+
 </div>
 </div>
 
