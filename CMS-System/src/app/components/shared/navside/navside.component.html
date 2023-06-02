@@ -1,4 +1,8 @@
-
+<div class="spinner-overlay" *ngIf="_show_spinner" >
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+</div>
 <div class="nav-side" [ngStyle]="{'width': _width_navside}" >
 
     <section class="headNavSide d-flex align-items-center p-2 ">

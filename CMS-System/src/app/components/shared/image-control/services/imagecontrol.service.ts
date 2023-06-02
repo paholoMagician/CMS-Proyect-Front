@@ -20,12 +20,20 @@ export class ImagecontrolService {
     return this.http.post(this.url+'Imagen/crearCarpeta/'+nombre, formData, { headers });
   }
 
+  obtenerImagenCodBinding( codBinding: string, tipo: string ) {
+    return this.http.get( this.url + 'Imagen/obtenerImagen/' + codBinding + '/' + tipo );
+  }
+
   guardarImgFile(model:any []) {
     return this.http.post( this.url + 'imagen/saveImagen', model );
   }
 
   getImageControl(route: string) {
     return this.http.get<any>(`${this.url}Imagen/GetImageControl/${route}`);
+  }
+
+  editarImagen( cbinding: string, model: any [] ) {
+    return this.http.put( this.url + 'Imagen/EditarImagen/'+cbinding, model );
   }
 
 }

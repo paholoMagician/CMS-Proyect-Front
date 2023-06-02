@@ -1,3 +1,4 @@
+
 <div class="spinner-overlay" *ngIf="_show_spinner" >
     <div class="spinner-container">
       <mat-spinner></mat-spinner>
@@ -5,17 +6,22 @@
 </div>
 
 <section class="w-100">
+        
         <label for="fileUp" id="imageUp" class="d-flex justify-content-center">
-            <!-- <img src="C:\Users\USUARIO\Documents\projects-cms\CMS-Proyect-Back\CMS-System\CMS-System\fileModel\Assets\maquina1\maquina1.jpg" -->
-                 <!-- alt="Imagen no ha sido cargada"> -->
-            <div class="imagen-container shadow" [ngStyle]="{'background-image': 'url('+_IMGE+')', 'background-size': '100% 100%'}" >
-            </div>
+            <div class="imagen-container shadow" [ngStyle]="{'background-image': 'url('+_IMGE+')', 'background-size': '100% 100%'}"></div>
         </label>
-        <input type="file" id="fileUp" (change)="encodeImageFileAsURL(); onFileSelected($event)">
-        <button mat-raised-button color="warn" (click)="mostrarDatosEnConsola()"><mat-icon>add</mat-icon> Guardar imagen </button>
+        
+        <input type="file" id="fileUp"
+               (change)="encodeImageFileAsURL();
+               onFileSelected($event)">
 
-        <!-- <a href="file:///C:/Users/USUARIO/Documents/projects-cms/CMS-Proyect-Back/CMS-System/CMS-System/fileModel/Assets/maquina1/maquina1.jpg" target="_blank">link image</a> -->
-
-        <!-- <img src="file:///C:/Users/USUARIO/Documents/projects-cms/CMS-Proyect-Back/CMS-System/CMS-System/fileModel/Assets/maquina1/maquina1.jpg" alt="Image"> -->
-
+        <button mat-raised-button 
+                *ngIf="showbtnperfil"
+                [disabled]="disbtnimg"
+                class="w-100"
+                color="warn"
+                (click)="validateaccion(3)">
+                <!-- this.datalisten.modulo= 'Perfil' -->
+                <mat-icon>sync-alt</mat-icon> Actualizar Imagen
+        </button>
 </section>

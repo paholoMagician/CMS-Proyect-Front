@@ -29,13 +29,14 @@ export class MaquinariaComponent implements OnInit {
 
   tipoMaquinaLista: any = []; 
   maquinariaLista: any = [];
+
   _cancel_button:     boolean = false;
   _icon_button:       string = 'add';
   _delete_show:       boolean = true;
   _action_butto:      string = 'Crear';
   ccia:               any;
   _show_spinner:      boolean = false; 
-  columnHead:         any = [ 'edit', 'nombretipomaquina', 'nombre', 'modelo', 'marca', 'ninventario', 'nserie', 'codigobp', 'observacion' ];
+  columnHead:         any = [ 'edit', 'nombretipomaquina', 'nombre', 'modelo', 'marca', 'ninventario', 'nserie', 'codigobp', 'cont', 'observacion' ];
   public dataSource!: MatTableDataSource<any>;
 
   @Input() modulo: any = [];
@@ -54,14 +55,20 @@ export class MaquinariaComponent implements OnInit {
     ninventario:                 new FormControl(''),
     codtipomaquina:              new FormControl(''),
     codigobp:                    new FormControl(''),
+    contador:                    new FormControl('') 
   })
 
   constructor( private DataMaster: SharedService, private maquinaria: MaquinariaService ) { }
-
+  xuser: any = '';
   ngOnInit(): void {
+    this.xuser = sessionStorage.getItem('UserCod');
     this.ccia = sessionStorage.getItem('codcia');
     this.getDataMaster('MQT');
     this.obtenerMaquinaria();
+
+    console.warn('ESTE ES EL MODULO');
+    console.warn(this.modulo.nombre);
+
   }
 
   onSubmit() {
@@ -92,7 +99,6 @@ export class MaquinariaComponent implements OnInit {
         switch(cod) {
           case 'MQT':
             this.tipoMaquinaLista = data;
-            // console.log(this.tipoMaquinaLista);
             break;
         }
       }
@@ -102,7 +108,6 @@ export class MaquinariaComponent implements OnInit {
   modelMaquinaria: any = [];
   guardarMaquinaria() {
 
-
     if ( this.maquinariaForm.controls['nombremaquina'].value == undefined || this.maquinariaForm.controls['nombremaquina'].value == null || this.maquinariaForm.controls['nombremaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El nombre de la maquinaria no debe estar vacío' })
     else if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
     else if ( this.maquinariaForm.controls['modelo'].value == undefined || this.maquinariaForm.controls['modelo'].value == null || this.maquinariaForm.controls['modelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
@@ -111,21 +116,31 @@ export class MaquinariaComponent implements OnInit {
     this._show_spinner = true;
     const cliente = this.maquinariaForm.controls['nombremaquina'].value.toString().replace(' ', '_').slice(0,6);
     const token: string = 'MAQ-'+cliente+'-'+this.DataMaster.generateRandomString(15);
-    const xuser: any = sessionStorage.getItem('UserCod');
+    
+    
+    this.maquinariaModel = {
+      nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
+      codtipomaquina: this.maquinariaForm.controls['codtipomaquina'].value.trim(),
+      codmaquina: token,
+      modulo: this.modulo.nombre,
+      state: 1,
+      accion: 1
+    };
 
     this.modelMaquinaria = {
       "codmaquina": token,
       "nombremaquina":  this.maquinariaForm.controls['nombremaquina'].value,
-      "codtipomaquina": this.maquinariaForm.controls['codtipomaquina'].value,
+      "codtipomaquina": this.maquinariaForm.controls['codtipomaquina'].value.trim(),
       "observacion":    this.maquinariaForm.controls['observacion'].value,
       "modelo":         this.maquinariaForm.controls['modelo'].value,
       "marca":          this.maquinariaForm.controls['marca'].value,
       "nserie":         this.maquinariaForm.controls['nserie'].value,
       "ninventario":    this.maquinariaForm.controls['ninventario'].value,
       "codigobp":       this.maquinariaForm.controls['codigobp'].value,
-      "codusercrea" :   xuser, 
+      "codusercrea" :   this.xuser, 
       "feccrea"  :      new Date(),
-      "codcia"      :   this.ccia
+      "codcia"      :   this.ccia,
+      "contador":       this.maquinariaForm.controls['contador'].value
     }
 
     console.warn('MAQUINARIA');
@@ -153,14 +168,107 @@ export class MaquinariaComponent implements OnInit {
 
     })
     }
+    
   }
 
   editarMaquinaria() {
+    if ( this.maquinariaForm.controls['nombremaquina'].value == undefined || this.maquinariaForm.controls['nombremaquina'].value == null || this.maquinariaForm.controls['nombremaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El nombre de la maquinaria no debe estar vacío' })
+    else if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
+    else if ( this.maquinariaForm.controls['modelo'].value == undefined || this.maquinariaForm.controls['modelo'].value == null || this.maquinariaForm.controls['modelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
+    else if ( this.maquinariaForm.controls['marca'].value == undefined || this.maquinariaForm.controls['marca'].value == null || this.maquinariaForm.controls['marca'].value == ''  )  Toast.fire({ icon: 'warning', title: 'La marca de la maquina no debe estar vacío' })
+    else {
+    this._show_spinner = true;
+    
+    this.maquinariaModel = {
+      nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
+      codtipomaquina: this.maquinariaForm.controls['codtipomaquina'].value.trim(),
+      codmaquina: this.codmaquinaria,
+      modulo: this.modulo.nombre,
+      state: 1,
+      accion: 2
+    };
 
+    this.modelMaquinaria = {
+      "codmaquina":     this.codmaquinaria,
+      "nombremaquina":  this.maquinariaForm.controls['nombremaquina'].value,
+      "codtipomaquina": this.maquinariaForm.controls['codtipomaquina'].value.trim(),
+      "observacion":    this.maquinariaForm.controls['observacion'].value,
+      "modelo":         this.maquinariaForm.controls['modelo'].value,
+      "marca":          this.maquinariaForm.controls['marca'].value,
+      "nserie":         this.maquinariaForm.controls['nserie'].value,
+      "ninventario":    this.maquinariaForm.controls['ninventario'].value,
+      "codigobp":       this.maquinariaForm.controls['codigobp'].value,
+      "codusercrea" :   this.xuser, 
+      "feccrea"  :      new Date(),
+      "codcia"      :   this.ccia,
+      "contador":       this.maquinariaForm.controls['contador'].value
+    }
+
+    console.warn('MAQUINARIA');
+    console.warn(this.modelMaquinaria);
+    this.maquinaria.putMaquinaria( this.codmaquinaria, this.modelMaquinaria ).subscribe({
+
+      next: (x) => {
+        this._show_spinner = false;
+        Swal.fire(
+          'Máquina: '+this.maquinariaForm.controls['nombremaquina'].value+' agregada',
+          'La máquina se ha guardado con éxito',
+          'success'
+        )
+      }, error: (e) => {
+        console.error(e);
+        Swal.fire(
+          'Oops!',
+          'Esta máquina no se ha podido guardar',
+          'error'
+        )
+      }, complete: () => {
+        this.obtenerMaquinaria();
+        this.limpiar();
+      }
+
+    })
+    }
   }
 
   eliminarMaquinaria(data:any) {
+    Swal.fire({
+      title: 'Estás seguro?',
+      text: "Esta acción es irreversible u podría provocar perdida de datos en otros procesos!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this._show_spinner = true;  
 
+        console.log(data.codcliente)
+        console.log(this.ccia)
+
+        this.maquinaria.eliminarMaquinaria( data.codmaquina ).subscribe({
+          next: (x) => {
+            this._show_spinner = false;
+            Swal.fire(
+              'Deleted!',
+              'Máquina: '+ data.nombreMaquina +' eliminado',
+              'success'
+            )
+          }, error: (e) => {
+            console.error(e);
+            this._show_spinner = false;
+            Swal.fire(
+              'Upps!',
+              'No hemos podido eliminar esta máquina',
+              'error'
+            )
+          }, complete: () => {
+            this.obtenerMaquinaria();
+          } 
+        })
+      }
+    })
   }
 
   applyFilter(event: Event) {
@@ -193,7 +301,13 @@ export class MaquinariaComponent implements OnInit {
   
   catchData(data: any) {
 
-    this.maquinariaModel = data;
+    this.maquinariaModel = {
+      nombreMaquina: data.nombremaquina,
+      codtipomaquina: data.codtipomaquina.trim(),
+      codmaquina: data.codmaquina,
+      modulo: this.modulo.nombre,
+      state: 2
+    };
     
     this.maquinariaForm.controls['nombremaquina'].setValue(data.nombremaquina);
     this.maquinariaForm.controls['codtipomaquina'].setValue(data.codtipomaquina.trim());
@@ -203,13 +317,15 @@ export class MaquinariaComponent implements OnInit {
     this.maquinariaForm.controls['nserie'].setValue(data.nserie);
     this.maquinariaForm.controls['ninventario'].setValue(data.ninventario);
     this.maquinariaForm.controls['codigobp'].setValue(data.codigobp);
-    this.codmaquinaria = data.codmaquina;
+    this.codmaquinaria  = data.codmaquina;
     this._icon_button   = 'sync_alt';
     this._action_butto  = 'Actualizar';
     this._cancel_button = true;
+
   }
 
   limpiar() {
+  
     this.maquinariaForm.controls['nombremaquina'].setValue('');
     this.maquinariaForm.controls['codtipomaquina'].setValue('');
     this.maquinariaForm.controls['observacion'].setValue('');
@@ -221,6 +337,7 @@ export class MaquinariaComponent implements OnInit {
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;
+  
   }
 
 }

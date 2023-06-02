@@ -1,4 +1,8 @@
-
+<div class="spinner-overlay" *ngIf="_show_spinner" >
+    <div class="spinner-container">
+      <mat-spinner></mat-spinner>
+    </div>
+</div>
 <div class="cont d-flex justify-content-between" >
     <div style="height: 100%">
         <app-navside (modulo)="recibirModulo($event)"></app-navside>
@@ -51,6 +55,8 @@
         <app-clientes *ngIf="_clientes" [modulo]="moduloEmitter"></app-clientes>
         <app-agencias *ngIf="_agencias" [modulo]="moduloEmitter"></app-agencias>
         <app-maquinaria *ngIf="_maquinaria" [modulo]="moduloEmitter"></app-maquinaria>
+        <app-perfil-usuario *ngIf="_perfil_usuario" [modulo]="moduloEmitter"></app-perfil-usuario>
+        <app-bodegas *ngIf="_bodegas" [modulo]="moduloEmitter"></app-bodegas>
     </div>
 </div>
 

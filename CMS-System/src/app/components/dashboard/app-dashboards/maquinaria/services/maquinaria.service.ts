@@ -22,8 +22,8 @@ export class MaquinariaService {
     return this.http.put( this.url + 'Maquinaria/EditarMaquinaria/' + codmaquina, model );
   }
 
-  eliminarMaquinaria( codmaquina: string, codcia: string ) {
-    return this.http.get( this.url + 'Maquinaria/eliminarMaquinaria/' + codmaquina + '/' + codcia );
+  eliminarMaquinaria( codmaquina: string ) {
+    return this.http.get( this.url + 'Maquinaria/eliminarMaquinaria/' + codmaquina );
   }
 
 }

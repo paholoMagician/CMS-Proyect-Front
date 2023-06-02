@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import Swal from 'sweetalert2'
 import { LoginService } from '../../login/services/login.service';
 import { NavsideService } from './services/navside.service';
+import { ImagecontrolService } from '../image-control/services/imagecontrol.service';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -27,10 +28,10 @@ export interface Modulo {
   styleUrls: ['./navside.component.scss']
 })
 export class NavsideComponent implements OnInit {
-
+  _show_spinner:      boolean = false; 
   public modulosLista: any        = [];
   public _username:    any        = '';
-  public _IMGE:        string     = '';
+  public _IMGE:        any;
   public codUser:      any        = '';
   _tipo_persona:       string     = '';
   moduleName: boolean = true;
@@ -42,13 +43,15 @@ export class NavsideComponent implements OnInit {
 
   @Output() modulo: EventEmitter<Modulo> = new EventEmitter<Modulo>();
 
-  constructor( private validate: LoginService, public Shared: NavsideService ) { }
+  constructor( private validate: LoginService, public Shared: NavsideService, private fileserv: ImagecontrolService ) { }
   
   ngOnInit(): void {
     this.getModulos();
+  
   }
 
   getModulos() {    
+    this._show_spinner = true;
     this._username = sessionStorage.getItem('UserName')?.toUpperCase();
     this.codUser = sessionStorage.getItem('UserCod');
     this.Shared.getModulos( this.codUser ).subscribe(
@@ -56,31 +59,30 @@ export class NavsideComponent implements OnInit {
         next: (modulos) => {
           this.modulosLista = modulos;
         },
-        error: () => {
-
+        error: (e) => {
+          console.error(e)
+          this._show_spinner = false;
         },
         complete: () => {
           console.log(this.modulosLista);
           this.getUser(this.codUser);
-          this.obtenerImagen(this.codUser); 
+          let x: any = localStorage.getItem('imgperfil'); 
+          if( x == undefined || x == null || x == '' ) {
+            // alert('consumiremos la api')
+            this.obtenerImagen(this.codUser, 'Perfil'); 
+          }
+          else {
+            // alert('ya tienes una imagen yano consumiremos la api')
+            this._IMGE = localStorage.getItem('imgperfil');
+          }
+          
+          this._show_spinner = false;
         }
       }
     )
   }
 
-  public imagenLista: any = [];
-  obtenerImagen(codUser: string) {
-    this.Shared.obtenerImagen(codUser, 'PERFIL').subscribe(
-    {
-      next: (imagen) => {
-        this.imagenLista = imagen;
-        // console.warn(this.imagenLista);
-        this._IMGE = this.imagenLista[0].imagenContent;   
-        // console.warn(this._IMGE);
-      }
-    }
-    )
-  }
+
 
   
   getUser(user: string) {
@@ -131,6 +133,35 @@ export class NavsideComponent implements OnInit {
 
     // console.log('Desde navside: ' + nameModule)
     this.modulo.emit(modulo)
+  }
+
+
+  
+  imgList: any = [];
+  obtenerImagen(codBinding:string, tipo:string) {
+    this._show_spinner = true;
+    let codm : any = codBinding;
+
+    console.warn(codm)
+
+    this.fileserv.obtenerImagenCodBinding('IMG-'+codm, tipo).subscribe({
+      next: (img) => {
+        this.imgList = img;
+        console.log('this.imgList visto desde los modulos')
+        console.log(this.imgList)
+      }, error: (e) => {
+        this._show_spinner = false;
+        console.error(e);
+      }, complete: () => {        
+        this.imgList.filter( (element:any) => {
+          if(element.codentidad == 'IMG-'+codm) {
+            this._IMGE = element.imagen;
+            localStorage.setItem('imgperfil', this._IMGE);
+          }
+        })
+        this._show_spinner = false; 
+      }
+    })
   }
 
 }

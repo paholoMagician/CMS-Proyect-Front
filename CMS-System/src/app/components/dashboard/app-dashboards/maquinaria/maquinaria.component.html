@@ -71,6 +71,15 @@
                            #codigobp id="codigobp"
                            placeholder="00012-B">
                 </div>
+                <div class="mb-3 col-2 ">
+                    <label for="nombre" class="form-label   ">
+                        Contador. 
+                    </label>
+                    <input type="number" class="form-control" 
+                           formControlName="contador" 
+                           #codigobp id="contador"
+                           placeholder="0">
+                </div>
             </div>
             <div class="d-flex justify-content-between align-item-start ">
                 <div class="mb-3 col-4  ">
@@ -119,7 +128,7 @@
 
     <hr>
 
-    <app-image-control [maquinariaDatos]="maquinariaModel"></app-image-control>
+    <app-image-control [datalisten]="maquinariaModel"></app-image-control>
 
 </div>
 </div>
@@ -147,7 +156,7 @@
             </div>        
     
         </section>
-        <table mat-table [dataSource]="dataSource" class="mtTable shadow" matSort class="w-100" >
+        <table mat-table [dataSource]="dataSource" class="mtTable shadow " matSort class="w-100" >
     
             <ng-container matColumnDef="edit">
                 
@@ -260,6 +269,17 @@
                     *matCellDef="let row" 
                     >
                   {{row.codigobp}}
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="cont">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Contador
+                </th>
+                <td style="cursor: pointer;" mat-cell 
+                    *matCellDef="let row" 
+                    >
+                  {{row.contador}}
                 </td>
             </ng-container>
     

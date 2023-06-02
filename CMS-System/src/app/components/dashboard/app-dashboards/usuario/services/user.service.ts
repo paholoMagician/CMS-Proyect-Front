@@ -31,4 +31,8 @@ export class UserService {
     return this.http.put( this.url + 'User/EditarUsuario/' + coduser, model );
   }
 
+  obtenerCuentaUsuario(coduser:string) {
+    return this.http.get( this.url + 'User/ObtenerCuentaUsuario/' + coduser );
+  }
+
 }

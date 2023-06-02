@@ -32,6 +32,7 @@ export class LoginService {
     sessionStorage.removeItem('tipo');
     sessionStorage.removeItem('imagen');
     sessionStorage.removeItem('email');
+    localStorage.removeItem('imgperfil');
     this.validate();
   }
 

@@ -176,6 +176,10 @@ export class AgenciasComponent implements OnInit {
   }
 
   getCantones() {
+
+    console.log('PROVINCIA CODIGO');
+    console.log(this.agenciaForm.controls['codProv'].value);
+
     this.DataMaster.getDataMaster(this.agenciaForm.controls['codProv'].value).subscribe({
       next: (cantones) => {
         this.cantonLista = cantones;
@@ -206,7 +210,9 @@ export class AgenciasComponent implements OnInit {
 
   codagencia: string = '';
   catchData(data: any) {
-
+    console.warn('==============================')
+    console.warn(data)
+    console.warn('==============================')
     this.agenciaForm.controls['codcliente']   .setValue(data.codcliente);
     this.validationCliente();
     setTimeout(() => {
@@ -214,18 +220,21 @@ export class AgenciasComponent implements OnInit {
       let h2 = data.horarioatencionh.split(':');
       let h3 = data.horarioatenciondm.split(':');
       let h4 = data.horarioatencionhm.split(':');
-      this.agenciaForm.controls['nombre']       .setValue(data.nombre);
-      this.agenciaForm.controls['descripcion']  .setValue(data.descripcion);
-      this.agenciaForm.controls['observacion']  .setValue(data.observacion);
-      this.agenciaForm.controls['longitud']     .setValue(data.longitud);
-      this.agenciaForm.controls['latitud']      .setValue(data.latitud);
-      this.agenciaForm.controls['tipo']         .setValue(data.tipo.trim());
-      this.agenciaForm.controls['campoA']       .setValue(data.campoA);
-      this.agenciaForm.controls['campoB']       .setValue(data.campoB);
-      this.agenciaForm.controls['codfrecuencia'].setValue(data.codfrecuencia);
-      this.agenciaForm.controls['codProv']      .setValue(data.codProv.trim());
+      this.agenciaForm.controls['nombre']        .setValue(data.nombre);
+      this.agenciaForm.controls['descripcion']   .setValue(data.descripcion);
+      this.agenciaForm.controls['observacion']   .setValue(data.observacion);
+      this.agenciaForm.controls['longitud']      .setValue(data.longitud);
+      this.agenciaForm.controls['latitud']       .setValue(data.latitud);
+      this.agenciaForm.controls['tipo']          .setValue(data.tipo.trim());
+      this.agenciaForm.controls['campoA']        .setValue(data.campoA);
+      this.agenciaForm.controls['campoB']        .setValue(data.campoB);
+      this.agenciaForm.controls['codfrecuencia'] .setValue(data.codfrecuencia);
+      this.agenciaForm.controls['codProv']       .setValue(data.codProv.trim());
       this.getCantones();
       this.agenciaForm.controls['codCanton']    .setValue(data.codCanton.trim());
+      console.log( 'CODIGO CANTON' )
+      console.log( this.agenciaForm.controls['codCanton'].value )
+      console.log( data.codCanton.trim() )
       this.agenciaForm.controls['horarioatencion1'].setValue(h1[0]);
       this.agenciaForm.controls['horarioatencion2'].setValue(h1[1]);
       this.agenciaForm.controls['horarioatencion3'].setValue(h2[0]);
