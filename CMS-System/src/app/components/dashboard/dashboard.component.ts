@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DashboardService } from './services/dashboard.service';
 import { ImagecontrolService } from '../shared/image-control/services/imagecontrol.service';
+import { LoginService } from '../login/services/login.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -22,11 +23,12 @@ export class DashboardComponent implements OnInit {
   _perfil_usuario: boolean = false;
   _bodegas: boolean = false;
 
-  constructor( private dash: DashboardService ) { }
+  constructor( private dash: DashboardService, private log: LoginService ) { }
 
   ngOnInit(): void {
     this.obtenerVersionCMS();
-    this.obtenerEmpresa()
+    this.obtenerEmpresa();
+    this.log.validate();
   }
   recibirModulo(modulo: any) {
     this.moduloEmitter = modulo;

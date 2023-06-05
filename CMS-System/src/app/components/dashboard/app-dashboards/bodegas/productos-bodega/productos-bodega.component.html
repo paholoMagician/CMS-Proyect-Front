@@ -1,0 +1,148 @@
+<div class="d-flex" >
+<div class="w-50 p-2">
+<div class="w-100 p-3 rounded-2" style="background-color: rgba(223, 233, 244, 0.797);" > 
+    <div class="fs-3 d-flex align-items-center ">
+        <mat-icon>conveyor_belt</mat-icon> Productos creados
+    </div>
+</div>
+<div class="contain-bodegas" >
+    <div class="m-2 bg-secondary text-light p-2 rounded-pill d-flex justify-content-between align-items-center ">
+       <span> Maquinarias </span>
+       <div class="d-flex ">
+        <span class="spanbtn" >
+            <mat-icon>view_list</mat-icon>
+        </span>
+        <span class="spanbtn">
+            <mat-icon>view_sidebar</mat-icon>
+        </span>
+       </div>
+    </div>
+    <ul>
+        <li *ngFor="let maquinaria of maquinariaLista" class="m-3" style="list-style: none;">
+
+            <div class="producto shadow rounded-2 p-3 d-flex ">
+                <div>
+                <label for="fileUp" id="imageUp" class="d-flex justify-content-center">
+                    <div class="imagen-container shadow" [ngStyle]="{'background-image': 'url('+maquinaria.imagen+')', 'background-size': '100% 100%'}"></div>
+                </label>
+                </div>
+                <div class="p-3">
+                <div class="d-flex flex-column ">
+                    <small>Nombre:</small>
+                    <span class="fs-5 text-primary"> {{maquinaria.nombremaquina}} </span>
+                </div>
+                <div class="d-flex">
+                    <div class="d-flex flex-column p-2 ">
+                        <div class="d-flex flex-column ">
+                            <small>Tipo de Maquina:</small>
+                            <span class="text-secondary"> {{maquinaria.nombretipomaquina}} </span>
+                        </div>
+                        <div class="d-flex flex-column ">
+                            <small>Modelo:</small>
+                            <span class="text-secondary"> {{maquinaria.modelo}} </span>
+                        </div>
+                    
+                    
+                        <div class="d-flex flex-column ">
+                            <small>Marca:</small>
+                            <span class="text-secondary"> {{maquinaria.marca}} </span>
+                        </div>
+                        <div class="d-flex flex-column ">
+                            <small>Contador:</small>
+                            <span class="text-secondary"> {{maquinaria.contador}} </span>
+                        </div>
+                    </div> 
+                    <div class="d-flex flex-column p-2">
+                        <div class="d-flex flex-column ">
+                            <small>N. Serie:</small>
+                            <span class="text-secondary"> {{maquinaria.nserie}} </span>
+                        </div>
+                        <div class="d-flex flex-column ">
+                            <small>N. Inventario:</small>
+                            <span class="text-secondary"> {{maquinaria.ninventario}} </span>
+                        </div>
+                        <div class="d-flex flex-column ">
+                            <small>Codigo B.P.:</small>
+                            <span class="text-secondary"> {{maquinaria.codigobp}} </span>
+                        </div>
+                    </div>
+                </div>
+                <button mat-raised-button  color="primary" [disabled]="_btn_add" (click)="guardarAgnacion(maquinaria)" class="d-flex align-items-center " >
+
+                    <span>Añadir item a bodega</span> <mat-icon> chevron_right </mat-icon>
+
+                </button>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+</div>
+<div class="w-50 p-2">
+<div class="w-100 p-3 rounded-2" style="background-color: rgba(223, 233, 244, 0.797);" > 
+    <div class="fs-3 d-flex align-items-center ">
+        <mat-icon>warehouse</mat-icon> Bodegas creadas
+    </div>
+    <section class="filtros mt-2 mb-2">
+        <!-- <input type="text" class="form-control" > -->
+        <small class="text-secondary">
+            Cantidad de bodegas registradas 
+            <strong class="text-primary">
+               ( {{listBodegas.length}} )
+            </strong>
+        </small>
+        <div class="mb-2 d-flex">
+          <input class=" w-100 form-control rounded-pill"
+                 fxFlex="auto" type="text"
+                 [(ngModel)]="searchTerm"
+                 (keyup)="filterBodegas()" 
+                 #input placeholder="Busqueda de bodegas registradas....">
+        </div>        
+
+    </section>
+    <hr>    
+    <div class="contain-bodegas" >
+        <form [formGroup]="maquinabodegaForm" class="mb-2" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <label for="nombre" class="form-label ">
+                    <span class="text-primary" > Escoge la bodega donde alojarás el item </span> <span class="text-danger">*</span>
+                </label>
+                <select class="inpForms form-select   w-100" (change)="validationBodehaExist()"
+                        formControlName="nombre" #nombre id="nombre" 
+                        aria-label="">
+                        <option *ngFor="let bodega of filteredBodegas" [value]="bodega.id" >
+                            {{bodega.nombrebodega }}                        
+                        </option>
+                </select>
+            </div>
+        </form>
+
+        <ul>
+            <li *ngFor="let itemBodega of listaMaquinaBodegas" class="m-3" style="list-style: none;" >
+                <div class="d-flex align-items-center">
+                    <div>
+                        <span class="spanbtn" (click)="eliminarItemBodega(itemBodega)"  >
+                            <mat-icon>delete</mat-icon>
+                        </span>
+                    </div>
+                    <div class="d-flex flex-column" style="margin-left: 15px !important;">
+                        <div class="fs-4 text-primary" >{{itemBodega.nombremaquina}}
+                            
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-secondary p-2">
+                                 <small>N. Serie: </small> {{itemBodega.nserie}}
+                            </span>
+                            <span class="text-secondary p-2">
+                                <small>Modelo: </small>{{itemBodega.modelo}}
+                            </span>
+                        </div>
+                        <small class="text-secondary">{{itemBodega.fecrea | date: 'dd-MM-yyyy'}}</small>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+</div>
+</div>

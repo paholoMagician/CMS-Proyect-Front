@@ -1,0 +1,39 @@
+.producto {
+    width: 500px;
+    background-color: rgb(222, 222, 222);
+    border: solid 1px white;
+}
+
+.imagen-container {
+
+    width: 230px;
+    height: 255px;
+    background-color: gray;
+    border-radius: 5px;
+    border: solid 5px white;
+    transition: ease all 1s;
+
+}
+
+
+.imagen-container:hover {
+    transition: ease all 1s;
+    background-color: rgb(59, 136, 110);
+    cursor: pointer;
+}
+
+
+.contain-bodegas {
+    height: 62vh;
+    overflow-y: auto;
+}
+
+.spanbtn {
+    cursor: pointer;
+    transition: ease all 0.5s;
+}
+
+.spanbtn:hover {
+    transition: ease all 0.5s;
+    color: orange;
+}

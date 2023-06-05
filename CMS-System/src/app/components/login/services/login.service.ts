@@ -17,8 +17,8 @@ export class LoginService {
   }
 
   validate() {
-    let user: any = sessionStorage.getItem('UserCod');
-    if( user == undefined || user == null || user == '' ) {
+    let UserCod: any = sessionStorage.getItem('UserCod');
+    if( UserCod == undefined || UserCod == null || UserCod == '' ) {
       this.router.navigate(['login']);
     } else {
       this.router.navigate(['dashboard']);
@@ -33,6 +33,7 @@ export class LoginService {
     sessionStorage.removeItem('imagen');
     sessionStorage.removeItem('email');
     localStorage.removeItem('imgperfil');
+    localStorage.removeItem('codcia');
     this.validate();
   }
 

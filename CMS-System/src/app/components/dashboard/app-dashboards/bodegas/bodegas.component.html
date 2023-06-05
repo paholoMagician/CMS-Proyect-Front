@@ -4,14 +4,20 @@
       <mat-spinner></mat-spinner>
     </div>
 </div>
-<div class="module-workarea p-4 ">
-
-    <div class="text-secondary d-flex align-item-center m-0 p-0">
-         <mat-icon>{{modulo.icono}}</mat-icon>
-         <span class="fs-5">{{modulo.nombre}}</span>
+<div class="module-workarea p-4">
+    <div class="text-secondary d-flex  align-item-center m-0 p-0">
+		<button mat-mini-fab color="primary" *ngIf="_dis_back_btn" (click)="optionApps(0)" class="d-flex align-items-center justify-content-center">
+			<mat-icon>chevron_left</mat-icon>
+		</button>
+		<div style="margin-left: 10px;" class="d-flex align-items-center ">
+         	<mat-icon>{{modulo.icono}}</mat-icon>
+         	<span class="fs-5">{{modulo.nombre}}</span>
+		</div>
     </div>
     <hr>
-    <div class=" d-flex align-content-center  ">
+	<app-crear-bodegas class="animate__animated animate__fadeInLeftBig" *ngIf="_crear_bodega" ></app-crear-bodegas>
+	<app-productos-bodega class="animate__animated animate__fadeInLeftBig" *ngIf="_producto_bodega" ></app-productos-bodega>
+    <div class=" d-flex align-content-center  " *ngIf="_worka1">
         <div class="vector animate__animated animate__fadeInLeftBig  p-4">
             <div class="bocadillo">
                 Bienvenido al gestor de <span class="text-primary" > 
@@ -848,12 +854,12 @@
         </svg>   
         
         </div>
-        <div class="workapp p-4 d-flex align-items-center   " >
+        <div class="workapp p-4 d-flex align-items-center">
             <ul>
-                <li class="sist fs-3 m-2" style="list-style: none; ">
+                <li class="sist fs-3 m-2" style="list-style: none; " (click)="optionApps(1)">
                     <mat-icon>add</mat-icon> &nbsp; Crear  
                 </li>
-                <li class="sist fs-3 m-2" style="list-style: none; ">
+                <li class="sist fs-3 m-2" style="list-style: none; " (click)="optionApps(2)">
                     <mat-icon>forklift</mat-icon> &nbsp;  Transferir productos 
                 </li>
                 <li class="sist fs-3 m-2" style="list-style: none; ">
@@ -863,4 +869,3 @@
         </div>
     </div>
 </div>
-

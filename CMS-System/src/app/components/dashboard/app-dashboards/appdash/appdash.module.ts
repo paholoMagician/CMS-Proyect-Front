@@ -56,6 +56,8 @@ import { MaquinariaComponent } from '../maquinaria/maquinaria.component';
 import { SharedModuleModule } from 'src/app/components/shared/shared-module/shared-module.module';
 import { PerfilUsuarioComponent } from '../perfil-usuario/perfil-usuario.component';
 import { BodegasComponent } from '../bodegas/bodegas.component';
+import { CrearBodegasComponent } from '../bodegas/crear-bodegas/crear-bodegas.component';
+import { ProductosBodegaComponent } from '../bodegas/productos-bodega/productos-bodega.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +68,9 @@ import { BodegasComponent } from '../bodegas/bodegas.component';
     AgenciasComponent,
     MaquinariaComponent,
     PerfilUsuarioComponent,
-    BodegasComponent
+    BodegasComponent,
+    CrearBodegasComponent,
+    ProductosBodegaComponent
   ],
   imports: [
     CommonModule,
@@ -127,7 +131,8 @@ import { BodegasComponent } from '../bodegas/bodegas.component';
     AgenciasComponent,
     MaquinariaComponent,
     PerfilUsuarioComponent,
-    BodegasComponent
+    BodegasComponent,
+    ProductosBodegaComponent
   ]
 })
 export class AppdashModule { }

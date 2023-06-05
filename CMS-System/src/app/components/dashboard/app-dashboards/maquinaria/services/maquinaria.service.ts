@@ -25,5 +25,9 @@ export class MaquinariaService {
   eliminarMaquinaria( codmaquina: string ) {
     return this.http.get( this.url + 'Maquinaria/eliminarMaquinaria/' + codmaquina );
   }
+  
+  obtenerMaquinariaIMG() {
+    return this.http.get( this.url + 'Maquinaria/obtenerMaquinariaIMG' );
+  }
 
 }
