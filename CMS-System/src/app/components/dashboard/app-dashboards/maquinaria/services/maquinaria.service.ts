@@ -30,4 +30,12 @@ export class MaquinariaService {
     return this.http.get( this.url + 'Maquinaria/obtenerMaquinariaIMG' );
   }
 
+  ObtenerMaquinasSinBodega(ccia:string, option:number) {
+    return this.http.get( this.url + 'Maquinaria/ObtenerMaquinasSinBodega/'+ ccia + '/' + option);
+  }
+
+  ObtenerMaquinaUnit( codmaquina: string, ccia: string ) {
+    return this.http.get( this.url + 'Maquinaria/ObtenerMaquinaUnit/' + codmaquina +'/'+ ccia );
+  }
+
 }

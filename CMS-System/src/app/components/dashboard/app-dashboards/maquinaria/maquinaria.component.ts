@@ -234,7 +234,7 @@ export class MaquinariaComponent implements OnInit {
   eliminarMaquinaria(data:any) {
     Swal.fire({
       title: 'Estás seguro?',
-      text: "Esta acción es irreversible u podría provocar perdida de datos en otros procesos!",
+      text: "Esta acción es irreversible y podría provocar perdida de datos en otros procesos!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

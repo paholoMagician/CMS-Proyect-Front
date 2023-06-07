@@ -1,26 +1,27 @@
 <div class="d-flex" >
-<div class="w-50 p-2">
+<div class="w-50 p-2" *ngIf="_boxa">
 <div class="w-100 p-3 rounded-2" style="background-color: rgba(223, 233, 244, 0.797);" > 
     <div class="fs-3 d-flex align-items-center ">
         <mat-icon>conveyor_belt</mat-icon> Productos creados
     </div>
+    <span class="text-secondary" > {{ detalle }} </span>
 </div>
 <div class="contain-bodegas" >
     <div class="m-2 bg-secondary text-light p-2 rounded-pill d-flex justify-content-between align-items-center ">
        <span> Maquinarias </span>
        <div class="d-flex ">
-        <span class="spanbtn" >
+        <span class="spanbtn" (click)="selectTypeVieew(1)" >
             <mat-icon>view_list</mat-icon>
         </span>
-        <span class="spanbtn">
+        <span class="spanbtn" (click)="selectTypeVieew(0)">
             <mat-icon>view_sidebar</mat-icon>
         </span>
        </div>
     </div>
-    <ul>
+    <ul *ngIf="_show_img">
         <li *ngFor="let maquinaria of maquinariaLista" class="m-3" style="list-style: none;">
 
-            <div class="producto shadow rounded-2 p-3 d-flex ">
+            <div class="producto shadow rounded-2 p-3 d-flex " >
                 <div>
                 <label for="fileUp" id="imageUp" class="d-flex justify-content-center">
                     <div class="imagen-container shadow" [ngStyle]="{'background-image': 'url('+maquinaria.imagen+')', 'background-size': '100% 100%'}"></div>
@@ -67,7 +68,10 @@
                         </div>
                     </div>
                 </div>
-                <button mat-raised-button  color="primary" [disabled]="_btn_add" (click)="guardarAgnacion(maquinaria)" class="d-flex align-items-center " >
+                <div>              
+
+                </div>
+                <button mat-raised-button  color="primary" [disabled]="_btn_add" (click)="guardarAsignacion(maquinaria)" class="d-flex align-items-center " >
 
                     <span>Añadir item a bodega</span> <mat-icon> chevron_right </mat-icon>
 
@@ -76,14 +80,43 @@
             </div>
         </li>
     </ul>
+    <div class="table table-responsive" *ngIf="_show_table">
+
+        <table class="table table-primary table-hover table-striped w-100"  >
+            <thead>
+                <th>Nombre</th>
+                <th>T. Maquina</th>
+                <th>Modelo</th>
+                <th>Marca</th>
+                <th>Contador</th>
+                <th>N. Serie</th>
+            <th>N. Inv</th>
+            <th>C.B.P.</th>
+        </thead>
+        <tbody>
+            <tr style="cursor: pointer;" *ngFor="let maquinaria of maquinariaLista" (click)="guardarAsignacion(maquinaria)">
+                <td>{{maquinaria.nombremaquina}}</td>
+                <td>{{maquinaria.nombretipomaquina}}</td>
+                <td>{{maquinaria.modelo}}</td>
+                <td>{{maquinaria.marca}}</td>
+                <td>{{maquinaria.contador}}</td>
+                <td>{{maquinaria.nserie}}</td>
+                <td>{{maquinaria.ninventario}}</td>
+                <td>{{maquinaria.codigobp}}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 </div>
-<div class="w-50 p-2">
-<div class="w-100 p-3 rounded-2" style="background-color: rgba(223, 233, 244, 0.797);" > 
+</div>
+<div [class]="_width_boxb +' p-2 h-100 '" style="transition: ease all 0.5s;" >
+
+<div class="w-100 p-3 rounded-2" 
+     style="background-color: rgba(223, 233, 244, 0.797);" > 
     <div class="fs-3 d-flex align-items-center ">
         <mat-icon>warehouse</mat-icon> Bodegas creadas
     </div>
-    <section class="filtros mt-2 mb-2">
+    <section class="filtros mt-2 mb-2" *ngIf="_img_bodegas" >
         <!-- <input type="text" class="form-control" > -->
         <small class="text-secondary">
             Cantidad de bodegas registradas 
@@ -96,29 +129,119 @@
                  fxFlex="auto" type="text"
                  [(ngModel)]="searchTerm"
                  (keyup)="filterBodegas()" 
-                 #input placeholder="Busqueda de bodegas registradas....">
+                 #input placeholder="Búsqueda de bodegas registradas....">
         </div>        
 
     </section>
+    <section class="filtros mt-2 mb-2" *ngIf="_view_palets">
+        
+        <small class="text-secondary">
+            Cantidad de maquinarias registradas a esta bodega
+            <strong class="text-primary">
+               ( {{listaMaquinaBodegas.length}} )
+            </strong>
+        </small>
+        <div class="mb-2 d-flex">
+            <input class=" w-100 form-control rounded-pill"
+                   fxFlex="auto" type="text"
+                   [(ngModel)]="searchMaqTerm"
+                   (keyup)="filterMaquinariasBodegas()"
+                   #input placeholder="Búsqueda de maquinarias registradas en esta bodega...">
+        </div>
+    </section>
+
     <hr>    
+    
     <div class="contain-bodegas" >
-        <form [formGroup]="maquinabodegaForm" class="mb-2" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-                <label for="nombre" class="form-label ">
-                    <span class="text-primary" > Escoge la bodega donde alojarás el item </span> <span class="text-danger">*</span>
-                </label>
-                <select class="inpForms form-select   w-100" (change)="validationBodehaExist()"
-                        formControlName="nombre" #nombre id="nombre" 
-                        aria-label="">
-                        <option *ngFor="let bodega of filteredBodegas" [value]="bodega.id" >
-                            {{bodega.nombrebodega }}                        
-                        </option>
-                </select>
+        <form [formGroup]="maquinabodegaForm" class="mb-2" (ngSubmit)="onSubmit()"  *ngIf="_img_bodegas">
+            <div class="mb-3 d-flex justify-content-lg-around align-items-end flex-wrap">                
+                <div class="bodegas" *ngFor="let bodegas of filteredBodegas; let i = index" [id]="'contain'+bodegas.id"    >
+                    <label [for]="bodegas.id" style="cursor: pointer;" (dblclick)="obtenerItems()" >
+                        <div class="title-bodega d-flex justify-content-center ">
+                          <input style="position: absolute; top: 8px; left: 8px;"
+                                class="form-check-input" type="radio" (change)="validationBodehaExist()"
+                                 name="nombre" [id]="bodegas.id"
+                                 [value]="bodegas" formControlName="nombre" 
+                                 #nombre id="nombre">
+                                 <span style="text-align: center;" >
+                                   {{bodegas.nombrebodega | uppercase}} - {{bodegas.cantidadItems}}
+                                 </span>
+                        </div>                      
+                        <img [src]="bodegas.url" width="100%">                       
+                    </label>
+                </div>
             </div>
         </form>
-
-        <ul>
-            <li *ngFor="let itemBodega of listaMaquinaBodegas" class="m-3" style="list-style: none;" >
+        <div class="d-flex">
+        <div class="details-palets animate__animated animate__fadeInleft " *ngIf="_view_details_palets">
+            <div *ngFor="let maquina of listMaquinaUnit" >
+                <div>
+                    <label for="fileUp" id="imageUp" style="cursor: none !important;" class="d-flex justify-content-center">
+                        <div class="imagen-container shadow" style="cursor: none !important;" [ngStyle]="{'background-image': 'url('+maquina.imagen+')', 'background-size': '100% 100%'}"></div>
+                    </label>
+                </div>                
+                <div class="textdetail" >
+                    <small>Nombre:</small><span>{{maquina.nombremaquina}}</span><br>
+                </div>
+                <div class="textdetail" >
+                    <small>Modelo:</small><span>{{maquina.modelo}}</span><br>
+                </div>
+                <div class="textdetail" >
+                    <small>Marca:</small><span>{{maquina.marca}}</span><br>
+                </div>
+                <div class="textdetail" >
+                    <small>N. Serie:</small><span>{{maquina.nserie}}</span><br>
+                </div>
+                <div class="textdetail" >
+                    <small>Contador:</small><span>{{maquina.contador}}</span><br>
+                </div>
+                <div class="textdetail" >
+                    <small>Fecha de Ingreso:</small><span>{{maquina.feccrea | date: 'dd-MM-yyyy'}}</span><br>
+                </div>
+                <div class="" >
+                    <small>Observación:</small>
+                    <br>
+                    <span>{{maquina.observacion}}</span><br>
+                </div>
+                <div>
+                    <button mat-raised-button color="warn" class="w-100" (click)="verDetallePalets(2)">
+                        <mat-icon>visibility_off</mat-icon>Cerrar detalle
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="cajas-contenido" *ngIf="_view_palets" >
+            
+            <div class="cajas animate__animated animate__fadeInUp" *ngFor="let item of listaMaquinaBodegas" (contextmenu)="openMenu($event, item)">                                
+                    <div class="notebox">
+                        <small class="text-secondary">Nombre: </small>
+                        <br>
+                        <span class="text-primary">  {{item.nombremaquina}}</span>
+                        <br>
+                        <small class="text-secondary">N.Serie: </small>
+                        <br>
+                        <span class="text-primary">{{item.nserie}}</span>
+                        <br>
+                    </div>           
+                    <mat-menu-trigger #myTrigger="matMenuTrigger" [matMenuTriggerFor]="myMenu" *ngIf="item.menuAbierto"></mat-menu-trigger>
+                    <mat-menu #myMenu="matMenu">
+                        <!-- (click)="verDetallePalets()"  -->
+                        <button mat-menu-item (click)="verDetallePalets(1)" >
+                            <mat-icon>visibility</mat-icon>Ver Detalle
+                        </button>
+                        <button mat-menu-item (click)="eliminarItemBodega(item)">
+                            <mat-icon>turn_slight_left</mat-icon>Dejar fuera
+                        </button>
+                        <button mat-menu-item color="warn" >
+                            <mat-icon>alt_route</mat-icon>Transferir
+                        </button>
+                    </mat-menu>   
+            </div>
+        </div>
+        </div>
+        <!-- <div class="mt-2">
+        <ul class="m-0">
+            <li *ngFor="let itemBodega of listaMaquinaBodegas" class="m-3" style=" list-style: none; border-bottom: solid 1px gray;" >
                 <div class="d-flex align-items-center">
                     <div>
                         <span class="spanbtn" (click)="eliminarItemBodega(itemBodega)"  >
@@ -129,19 +252,22 @@
                         <div class="fs-4 text-primary" >{{itemBodega.nombremaquina}}
                             
                         </div>
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between align-items-center ">
                             <span class="text-secondary p-2">
                                  <small>N. Serie: </small> {{itemBodega.nserie}}
                             </span>
                             <span class="text-secondary p-2">
                                 <small>Modelo: </small>{{itemBodega.modelo}}
                             </span>
-                        </div>
-                        <small class="text-secondary">{{itemBodega.fecrea | date: 'dd-MM-yyyy'}}</small>
+                            <span class="text-secondary">
+                                <small >Fecha Creación:</small> {{itemBodega.fecrea | date: 'dd-MM-yyyy'}}
+                            </span>
+                        </div>                        
                     </div>
                 </div>
             </li>
         </ul>
+    </div> -->
     </div>
 </div>
 </div>

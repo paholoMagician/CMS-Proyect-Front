@@ -60,7 +60,7 @@
                              fxFlex="auto" type="text"
                              [(ngModel)]="searchTerm"
                              (keyup)="filterBodegas()" 
-                             #input placeholder="Busqueda de bodegas registradas....">
+                             #input placeholder="Búsqueda de bodegas registradas....">
                     </div>        
             
                 </section>
@@ -78,7 +78,7 @@
                             </button>
                         </span>
                         <div class="d-flex flex-column" style="margin-left: 15px !important;">
-                            <div class="fs-4 text-primary" >{{bodegas.nombrebodega}}  </div>
+                            <div class="fs-4 text-primary d-flex align-items-center  "  >{{bodegas.nombrebodega}} <span class="badge bg-warning text-dark ">{{bodegas.cantidadItems}}</span>  </div>
                             <small class="text-secondary">{{bodegas.fecrea | date: 'dd-MM-yyyy'}}</small>
                         </div>
                     </div>

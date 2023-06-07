@@ -58,7 +58,8 @@ import { PerfilUsuarioComponent } from '../perfil-usuario/perfil-usuario.compone
 import { BodegasComponent } from '../bodegas/bodegas.component';
 import { CrearBodegasComponent } from '../bodegas/crear-bodegas/crear-bodegas.component';
 import { ProductosBodegaComponent } from '../bodegas/productos-bodega/productos-bodega.component';
-
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ButtonModule } from 'primeng/button';
 @NgModule({
   declarations: [
     UsuarioComponent,
@@ -123,6 +124,8 @@ import { ProductosBodegaComponent } from '../bodegas/productos-bodega/productos-
     ReactiveFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
+    InputNumberModule,
+    ButtonModule 
   ],
   exports: [
     UsuarioComponent,
