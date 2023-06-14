@@ -17,6 +17,7 @@
     <hr>
 	<app-crear-bodegas class="animate__animated animate__fadeInLeftBig" *ngIf="_crear_bodega" ></app-crear-bodegas>
 	<app-productos-bodega class="animate__animated animate__fadeInLeftBig" *ngIf="_producto_bodega" ></app-productos-bodega>
+	<app-kardex-transferencia class="animate__animated animate__fadeInLeftBig" *ngIf="_kardex_bodega" ></app-kardex-transferencia>
     <div class=" d-flex align-content-center  " *ngIf="_worka1">
         <div class="vector animate__animated animate__fadeInLeftBig  p-4">
             <div class="bocadillo">
@@ -857,14 +858,17 @@
         <div class="workapp p-4 d-flex align-items-center">
             <ul>
                 <li class="sist fs-3 m-2" style="list-style: none; " (click)="optionApps(1)">
-                    <mat-icon>add</mat-icon> &nbsp; Crear  
+                    <mat-icon>add</mat-icon> &nbsp; Crear Bodega
                 </li>
                 <li class="sist fs-3 m-2" style="list-style: none; " (click)="optionApps(2)">
                     <mat-icon>forklift</mat-icon> &nbsp;  Transferir productos 
                 </li>
-                <li class="sist fs-3 m-2" style="list-style: none; ">
-                    <mat-icon>trolley</mat-icon> &nbsp;  Clasificar 
+                <li class="sist fs-3 m-2" style="list-style: none; " (click)="optionApps(3)">
+                    <mat-icon>list_alt</mat-icon> &nbsp;  Kardex 
                 </li>
+                <!-- <li class="sist fs-3 m-2" style="list-style: none; ">
+                    <mat-icon>trolley</mat-icon> &nbsp;  Clasificar 
+                </li> -->
             </ul>
         </div>
     </div>

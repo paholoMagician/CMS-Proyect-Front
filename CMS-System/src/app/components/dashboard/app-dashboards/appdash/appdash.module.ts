@@ -60,6 +60,9 @@ import { CrearBodegasComponent } from '../bodegas/crear-bodegas/crear-bodegas.co
 import { ProductosBodegaComponent } from '../bodegas/productos-bodega/productos-bodega.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
+import { KardexTransferenciaComponent } from '../bodegas/kardex-transferencia/kardex-transferencia.component';
+import { EmpresaComponent } from '../empresa/empresa.component';
+
 @NgModule({
   declarations: [
     UsuarioComponent,
@@ -71,7 +74,9 @@ import { ButtonModule } from 'primeng/button';
     PerfilUsuarioComponent,
     BodegasComponent,
     CrearBodegasComponent,
-    ProductosBodegaComponent
+    ProductosBodegaComponent,
+    KardexTransferenciaComponent,
+    EmpresaComponent
   ],
   imports: [
     CommonModule,
@@ -135,7 +140,9 @@ import { ButtonModule } from 'primeng/button';
     MaquinariaComponent,
     PerfilUsuarioComponent,
     BodegasComponent,
-    ProductosBodegaComponent
+    ProductosBodegaComponent,
+    KardexTransferenciaComponent,
+    EmpresaComponent
   ]
 })
 export class AppdashModule { }

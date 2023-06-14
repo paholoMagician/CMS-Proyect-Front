@@ -74,6 +74,9 @@
     font-size: 8pt;
 }
 
+.checkcajas {
+    margin-top: -40px;
+}
 
 .cajas-contenido {
     padding: 25px;
@@ -81,7 +84,6 @@
     border-radius: 10px;
     height: 60vh;
     overflow-y: auto;
-    // background-color: aqua;
     width: 100%;
     z-index: 3;
     display: flex;
@@ -98,9 +100,16 @@
     background-size: 100% 100%;
     display: flex;
     justify-content: center;
-    
+    cursor: pointer;
     align-items: center;
     background-image: url('../../../../../../assets/palets.png');
+    transition: ease all 1s;
+}
+
+.cajas:hover {
+    transition: ease all 0.5s;
+    border-radius: 10px;
+    background-color: rgba(86, 77, 30, 0.664);
 }
 
 .notebox {
@@ -156,4 +165,17 @@
         opacity: 0;
     }
 
+}
+
+.transfer-mod {
+    z-index: 15;
+    width: 400px;
+    // height: 100;
+    background-color: whitesmoke;
+
+}
+
+.lista-productos {
+    height: 370px;
+    overflow-y: auto;
 }

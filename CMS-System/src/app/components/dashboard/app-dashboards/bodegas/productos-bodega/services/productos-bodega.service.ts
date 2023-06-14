@@ -14,12 +14,21 @@ export class ProductosBodegaService {
     return this.http.post( this.url + 'AsignarProductoBodega/guardarProductoBodega', model );
   }
 
-  obtenerItemsBodega( id:number ) {
-    return this.http.get( this.url + 'AsignarProductoBodega/obtenerItemsBodega/' + id );
+  obtenerItemsBodega( id:number, state: number ) {
+    return this.http.get( this.url + 'AsignarProductoBodega/obtenerItemsBodega/' + id + '/' + state  );
   }
 
   eliminarItemBodega( id:number ) {
     return this.http.get( this.url + 'AsignarProductoBodega/eliminarItemBodega/' + id );
   }
+
+  ProcesoTransdferenciaBod( model: any [] ) {
+    return this.http.post( this.url + 'Transferencias/ProcesoTransdferenciaBod', model );
+  }
+
+  TransferenciaBodDetalle( model: any [] ) {
+    return this.http.post( this.url + 'Transferencias/guardarDetalleTransaciion', model );
+  }
+
 
 }

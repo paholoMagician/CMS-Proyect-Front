@@ -7,6 +7,8 @@ import { CrearBodegasService } from '../crear-bodegas/services/crear-bodegas.ser
 import { FormControl, FormGroup } from '@angular/forms';
 import { ProductosBodegaService } from './services/productos-bodega.service';
 import { MatMenuTrigger } from '@angular/material/menu';
+import { stat } from 'fs';
+import { elementAt } from 'rxjs';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -29,7 +31,10 @@ const Toast = Swal.mixin({
 
 
 export class ProductosBodegaComponent implements OnInit {
-  selectedOption: any;
+  
+  _border_cajas:        string = 'none';
+  _dis_button_transfer: boolean = true;
+selectedOption: any;
   ccia:               any;
   _show_spinner:      boolean = false;
   _cancel_button:     boolean = false;
@@ -39,10 +44,26 @@ export class ProductosBodegaComponent implements OnInit {
   filteredBodegas:    any = [];
   searchTerm: string = '';
   searchMaqTerm: string = '';
+  searchMTerm: string = '';
+  searchMPretrans: string = '';
   listBodegas: any = [];
   _IMGE:any;
   _boxa: boolean = true;
   _view_details_palets: boolean = false;
+  modelItemBodega: any = [];
+  codBodega: number = 0;
+  detalle: string = '';
+  _show_img: boolean = false;
+  _show_table: boolean = false;
+  maquinariaListaGhost: any = [];
+  _btn_add: boolean = true;
+  nombodega: string = '';
+  listaMaquinaBodegasGhost: any = [];
+  listaMaquinaBodegas: any = [];
+  _width_boxb: string = '50%';
+  _img_bodegas: boolean = true;
+  _view_palets: boolean = false;
+  listMaquinaUnit: any = [];
 
   @ViewChild(MatMenuTrigger)
   contextMenu!: MatMenuTrigger;
@@ -57,13 +78,22 @@ export class ProductosBodegaComponent implements OnInit {
   maquinabodegaForm = new FormGroup({
     nombre: new FormControl(''),    
   })
+  maquinabodegaAsignForm = new FormGroup({
+    nombreMaq: new FormControl(''),    
+  })
+
+  bodegasFormTransfer = new FormGroup({
+    bodegaentrada: new FormControl(),
+    bodegasalida: new FormControl(),
+    pretransferencia: new FormControl()
+  })
 
   constructor( private maqbodega: ProductosBodegaService, private maquinaria: MaquinariaService, private bodega: CrearBodegasService) { }
 
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
-    this.obtenerMaquinaria(1);
     this.obtenerBodegas();
+    this.obtenerMaquinaria(1);
   }
 
   selectViewState: number = 1;
@@ -72,17 +102,40 @@ export class ProductosBodegaComponent implements OnInit {
     this.obtenerMaquinaria(this.selectViewState);
   }
 
-  url_img: string = '../../../../../../assets/bodega.png';
-
+  listaTransferenciaMaquinaria: any = [];
+  handleCheckboxChange(event: Event, index: number) {
+    const checkbox = event.target as HTMLInputElement;
+    const maquinaria = this.listaMaquinaBodegas[index];  
+    if (checkbox.checked) {
+      this.listaTransferenciaMaquinaria.push(maquinaria);
+    } 
+    else {    
+      const indexToRemove = this.listaTransferenciaMaquinaria.findIndex(
+        (item: any) => item.codmaquinaria === maquinaria.codmaquinaria
+      );      
+      this.listaTransferenciaMaquinaria.splice(indexToRemove, 1);    
+    }
+    console.warn(this.listaTransferenciaMaquinaria);
+  }
   
-  obtenerBodegas() {   
-
+  addAllPretrenasfer() {
+    this.listaMaquinaBodegas.filter((element:any)=>{
+      this.ProcesoTransdferenciaBod (element.codmaquinaria,1);
+    })
+  }
+  
+  obtenerBodegas() {
+    this._show_spinner = true
+    let narray:any = [];
+    this.filteredBodegas = [];
     this.bodega.obtenerBodegas(this.ccia).subscribe({
       next:(bodegas) => {
+        this._show_spinner = false
         this.listBodegas = bodegas;
-        // console.log(this.listBodegas);
-        this.listBodegas.filter((element:any)=>{
-          const array = {
+        // console.log('---BODEGAS OBTENIDAS---')
+        // console.log(this.listBodegas)
+        this.listBodegas.filter((element:any)=>{ 
+          narray = {
               "cantidadItems": element.cantidadItems,
               "id": element.id,
               "nombrebodega": element.nombrebodega,
@@ -93,17 +146,16 @@ export class ProductosBodegaComponent implements OnInit {
               "url": '../../../../../../assets/bodega_full.png'
           }
 
-          if( element.cantidadItems == 0 ) {
-            element.url = '../../../../../../assets/bodega_vacia.png';
-          }
+          if( narray.cantidadItems == 0 ) narray.url = '../../../../../../assets/bodega_vacia.png';         
 
-          this.filteredBodegas.push(array);
+          this.filteredBodegas.push(narray);
 
         })
-
-        console.log( this.filteredBodegas )
-
-        // this.filteredBodegas = bodegas;
+      },
+      error:(e) => {
+        console.error(e);
+        this._show_spinner = false;
+      }, complete: () => {
       }
     })
   }
@@ -127,22 +179,129 @@ export class ProductosBodegaComponent implements OnInit {
 
   }
 
+  closeTransfer() {
+    this._show_transfer = false;
+    this._border_cajas = 'none';
+    this._dis_button_transfer = true;
+    this.bodegasFormTransfer.controls['bodegaentrada'].setValue('');
+  }
 
-  filterBodegas() {
-    if (this.searchTerm) {
-      this.filteredBodegas = this.listBodegas.filter((bodega:any) =>
-        bodega.nombrebodega.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-        bodega.descripcion.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
-    } else {
-      this.filteredBodegas = this.listBodegas;
+  modtransferstate: number = 0;
+  validationTransfrBod() {
+    if((this.bodegasFormTransfer.controls['bodegaentrada'].value == undefined || this.bodegasFormTransfer.controls['bodegaentrada'].value == null || this.bodegasFormTransfer.controls['bodegaentrada'].value == '')
+      && this.itemsBodegaTransferencia.length == 0
+    ){
+
+        this._dis_button_transfer = true;
+        this.modtransferstate = 0;
+
+
+    }else {
+
+      if (this.itemsBodegaTransferencia.length == 0) {
+        this._dis_button_transfer = true;
+      }
+      else {
+        this._dis_button_transfer = false;
+      }   
+      this._border_cajas = 'dashed 3px orangered';
+      this.modtransferstate = 1;
+      // this.obtenerItemsBodTransferencia();
     }
   }
 
+  filterbodegaghost: any = [];
+  filterBodegas() {
+    
+    this.filteredBodegas= [];
+    let narray: any = [];
+    if (this.searchTerm) {
+      this.filterbodegaghost = this.listBodegas.filter( (bodega:any) => 
+
+        bodega.nombrebodega.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        bodega.descripcion.toLowerCase().includes(this.searchTerm.toLowerCase())        
+      
+        );
+
+      console.log(this.filteredBodegas);
+
+      this.filterbodegaghost.filter((element:any)=>{
+
+        narray = {
+          "cantidadItems": element.cantidadItems,
+          "id": element.id,
+          "nombrebodega": element.nombrebodega,
+          "descripcion": element.descripcion,
+          "fecrea": element.fecrea,
+          "codusercrea": element.codusercrea,
+          "ccia": element.ccia,
+          "url": '../../../../../../assets/bodega_full.png'
+        }
+        
+        if( narray.cantidadItems == 0 ) narray.url = '../../../../../../assets/bodega_vacia.png';         
+
+        this.filteredBodegas.push(narray); 
+
+      })
+
+    } else {
+      this.listBodegas.filter((element:any) => { 
+      narray = {
+          "cantidadItems": element.cantidadItems,
+          "id": element.id,
+          "nombrebodega": element.nombrebodega,
+          "descripcion": element.descripcion,
+          "fecrea": element.fecrea,
+          "codusercrea": element.codusercrea,
+          "ccia": element.ccia,
+          "url": '../../../../../../assets/bodega_full.png'
+      }
+
+      if( narray.cantidadItems == 0 ) narray.url = '../../../../../../assets/bodega_vacia.png';         
+
+        this.filteredBodegas.push(narray);
+
+      })
+
+    }
+  }
+
+  filterMaquinarias() {
+  
+    if (this.searchMTerm) {
+      this.maquinariaLista = this.maquinariaListaGhost.filter((maquina:any) =>
+          maquina.nombremaquina.toLowerCase()
+                 .includes(this.searchMTerm.toLowerCase()) ||
+          maquina.modelo.toLowerCase()
+                 .includes(this.searchMTerm.toLowerCase()) ||
+          maquina.nserie.toLowerCase()
+                 .includes(this.searchMTerm.toLowerCase())
+      );  
+    } else {
+      this.maquinariaLista = this.maquinariaListaGhost;
+    }
+  
+  }
+
+  filterMaquinariasPreransfer() {
+    
+    console.log(this.bodegasFormTransfer.controls['pretransferencia'].value);
+
+    if (this.bodegasFormTransfer.controls['pretransferencia'].value != '') {
+      this.itemsBodegaTransferencia = this.itemsBodegaTransferenciaGhost.filter((maquina:any) =>
+          maquina.nombremaquina.toLowerCase()
+                 .includes(this.bodegasFormTransfer.controls['pretransferencia'].value.toLowerCase()) ||
+          maquina.nserie.toLowerCase()
+                 .includes(this.bodegasFormTransfer.controls['pretransferencia'].value.toLowerCase())
+      );  
+    } else {
+      this.itemsBodegaTransferencia = this.itemsBodegaTransferenciaGhost;
+    }
+  
+  }
 
 
-  _show_img: boolean = false;
-  _show_table: boolean = false;
+  
   obtenerMaquinaria(option:number) {
     this._show_spinner = true;
 
@@ -157,7 +316,8 @@ export class ProductosBodegaComponent implements OnInit {
 
     this.maquinaria.ObtenerMaquinasSinBodega(this.ccia, option).subscribe({
       next: (maquinas) => {
-        this.maquinariaLista = maquinas
+        this.maquinariaLista = maquinas;
+        this.maquinariaListaGhost = maquinas;
         console.log('LISTA MAQUINARIA GUARDADO');
         console.log(this.maquinariaLista);
         this._show_spinner = false;
@@ -172,8 +332,7 @@ export class ProductosBodegaComponent implements OnInit {
       }
     })
   }
-  _btn_add: boolean = true;
-  nombodega: string = '';
+
   validationBodehaExist() {
     let data = this.maquinabodegaForm.controls['nombre'].value;
     this.codBodega = data.id;
@@ -181,10 +340,94 @@ export class ProductosBodegaComponent implements OnInit {
     this._btn_add = false;
   }
   
+  listaprocesotransferencia: any = [];
+  ordenesTransferenciaLista:any = [];
+  ProcesoTransdferenciaBod (codprod:string,state:number) {
 
-  modelItemBodega: any = [];
-  codBodega: number = 0;
-  detalle: string = '';
+
+
+    if ( this.modtransferstate == 0  ) {
+      Swal.fire(
+        '¿No haz entrado al modo de transferencia?',
+        'Para agregar a la pretransferencia necesitas escojer bodega de entrada. Ingresa dando click derecho al producto guardado y escoje la opción Transferir.',
+        'question'
+      )
+    }
+    else if ( this.modtransferstate = 1 ) {
+
+      this._show_spinner = true;
+      let xuser: any = sessionStorage.getItem('UserCod');
+      this.listaprocesotransferencia = {
+        "codprod": codprod,
+        "state":   state,
+        "cuser":   xuser,
+        "boden":   this.bodegasFormTransfer.controls['bodegaentrada'].value | 0,
+        "bodsal":  this.codigobodegaselect,
+        "ccia":    this.ccia
+      }
+  
+      this.maqbodega.ProcesoTransdferenciaBod(this.listaprocesotransferencia).subscribe({
+        next:(x)=>{
+          console.warn('Transferencia entre bodegas ha sido exitosa')
+          this._show_spinner = false;
+          this.ordenesTransferenciaLista = x;
+          if( state == 1 ) {
+            Swal.fire(
+              'Agregado a la pretransferencia ',
+              '',
+              'success'
+            )
+          }else if ( state == 2 ) {
+            Swal.fire(
+              'Transferencia exitosa!',
+              this.itemsBodegaTransferencia.length + ' producto(s) transferidos de la bodega ' + this.codigobodegaselect + ' hacia la bodega ' + this.bodegasFormTransfer.controls['bodegaentrada'].value,
+              'success'
+            )
+          }
+        }, error: (e) => {
+          console.error(e);
+          this._show_spinner = false;
+          
+          if( state == 1) {
+            Swal.fire(
+              '¿No haz entrado al modo de transferencia?',
+              'Para agregar a la pretransferencia necesitas escojer bodega de entrada. Ingresa dando click derecho al producto guardado y escoje la opción Transferir.',
+              'question'
+            )            
+          } else if (state == 2) {
+            Swal.fire(
+              'Oops!',
+              'Algo ha ocurrido con la transferencia',
+              'error'
+            )
+          }
+        }, complete: () => {
+          this.obtenerItemsBodTransferencia();
+          this.obtenerItems();
+          this.validationTransfrBod();
+          // if     ( state == 0 ) this._dis_button_transfer = false;
+          // else if( state == 1 ) this._dis_button_transfer = false;
+          // else if( state == 2 ) this._dis_button_transfer = true;
+        }
+      })
+    }    
+  }
+
+  _select_lote: boolean = false;
+  _show_transfer: boolean = false;
+  modoTransferencia() {
+    this._select_lote = true;
+    this._show_transfer = true;    
+    this.bodegasFormTransfer.controls['bodegasalida'].setValue(this.bodegaselect);
+    const arrayval: any = [];    
+    this.filteredBodegas.filter((element:any)=>{
+      if(element.id !== this.codigobodegaselect) {
+        arrayval.push(element);
+      }
+    }) 
+    this.filteredBodegas = arrayval;
+  }
+
   guardarAsignacion(data:any) {
 
     if ( this.codBodega == 0 ) {
@@ -195,12 +438,14 @@ export class ProductosBodegaComponent implements OnInit {
       )
     }
     else {
+      this._show_spinner = true;
       let xuser: any = sessionStorage.getItem('UserCod');
       this.modelItemBodega = {
         codmaquinaria: data.codmaquina,
         codbodega:     this.codBodega,
         fecrea:        new Date(),
-        coduser:       xuser
+        coduser:       xuser,
+        estado:        0
       }
 
       setTimeout(()=>{
@@ -215,6 +460,8 @@ export class ProductosBodegaComponent implements OnInit {
             title: 'Item: '+data.nombremaquina+' agregada'
           })
 
+          this._show_spinner = false;
+
         },error: (e) => {
           console.error(e);
           Swal.fire(
@@ -222,7 +469,10 @@ export class ProductosBodegaComponent implements OnInit {
             'El item no se ha podido guardar',
             'error'
           )
-        },complete: () => { 
+
+          this._show_spinner = false;
+        },
+        complete: () => {           
           this.obtenerMaquinaria(this.selectViewState);
           this.obtenerBodegas();
           this.limpiar();
@@ -231,24 +481,30 @@ export class ProductosBodegaComponent implements OnInit {
     }
   }
 
-  filterMaquinariasBodegas() {
-    
-    console.warn(this.searchMaqTerm);
-
-    if (this.searchMaqTerm) {
-      this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost.filter((maquina:any) =>
-          maquina.nombremaquina.toLowerCase()
-                 .includes(this.searchMaqTerm.toLowerCase()) ||
-          maquina.modelo.toLowerCase()
-                 .includes(this.searchMaqTerm.toLowerCase()) ||
-          maquina.nserie.toLowerCase()
-                 .includes(this.searchMaqTerm.toLowerCase()) ||
-          maquina.tipoMaquinas.toLowerCase().includes(this.searchMaqTerm.toLowerCase())
+  filterMaquinariasBodegas(searchTerm: string) {
+  
+    if (searchTerm) {
+      this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost.filter((maquina: any) =>
+        maquina.nombremaquina.toLowerCase()
+               .includes(searchTerm.toLowerCase()) ||
+        maquina.modelo.toLowerCase()       
+               .includes(searchTerm.toLowerCase()) ||
+        maquina.nserie.toLowerCase()       
+               .includes(searchTerm.toLowerCase()) ||
+        maquina.tipoMaquinas.toLowerCase() 
+               .includes(searchTerm.toLowerCase())
       );
-    } else {
+      console.log('listaMaquinaBodegas filtrando');
+      console.log(this.listaMaquinaBodegas);
+    } else {      
       this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost;
+      console.log('listaMaquinaBodegas devuelve todo');
+      console.log(this.listaMaquinaBodegas);
     }
   }
+  
+  
+   
 
   eliminarItemBodega(data:any) {
     Swal.fire({
@@ -282,7 +538,6 @@ export class ProductosBodegaComponent implements OnInit {
             )
           }, complete: () => {
             this.obtenerItems();
-            // this.actualizarCantidadItems(this.codBodega)
             this.obtenerMaquinaria(this.selectViewState);
             this.obtenerBodegas();
             this.limpiar();
@@ -324,11 +579,38 @@ export class ProductosBodegaComponent implements OnInit {
 
   }
 
-  listaMaquinaBodegasGhost: any = [];
-  listaMaquinaBodegas: any = [];
-  _width_boxb: string = '50%';
-  _img_bodegas: boolean = true;
-  _view_palets: boolean = false;
+  itemsBodegaTransferencia: any = [];
+  itemsBodegaTransferenciaGhost: any = [];
+  obtenerItemsBodTransferencia() {
+    this._show_spinner = true;
+    console.log(this.codigobodegaselect);
+
+    if( this.itemsBodegaTransferencia.length < 1 ) {
+
+      this._dis_button_transfer = true;
+
+    }
+
+    // let data = this.maquinabodegaForm.controls['nombre'].value;
+    this.maqbodega.obtenerItemsBodega( this.codigobodegaselect, 1 ).subscribe({
+
+      next:(itemstransfer) => {
+        this.itemsBodegaTransferenciaGhost = itemstransfer;
+        this.itemsBodegaTransferencia = itemstransfer;
+        console.log(this.itemsBodegaTransferencia.length);
+        this._show_spinner = false;
+      },error: (e) => {
+        console.error(e);
+        this._show_spinner = false;
+      },complete: () => {
+        this.validationTransfrBod();
+      }
+
+    })
+  }
+
+  bodegaselect: string = ''
+  codigobodegaselect: number = 0;
   obtenerItems() {
 
     this._boxa                    = false;
@@ -338,12 +620,12 @@ export class ProductosBodegaComponent implements OnInit {
     this.listaMaquinaBodegasGhost = [];
     this.listaMaquinaBodegas      = [];
     let data = this.maquinabodegaForm.controls['nombre'].value
-    this.maqbodega.obtenerItemsBodega( data.id ).subscribe({
-      
+    this.bodegaselect = data.nombrebodega;
+    this.codigobodegaselect = data.id;
+    this.obtenerItemsBodTransferencia()
+    this.maqbodega.obtenerItemsBodega( data.id, 0 ).subscribe({      
       next: (itemsBodega) => {        
         this.listaMaquinaBodegasGhost = itemsBodega;
-        console.warn('listaMaquinaBodegasGhost');
-        console.warn(this.listaMaquinaBodegasGhost);
         this.listaMaquinaBodegasGhost.filter( (element:any) => {
 
           let array = {            
@@ -356,18 +638,17 @@ export class ProductosBodegaComponent implements OnInit {
               "fecrea":               element.fecre,
               "codmaquinariabodega":  element.codmaquinariabodega,
               "coduser":              element.coduser,
-              "menuAbierto":          false
+              "menuAbierto":          false,
+              "estado":               element.estado
           }
 
           this.listaMaquinaBodegas.push(array);
 
         }) 
-
-        console.warn(this.listaMaquinaBodegas);
-
       }
     })
   }
+
 
   codmaquinaria: string = '';
   openMenu(event: MouseEvent, item: any): void {
@@ -390,7 +671,6 @@ export class ProductosBodegaComponent implements OnInit {
 
   }
 
-  listMaquinaUnit: any = [];
   verDetallePalets(option:number) {
 
     switch(option) {
