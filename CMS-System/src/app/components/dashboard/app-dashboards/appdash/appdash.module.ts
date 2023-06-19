@@ -62,6 +62,8 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
 import { KardexTransferenciaComponent } from '../bodegas/kardex-transferencia/kardex-transferencia.component';
 import { EmpresaComponent } from '../empresa/empresa.component';
+import { ConfiguracionComponent } from '../configuracion/configuracion.component';
+import { AsignModUserComponent } from '../configuracion/asign-mod-user/asign-mod-user.component';
 
 @NgModule({
   declarations: [
@@ -76,7 +78,9 @@ import { EmpresaComponent } from '../empresa/empresa.component';
     CrearBodegasComponent,
     ProductosBodegaComponent,
     KardexTransferenciaComponent,
-    EmpresaComponent
+    EmpresaComponent,
+    ConfiguracionComponent,
+    AsignModUserComponent
   ],
   imports: [
     CommonModule,
@@ -142,7 +146,9 @@ import { EmpresaComponent } from '../empresa/empresa.component';
     BodegasComponent,
     ProductosBodegaComponent,
     KardexTransferenciaComponent,
-    EmpresaComponent
+    EmpresaComponent,
+    ConfiguracionComponent,
+    AsignModUserComponent
   ]
 })
 export class AppdashModule { }

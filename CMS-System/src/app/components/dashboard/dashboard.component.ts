@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   _agencias: boolean = false;
   _perfil_usuario: boolean = false;
   _bodegas: boolean = false;
+  _configuracion: boolean = false;
 
   constructor( private dash: DashboardService, private log: LoginService ) { }
 
@@ -42,6 +43,7 @@ export class DashboardComponent implements OnInit {
         this._maquinaria = false;
         this._perfil_usuario = false;
         this._bodegas = false;
+        this._configuracion = false;
         break;
       case 'Cobertura Técnica':
         this._usuario    = false;
@@ -51,6 +53,7 @@ export class DashboardComponent implements OnInit {
         this._agencias   = false;
         this._perfil_usuario = false;
         this._bodegas = false;
+        this._configuracion = false;
         break;
       case 'Clientes':
         this._usuario    = false;
@@ -61,6 +64,7 @@ export class DashboardComponent implements OnInit {
         this._maquinaria = false;
         this._perfil_usuario = false;
         this._bodegas = false;
+        this._configuracion = false;
         break;
       case 'Agencias':
         this._usuario    = false;
@@ -71,6 +75,7 @@ export class DashboardComponent implements OnInit {
         this._maquinaria = false;        
         this._perfil_usuario = false;
         this._bodegas = false;
+        this._configuracion = false;
         break;
       case 'Maquinaria':
         this._usuario    = false;
@@ -81,6 +86,7 @@ export class DashboardComponent implements OnInit {
         this._maquinaria = true;
         this._perfil_usuario = false;
         this._bodegas = false;
+        this._configuracion = false;
         break;
       case 'Perfil':
         this._usuario    = false;
@@ -91,6 +97,7 @@ export class DashboardComponent implements OnInit {
         this._maquinaria = false;
         this._perfil_usuario = true;
         this._bodegas = false;
+        this._configuracion = false;
         break;
       case 'Bodegas Virtuales':
         this._usuario    = false;
@@ -101,6 +108,18 @@ export class DashboardComponent implements OnInit {
         this._maquinaria = false;
         this._perfil_usuario = false;
         this._bodegas = true;
+        this._configuracion = false;
+        break;
+      case 'Configuración':
+        this._usuario    = false;
+        this._dashboard  = false;
+        this._asignacion = false;
+        this._clientes   = false;
+        this._agencias   = false;
+        this._maquinaria = false;
+        this._perfil_usuario = false;
+        this._bodegas = false;
+        this._configuracion = true;
         break;
     }
   }

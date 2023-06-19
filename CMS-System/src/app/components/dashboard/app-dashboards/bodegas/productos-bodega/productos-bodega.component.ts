@@ -597,6 +597,9 @@ selectedOption: any;
       next:(itemstransfer) => {
         this.itemsBodegaTransferenciaGhost = itemstransfer;
         this.itemsBodegaTransferencia = itemstransfer;
+        console.warn('xxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        console.warn(this.itemsBodegaTransferencia);
+        console.warn('xxxxxxxxxxxxxxxxxxxxxxxxxxx');
         console.log(this.itemsBodegaTransferencia.length);
         this._show_spinner = false;
       },error: (e) => {
@@ -644,7 +647,10 @@ selectedOption: any;
 
           this.listaMaquinaBodegas.push(array);
 
-        }) 
+        })
+        
+        console.warn(this.listaMaquinaBodegas);
+
       }
     })
   }

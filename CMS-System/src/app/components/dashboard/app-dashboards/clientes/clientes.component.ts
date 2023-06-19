@@ -57,6 +57,8 @@ export class ClientesComponent implements OnInit {
     tipo:                 new FormControl(''),
     nombreMantenimiento:  new FormControl(''),
     nombrePago:          new FormControl(''),
+    extension1:          new FormControl(''),
+    extension2:          new FormControl(''),
   })
 
   constructor( private client: ClienteService,private DataMaster: SharedService  ) { }
@@ -99,6 +101,8 @@ export class ClientesComponent implements OnInit {
     this.clienteForm.controls['tipo'].setValue('');
     this.clienteForm.controls['nombreMantenimiento'].setValue('');
     this.clienteForm.controls['nombrePago'].setValue('');
+    this.clienteForm.controls['extension1'].setValue('');
+    this.clienteForm.controls['extension2'].setValue('');
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;
@@ -173,7 +177,9 @@ export class ClientesComponent implements OnInit {
       NombreMantenimiento : this.clienteForm.controls['nombreMantenimiento'].value,
       nombrePago :         this.clienteForm.controls['nombrePago'].value,
       Nombre :              this.clienteForm.controls['nombre'].value,
-      Tipo :                this.clienteForm.controls['tipo'].value
+      Tipo :                this.clienteForm.controls['tipo'].value,
+      extension1 :                this.clienteForm.controls['extension1'].value,
+      extension2 :                this.clienteForm.controls['extension2'].value
     }
 
     console.warn( this.modelCliente );
@@ -294,6 +300,8 @@ export class ClientesComponent implements OnInit {
     this.clienteForm.controls['tipo']               .setValue(data.tipo);
     this.clienteForm.controls['nombreMantenimiento'].setValue(data.nombreMantenimiento),
     this.clienteForm.controls['nombrePago']        .setValue(data.nombrePago),
+    this.clienteForm.controls['extension1']        .setValue(data.extension1),
+    this.clienteForm.controls['extension2']        .setValue(data.extension2),
     this.codcli         = data.codcliente;
     this._icon_button   = 'sync_alt';
     this._action_butto  = 'Actualizar';
@@ -327,7 +335,9 @@ export class ClientesComponent implements OnInit {
         Coduser :             userSession,
         Codcia :              this.ccia,
         Nombre :              this.clienteForm.controls['nombre'].value,
-        Tipo :                this.clienteForm.controls['tipo'].value
+        Tipo :                this.clienteForm.controls['tipo'].value,
+        extension2 :                this.clienteForm.controls['extension2'].value,
+        extension1 :                this.clienteForm.controls['extension1'].value
       }
       this._show_spinner = true;
       this.client.editaCLientes( this.codcli, this.ccia, this.modelCliente ).subscribe({

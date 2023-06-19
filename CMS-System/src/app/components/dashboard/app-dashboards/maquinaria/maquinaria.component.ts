@@ -36,7 +36,7 @@ export class MaquinariaComponent implements OnInit {
   _action_butto:      string = 'Crear';
   ccia:               any;
   _show_spinner:      boolean = false; 
-  columnHead:         any = [ 'edit', 'nombretipomaquina', 'nombre', 'modelo', 'marca', 'ninventario', 'nserie', 'codigobp', 'cont', 'observacion' ];
+  columnHead:         any = [ 'edit', 'nombretipomaquina', 'modelo', 'marca', 'ninventario', 'nserie', 'codigobp', 'continicial', 'contfinal', 'observacion' ];
   public dataSource!: MatTableDataSource<any>;
 
   @Input() modulo: any = [];
@@ -47,7 +47,6 @@ export class MaquinariaComponent implements OnInit {
 
 
   public maquinariaForm = new FormGroup({
-    nombremaquina:               new FormControl(''),
     observacion:                 new FormControl(''),
     modelo:                      new FormControl(''),
     marca:                       new FormControl(''),
@@ -55,7 +54,8 @@ export class MaquinariaComponent implements OnInit {
     ninventario:                 new FormControl(''),
     codtipomaquina:              new FormControl(''),
     codigobp:                    new FormControl(''),
-    contador:                    new FormControl('') 
+    contadorinicial:             new FormControl(),
+    contadorfinal:               new FormControl() 
   })
 
   constructor( private DataMaster: SharedService, private maquinaria: MaquinariaService ) { }
@@ -108,18 +108,17 @@ export class MaquinariaComponent implements OnInit {
   modelMaquinaria: any = [];
   guardarMaquinaria() {
 
-    if ( this.maquinariaForm.controls['nombremaquina'].value == undefined || this.maquinariaForm.controls['nombremaquina'].value == null || this.maquinariaForm.controls['nombremaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El nombre de la maquinaria no debe estar vacío' })
-    else if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
+    if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
     else if ( this.maquinariaForm.controls['modelo'].value == undefined || this.maquinariaForm.controls['modelo'].value == null || this.maquinariaForm.controls['modelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
     else if ( this.maquinariaForm.controls['marca'].value == undefined || this.maquinariaForm.controls['marca'].value == null || this.maquinariaForm.controls['marca'].value == ''  )  Toast.fire({ icon: 'warning', title: 'La marca de la maquina no debe estar vacío' })
     else {
-    this._show_spinner = true;
-    const cliente = this.maquinariaForm.controls['nombremaquina'].value.toString().replace(' ', '_').slice(0,6);
-    const token: string = 'MAQ-'+cliente+'-'+this.DataMaster.generateRandomString(15);
+      this._show_spinner = true;
+      const cliente = this.maquinariaForm.controls['codtipomaquina'].value;
+      const token: string = 'MAQ-'+cliente+'-'+this.DataMaster.generateRandomString(15);
     
     
     this.maquinariaModel = {
-      nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
+      // nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
       codtipomaquina: this.maquinariaForm.controls['codtipomaquina'].value.trim(),
       codmaquina: token,
       modulo: this.modulo.nombre,
@@ -129,7 +128,6 @@ export class MaquinariaComponent implements OnInit {
 
     this.modelMaquinaria = {
       "codmaquina": token,
-      "nombremaquina":  this.maquinariaForm.controls['nombremaquina'].value,
       "codtipomaquina": this.maquinariaForm.controls['codtipomaquina'].value.trim(),
       "observacion":    this.maquinariaForm.controls['observacion'].value,
       "modelo":         this.maquinariaForm.controls['modelo'].value,
@@ -140,7 +138,8 @@ export class MaquinariaComponent implements OnInit {
       "codusercrea" :   this.xuser, 
       "feccrea"  :      new Date(),
       "codcia"      :   this.ccia,
-      "contador":       this.maquinariaForm.controls['contador'].value
+      "contadorinicial":       this.maquinariaForm.controls['contadorinicial'].value,
+      "contadorfinal":       this.maquinariaForm.controls['contadorfinal'].value
     }
 
     console.warn('MAQUINARIA');
@@ -172,15 +171,15 @@ export class MaquinariaComponent implements OnInit {
   }
 
   editarMaquinaria() {
-    if ( this.maquinariaForm.controls['nombremaquina'].value == undefined || this.maquinariaForm.controls['nombremaquina'].value == null || this.maquinariaForm.controls['nombremaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El nombre de la maquinaria no debe estar vacío' })
-    else if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
+    
+    if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
     else if ( this.maquinariaForm.controls['modelo'].value == undefined || this.maquinariaForm.controls['modelo'].value == null || this.maquinariaForm.controls['modelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
     else if ( this.maquinariaForm.controls['marca'].value == undefined || this.maquinariaForm.controls['marca'].value == null || this.maquinariaForm.controls['marca'].value == ''  )  Toast.fire({ icon: 'warning', title: 'La marca de la maquina no debe estar vacío' })
     else {
     this._show_spinner = true;
     
     this.maquinariaModel = {
-      nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
+      // nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
       codtipomaquina: this.maquinariaForm.controls['codtipomaquina'].value.trim(),
       codmaquina: this.codmaquinaria,
       modulo: this.modulo.nombre,
@@ -190,7 +189,6 @@ export class MaquinariaComponent implements OnInit {
 
     this.modelMaquinaria = {
       "codmaquina":     this.codmaquinaria,
-      "nombremaquina":  this.maquinariaForm.controls['nombremaquina'].value,
       "codtipomaquina": this.maquinariaForm.controls['codtipomaquina'].value.trim(),
       "observacion":    this.maquinariaForm.controls['observacion'].value,
       "modelo":         this.maquinariaForm.controls['modelo'].value,
@@ -201,7 +199,8 @@ export class MaquinariaComponent implements OnInit {
       "codusercrea" :   this.xuser, 
       "feccrea"  :      new Date(),
       "codcia"      :   this.ccia,
-      "contador":       this.maquinariaForm.controls['contador'].value
+      "contadorinicial":       this.maquinariaForm.controls['contadorinicial'].value,
+      "contadorfinal":       this.maquinariaForm.controls['contadorfinal'].value
     }
 
     console.warn('MAQUINARIA');
@@ -302,14 +301,13 @@ export class MaquinariaComponent implements OnInit {
   catchData(data: any) {
 
     this.maquinariaModel = {
-      nombreMaquina: data.nombremaquina,
+      // nombreMaquina: data.nombremaquina,
       codtipomaquina: data.codtipomaquina.trim(),
       codmaquina: data.codmaquina,
       modulo: this.modulo.nombre,
       state: 2
     };
     
-    this.maquinariaForm.controls['nombremaquina'].setValue(data.nombremaquina);
     this.maquinariaForm.controls['codtipomaquina'].setValue(data.codtipomaquina.trim());
     this.maquinariaForm.controls['observacion'].setValue(data.observacion);
     this.maquinariaForm.controls['modelo'].setValue(data.modelo);
@@ -317,6 +315,8 @@ export class MaquinariaComponent implements OnInit {
     this.maquinariaForm.controls['nserie'].setValue(data.nserie);
     this.maquinariaForm.controls['ninventario'].setValue(data.ninventario);
     this.maquinariaForm.controls['codigobp'].setValue(data.codigobp);
+    this.maquinariaForm.controls['contadorinicial'].setValue(data.contadorinicial);
+    this.maquinariaForm.controls['contadorfinal'].setValue(data.contadorfinal);
     this.codmaquinaria  = data.codmaquina;
     this._icon_button   = 'sync_alt';
     this._action_butto  = 'Actualizar';
@@ -326,7 +326,7 @@ export class MaquinariaComponent implements OnInit {
 
   limpiar() {
   
-    this.maquinariaForm.controls['nombremaquina'].setValue('');
+    // this.maquinariaForm.controls['nombremaquina'].setValue('');
     this.maquinariaForm.controls['codtipomaquina'].setValue('');
     this.maquinariaForm.controls['observacion'].setValue('');
     this.maquinariaForm.controls['modelo'].setValue('');
@@ -334,6 +334,8 @@ export class MaquinariaComponent implements OnInit {
     this.maquinariaForm.controls['nserie'].setValue('');
     this.maquinariaForm.controls['ninventario'].setValue('');
     this.maquinariaForm.controls['codigobp'].setValue('');
+    this.maquinariaForm.controls['contadorinicial'].setValue(0);
+    this.maquinariaForm.controls['contadorfinal'].setValue(0);
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;

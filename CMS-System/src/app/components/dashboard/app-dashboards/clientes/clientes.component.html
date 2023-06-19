@@ -3,6 +3,7 @@
       <mat-spinner></mat-spinner>
     </div>
 </div>
+
 <div class="module-workarea p-4 ">
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
@@ -70,7 +71,10 @@
                         <br>
                         <small class="text-secondary">Teléfono de la persona encargada del mantenimiento por parte del cliente.</small>
                     </label>
-                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfclimanteni', 'N')"  formControlName="telfclimanteni" #telfclimanteni id="telfclimanteni" placeholder="0987654321">
+                    <div class="d-flex">
+                        <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfclimanteni', 'N')"  formControlName="telfclimanteni" #telfclimanteni id="telfclimanteni" placeholder="0987654321">
+                        <input type="text" style="width: 80px;" class="form-control" (keyup)="validarCadena($event, 'extension1', 'N')"  formControlName="extension1" #extension1 id="extension1" placeholder="Ext.:141">
+                    </div>
                 </div>
                 <div class="m-2 col-4 ">
                     <label for="correomantenimiento" class="form-label   ">
@@ -79,6 +83,7 @@
                         <small class="text-secondary">Email de la persona encargada del mantenimiento por parte del cliente.</small>
                     </label>
                     <input type="email" class="form-control" formControlName="correomantenimiento" #correomantenimiento id="correomantenimiento" placeholder="mateni@mail.com">
+                    
                 </div>
             </div>
             <div  class=" d-flex justify-content-start  flex-wrap    "  >
@@ -96,7 +101,10 @@
                         <br>
                         <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small>
                     </label>
-                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'ruc', 'N')"  formControlName="telfpago" #telfpago id="telfpago" placeholder="0987654321">
+                    <div class="d-flex">
+                        <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfpago', 'N')"  formControlName="telfpago" #telfpago id="telfpago" placeholder="0987654321">
+                        <input type="text" style="width: 80px;" class="form-control" (keyup)="validarCadena($event, 'extension2', 'N')"  formControlName="extension2" #extension2 id="extension2" placeholder="Ext.:182">
+                    </div>
                 </div>
                 <div class="m-2 col-4 ">
                     <label for="telfpago" class="form-label   ">
@@ -225,7 +233,7 @@
                 </th>
                 <td style="cursor: pointer;" mat-cell 
                     *matCellDef="let row" 
-                    [matTooltip]="'Nombre Mant.: ' +row.nombreMantenimiento+ '  Telf Mant.: ' + row.telfclimanteni +'  Correo: '+ row.correomantenimiento +'Nombre Cobro:  ' +row.nombrePago+  '   Telf. Cobro: ' + row.telfpago + '    Correo: ' + row.correopago + ' Observacion: ' + row.observacion">
+                    [matTooltip]="'Nombre Mant.: ' +row.nombreMantenimiento+ '  Telf Mant.: ' + row.telfclimanteni + '-Ext.: ' + row.extension1 + '  Correo: '+ row.correomantenimiento +'Nombre Cobro:  ' +row.nombrePago+  '   Telf. Cobro: ' + row.telfpago + '-Ext.: ' + row.extension2 + '    Correo: ' + row.correopago + ' Observacion: ' + row.observacion">
                   {{row.nombre}}
                 </td>
             </ng-container>

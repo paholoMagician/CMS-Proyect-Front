@@ -27,13 +27,20 @@
             </div>
             <hr>
             <div  class="form-agency animate__animated animate__fadeInLeft " *ngIf="_show_form_agency"  >
-                
-                <div class="mb-3 col-6 ">
-                    <label for="nombre" class="form-label   ">
-                        Nombre de agencia <span class="text-danger">*</span>
-                    </label>
-                    <input type="text" class="form-control" 
-                           formControlName="nombre" #nombre id="nombre" placeholder="Agencia 1">
+                <div class="d-flex justify-content-between  flex-wrap" >
+                    <div class="mb-3 col-6 ">
+                        <label for="nombre" class="form-label   ">
+                            Nombre de agencia <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control" 
+                               formControlName="nombre" #nombre id="nombre" placeholder="Agencia 1">
+                    </div>
+                    <div class="mb-3 col-0 ">
+                        <label for="centrocostos" class="form-label   ">
+                            Centro de costos 
+                        </label>
+                        <input type="text" class="form-control" formControlName="centrocostos" #centrocostos id="centrocostos" placeholder="0">
+                    </div>
                 </div>
                 <div class="d-flex justify-content-between  flex-wrap" >
                     <div class="mb-3 col-5 ">
@@ -318,6 +325,16 @@
                 </td>
             </ng-container>
     
+            <ng-container matColumnDef="centrocostos" >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Centrocostos
+                </th>
+                <td style="cursor: pointer;" mat-cell 
+                    *matCellDef="let row">
+                  {{row.centrocostos}}
+                </td>
+            </ng-container>
+            
             <ng-container matColumnDef="mantenimiento" >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Frecuencia M.

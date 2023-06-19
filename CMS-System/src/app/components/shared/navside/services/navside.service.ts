@@ -17,9 +17,9 @@ export class NavsideService {
     return this.http.get( this.url + 'modulos/GetModulos/' + userCod );
   }
 
-  getUser(userCod: string) {
-    return this.http.get( this.url + 'User/GetModulos/' + userCod );
-  }
+  // getUser(userCod: string) {
+  //   return this.http.get( this.url + 'User/GetModulos/' + userCod );
+  // }
 
   obtenerImagen(cuser: string, tipo: string) {
     return this.http.get( this.url + 'Imagen/obtenerImagen/' + cuser + '/' + tipo );

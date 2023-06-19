@@ -65,7 +65,7 @@ export class NavsideComponent implements OnInit {
         },
         complete: () => {
           console.log(this.modulosLista);
-          this.getUser(this.codUser);
+          // this.getUser(this.codUser);
           let x: any = localStorage.getItem('imgperfil'); 
           if( x == undefined || x == null || x == '' ) {
             // alert('consumiremos la api')
@@ -85,11 +85,11 @@ export class NavsideComponent implements OnInit {
 
 
   
-  getUser(user: string) {
-    this.Shared.getUser(user).subscribe( x => {
-      console.log(x)
-    })
-  }
+  // getUser(user: string) {
+  //   this.Shared.getUser(user).subscribe( x => {
+  //     console.log(x)
+  //   })
+  // }
 
   data: boolean = true;
   constrolNavside() {

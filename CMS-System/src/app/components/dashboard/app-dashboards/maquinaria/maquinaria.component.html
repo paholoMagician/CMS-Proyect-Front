@@ -14,7 +14,7 @@
     <div class="form-section">
         <form [formGroup]="maquinariaForm" class="mb-2" (ngSubmit)="onSubmit()">
             <div class="d-flex justify-content-between " >
-                <div class="mb-3 col-7 ">
+                <!-- <div class="mb-3 col-7 ">
                     <label for="nombremaquina" class="form-label   ">
                         Nombre de la Maquinaria <span class="text-danger">*</span>
                     </label>
@@ -22,6 +22,18 @@
                            formControlName="nombremaquina" 
                            #nombremaquina id="nombremaquina"
                            placeholder="Newton R12...">
+                </div> -->
+                <div class="mb-3 col-4  ">
+                    <label for="codtipomaquina" class="form-label ">
+                        Tipo de Maquinaria:<span class="text-danger">*</span> <br>
+                        <!-- <small class="text-secondary" > Categoriza la máquina seleccionando un tipo. </small>   -->
+                    </label>
+                    <select class="inpForms form-select   w-100"
+                            formControlName="codtipomaquina" #codtipomaquina id="codtipomaquina" aria-label="">
+                            <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo" >
+                                {{tipomaquina.nombre | titlecase }}                                
+                            </option>
+                    </select>
                 </div>
                 <div class="mb-3 col-3 ">
                     <label for="modelo" class="form-label   ">
@@ -32,8 +44,6 @@
                            #marca id="modelo"
                            placeholder="125521A...">
                 </div>
-            </div>
-            <div class="d-flex justify-content-between align-item-start ">
                 <div class="mb-3 col-2 ">
                     <label for="nombre" class="form-label   ">
                         Marca <span class="text-danger">*</span>
@@ -43,6 +53,8 @@
                            #marca id="marca"
                            placeholder="MT-125521A...">
                 </div>
+            </div>
+            <div class="d-flex justify-content-between align-item-start ">
                 <div class="mb-3 col-2 ">
                     <label for="nombre" class="form-label   ">
                         Número de Serie <span class="text-danger">*</span>
@@ -72,29 +84,27 @@
                            placeholder="00012-B">
                 </div>
                 <div class="mb-3 col-2 ">
-                    <label for="nombre" class="form-label   ">
-                        Contador. 
+                    <label for="contadorinicial" class="form-label   ">
+                        Contador Inicial: 
                     </label>
                     <input type="number" class="form-control" 
-                           formControlName="contador" 
-                           #codigobp id="contador"
+                           formControlName="contadorinicial" 
+                           #contadorinicial id="contadorinicial"
+                           placeholder="0">
+                </div>
+                <div class="mb-3 col-2 ">
+                    <label for="contadorfinal" class="form-label   ">
+                        Contador Final: 
+                    </label>
+                    <input type="number" class="form-control" 
+                           formControlName="contadorfinal" 
+                           #contadorfinal id="contadorfinal"
                            placeholder="0">
                 </div>
             </div>
             <div class="d-flex justify-content-between align-item-start ">
-                <div class="mb-3 col-4  ">
-                    <label for="codtipomaquina" class="form-label ">
-                        Tipo de Maquinaria:<span class="text-danger">*</span> <br>
-                        <!-- <small class="text-secondary" > Categoriza la máquina seleccionando un tipo. </small>   -->
-                    </label>
-                    <select class="inpForms form-select   w-100"
-                            formControlName="codtipomaquina" #codtipomaquina id="codtipomaquina" aria-label="">
-                            <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo" >
-                                {{tipomaquina.nombre | titlecase }}                                
-                            </option>
-                    </select>
-                </div>
-                <div class="mb-3 col-6 ">
+                
+                <div class="mb-3 w-100">
                     <label for="nombre" class="form-label   ">
                         Observación técnica de la máquina. 
                     </label>
@@ -136,7 +146,7 @@
 
 <div class="module-workarea p-4 mt-3 ">
     <div class="text-secondary d-flex align-item-center m-0 p-0">
-         <mat-icon>{{modulo.icono}}</mat-icon><span class="fs-5" > {{modulo.nombre}} Registrados  </span>
+         <mat-icon>{{modulo.icono}}</mat-icon><span class="fs-5" > {{modulo.nombre}} Registrada  </span>
     </div>
     <hr>
     <div class="table-responsive w-100">
@@ -200,18 +210,6 @@
                 </td>
             </ng-container>
     
-            <ng-container matColumnDef="nombre" >
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Nombre
-                </th>
-                <!-- [matTooltip]="'Nombre Mant.: ' +row.nombreMantenimiento+ '  Telf Mant.: ' + row.telfclimanteni +'  Correo: '+ row.correomantenimiento +'Nombre Cobro:  ' +row.nombrePago+  '   Telf. Cobro: ' + row.telfpago + '    Correo: ' + row.correopago + ' Observacion: ' + row.observacion" -->
-                <td style="cursor: pointer;" mat-cell 
-                    *matCellDef="let row" 
-                    >
-                  {{row.nombremaquina}}
-                </td>
-            </ng-container>
-    
             <ng-container matColumnDef="modelo" >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Modelo
@@ -272,14 +270,25 @@
                 </td>
             </ng-container>
     
-            <ng-container matColumnDef="cont">
+            <ng-container matColumnDef="continicial">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                    Contador
+                    Contador Inicial
                 </th>
-                <td style="cursor: pointer;" mat-cell 
+                <td style="cursor: pointer; color: yellowgreen; " mat-cell 
                     *matCellDef="let row" 
                     >
-                  {{row.contador}}
+                  {{row.contadorinicial}}
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="contfinal">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    Contador Final
+                </th>
+                <td style="cursor: pointer; color: orange; " mat-cell 
+                    *matCellDef="let row" 
+                    >
+                  {{row.contadorfinal}}
                 </td>
             </ng-container>
     

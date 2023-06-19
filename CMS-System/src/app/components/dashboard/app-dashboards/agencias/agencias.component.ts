@@ -31,7 +31,7 @@ export class AgenciasComponent implements OnInit {
 
   _show_form_agency: boolean = false;
 
-  columnHead:         any = [ 'edit', 'nombreCliente', 'nombre', 'mantenimiento', 'horarioatenciond', 'horarioatenciondm', 'C.Maq.', 'tipoAgencia'];
+  columnHead:         any = [ 'edit', 'nombreCliente', 'nombre', 'centrocostos', 'mantenimiento', 'horarioatenciond', 'horarioatenciondm', 'C.Maq.', 'tipoAgencia'];
   public dataSource!: MatTableDataSource<any>;
   _cancel_button:     boolean = false;
   _icon_button:       string = 'add';
@@ -70,7 +70,8 @@ export class AgenciasComponent implements OnInit {
     estado:               new FormControl(''),
     codmachine:           new FormControl(''),
     codProv:              new FormControl(''),
-    codCanton:            new FormControl('')
+    codCanton:            new FormControl(''),
+    centrocostos:            new FormControl('')
 
   })
 
@@ -122,6 +123,7 @@ export class AgenciasComponent implements OnInit {
     this.agenciaForm.controls['horarioatencionM2'].setValue('');
     this.agenciaForm.controls['horarioatencionM3'].setValue('');
     this.agenciaForm.controls['horarioatencionM4'].setValue('');
+    this.agenciaForm.controls['centrocostos'].setValue(0);
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;
@@ -243,6 +245,7 @@ export class AgenciasComponent implements OnInit {
       this.agenciaForm.controls['horarioatencionM2'].setValue(h3[1]);
       this.agenciaForm.controls['horarioatencionM3'].setValue(h4[0]);
       this.agenciaForm.controls['horarioatencionM4'].setValue(h4[1]);
+      this.agenciaForm.controls['centrocostos'].setValue(data.centrocostos);
       this.codagencia     = data.codagencia;
       this._icon_button   = 'sync_alt';
       this._action_butto  = 'Actualizar';
@@ -312,6 +315,7 @@ export class AgenciasComponent implements OnInit {
       Horarioatencionh:     this.agenciaForm.controls['horarioatencion3'] .value+':'+this.agenciaForm.controls['horarioatencion4'] .value,
       Horarioatenciondm:    this.agenciaForm.controls['horarioatencionM1'].value+':'+this.agenciaForm.controls['horarioatencionM2'].value,
       Horarioatencionhm:    this.agenciaForm.controls['horarioatencionM3'].value+':'+this.agenciaForm.controls['horarioatencionM4'].value,
+      centrocostos:              this.agenciaForm.controls['centrocostos'].value,
     }
 
     console.warn(this.modelAgencia);
@@ -385,6 +389,7 @@ export class AgenciasComponent implements OnInit {
       Horarioatencionh:     (this.agenciaForm.controls['horarioatencion3'].value || 0)+':'+(this.agenciaForm.controls['horarioatencion4'].value || 0),
       Horarioatenciondm:    (this.agenciaForm.controls['horarioatencionM1'].value || 0)+':'+(this.agenciaForm.controls['horarioatencionM2'].value || 0),
       Horarioatencionhm:    (this.agenciaForm.controls['horarioatencionM3'].value || 0)+':'+(this.agenciaForm.controls['horarioatencionM4'].value || 0),
+      centrocostos:            this.agenciaForm.controls['centrocostos'].value,
     }
 
     this.client.guardarAgencia(this.modelAgencia).subscribe({
