@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { UserService } from '../usuario/services/user.service';
 
 @Component({
   selector: 'app-configuracion',
@@ -6,9 +7,10 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./configuracion.component.scss']
 })
 export class ConfiguracionComponent implements OnInit {
-  
-  @Input() modulo: any = [];
+  ccia:               any;
   _show_spinner: boolean = false;
+  @Input() modulo: any = [];
+  listausuarios:any = [];
 
   _funcionalidad_list: any = [
 
@@ -20,9 +22,12 @@ export class ConfiguracionComponent implements OnInit {
 
   ];
 
-  constructor() { }
+  constructor( public usuario: UserService ) { }
 
   ngOnInit(): void {
+    // this.xuser = sessionStorage.getItem('UserCod');
+    this.ccia = sessionStorage.getItem('codcia');
+    // this.obtenerUsuariosEmpresa();
   }
   
   lista:any;
@@ -30,5 +35,7 @@ export class ConfiguracionComponent implements OnInit {
     this.lista = data;
     return this.lista;
   }
+
+
 
 }

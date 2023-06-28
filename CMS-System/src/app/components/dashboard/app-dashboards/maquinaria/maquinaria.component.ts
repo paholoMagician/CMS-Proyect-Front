@@ -6,6 +6,8 @@ import { SharedService } from 'src/app/components/shared/services/shared.service
 
 import Swal from 'sweetalert2'
 import { MaquinariaService } from './services/maquinaria.service';
+import { Console, error, warn } from 'console';
+import { ImagecontrolService } from 'src/app/components/shared/image-control/services/imagecontrol.service';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -27,6 +29,8 @@ const Toast = Swal.mixin({
 })
 export class MaquinariaComponent implements OnInit {
 
+  _IMGE:any;
+
   tipoMaquinaLista: any = []; 
   maquinariaLista: any = [];
 
@@ -36,7 +40,12 @@ export class MaquinariaComponent implements OnInit {
   _action_butto:      string = 'Crear';
   ccia:               any;
   _show_spinner:      boolean = false; 
-  columnHead:         any = [ 'edit', 'nombretipomaquina', 'modelo', 'marca', 'ninventario', 'nserie', 'codigobp', 'continicial', 'contfinal', 'observacion' ];
+
+  sgrupolista: any = [];
+  grupolista: any = [];
+  modeloActivo:   any = null;
+
+  columnHead:         any = [ 'edit', 'nombretipomaquina', 'marca', 'modelo', 'ninventario', 'nserie', 'codigobp', 'continicial', 'contfinal', 'observacion' ];
   public dataSource!: MatTableDataSource<any>;
 
   @Input() modulo: any = [];
@@ -44,7 +53,7 @@ export class MaquinariaComponent implements OnInit {
   dataEmitter: any = {};
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
-
+  modelMaquinaria: any = [];
 
   public maquinariaForm = new FormGroup({
     observacion:                 new FormControl(''),
@@ -55,10 +64,12 @@ export class MaquinariaComponent implements OnInit {
     codtipomaquina:              new FormControl(''),
     codigobp:                    new FormControl(''),
     contadorinicial:             new FormControl(),
-    contadorfinal:               new FormControl() 
+    contadorfinal:               new FormControl(), 
+    codmarca:                    new FormControl(),
+    codmodelo:                   new FormControl()
   })
 
-  constructor( private DataMaster: SharedService, private maquinaria: MaquinariaService ) { }
+  constructor( private DataMaster: SharedService, private fileserv: ImagecontrolService, private maquinaria: MaquinariaService ) { }
   xuser: any = '';
   ngOnInit(): void {
     this.xuser = sessionStorage.getItem('UserCod');
@@ -66,8 +77,8 @@ export class MaquinariaComponent implements OnInit {
     this.getDataMaster('MQT');
     this.obtenerMaquinaria();
 
-    console.warn('ESTE ES EL MODULO');
-    console.warn(this.modulo.nombre);
+    // console.warn('ESTE ES EL MODULO');
+    // console.warn(this.modulo.nombre);
 
   }
 
@@ -93,6 +104,8 @@ export class MaquinariaComponent implements OnInit {
 
   }
 
+
+  /** OBTENER TIPO DE MAQUINAS */
   getDataMaster(cod:string) {
     this.DataMaster.getDataMaster(cod).subscribe({
       next: (data) => {
@@ -105,102 +118,213 @@ export class MaquinariaComponent implements OnInit {
     }) 
   }
 
-  modelMaquinaria: any = [];
+  /** OBTENER MARCA */
+  codtipomaquinaValue:any;
+  getGrupos() {
+    this.grupolista  = [];
+    this.sgrupolista = [];
+    this.maquinariaForm.controls['marca'].setValue('');
+    this.maquinariaForm.controls['codmarca'].setValue('');
+    this.maquinariaForm.controls['modelo'].setValue('');
+    this.maquinariaForm.controls['codmodelo'].setValue('');
+    this.codtipomaquinaValue = this.maquinariaForm.controls['codtipomaquina'].value.trim();
+    this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
+        next:( grupo ) => {
+          this.grupolista = grupo;
+          // console.warn(this.grupolista);
+        },
+        complete: () => {
+          // if(this.grupolista.length == 1) {
+          //     let grupo:    any = this.grupolista[0].codigotipomaq.trim();
+          //     let subgrupo: any = this.grupolista[0].codmarca.trim();
+          //     this.DataMaster.getDataMasterSubGrupo(grupo, subgrupo).subscribe(
+          //       {
+          //         next:( sgrupo ) => {
+          //           this.sgrupolista = sgrupo;
+          //           // console.warn(this.sgrupolista);
+          //         }
+          //       }
+          //     )       
+          // }
+        }
+      }
+    )
+  }
+
+
+  /** OBTENER MODELOS */
+  getSubgrupos() {
+    // console.warn(this.maquinariaForm.controls['marca'].value);
+    this.maquinariaForm.controls['codmarca'].setValue(this.maquinariaForm.controls['marca'].value);
+    let grupo: any = this.codtipomaquinaValue;
+    let subgrupo: any = this.maquinariaForm.controls['marca'].value;
+    this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
+      next:( sgrupo ) => {
+        this.sgrupolista = sgrupo;
+        console.warn(this.sgrupolista);
+      }
+    });
+  }
+
+  obtenerCodigoModelo(data:any) {
+    console.log(this.modeloActivo);
+    this.maquinariaForm.controls['codmodelo'].setValue(data);    
+  }
+
+  codec:any;
+  obtenerImagen() {
+    this.codec = this.maquinariaForm.controls['codtipomaquina'].value.trim() +'-'+ this.maquinariaForm.controls['codmarca'].value.trim() +'-'+ this.maquinariaForm.controls['codmodelo'].value.trim();
+    console.log(this.codec);
+    this.fileserv.obtenerImagenCodBinding(this.codec, 'Maquinaria').subscribe({
+      next: (imagen:any) => {
+        this._IMGE = imagen[0].imagen;
+      }
+    })  
+  }  
+
+  /**GUARDAR MAQUINARIA */
   guardarMaquinaria() {
 
-    if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
-    else if ( this.maquinariaForm.controls['modelo'].value == undefined || this.maquinariaForm.controls['modelo'].value == null || this.maquinariaForm.controls['modelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
-    else if ( this.maquinariaForm.controls['marca'].value == undefined || this.maquinariaForm.controls['marca'].value == null || this.maquinariaForm.controls['marca'].value == ''  )  Toast.fire({ icon: 'warning', title: 'La marca de la maquina no debe estar vacío' })
+    if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined ||
+         this.maquinariaForm.controls['codtipomaquina'].value == null ||
+         this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
+    else if ( this.maquinariaForm.controls['codmarca'] .value == undefined || this.maquinariaForm.controls['codmarca'].value == null || this.maquinariaForm.controls['codmarca'].value == ''  )  Toast.fire({ icon: 'warning', title: 'La marca de la maquina no debe estar vacío' })
+    else if ( this.maquinariaForm.controls['codmodelo'].value == undefined || this.maquinariaForm.controls['codmodelo'].value == null || this.maquinariaForm.controls['codmodelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
     else {
+     
       this._show_spinner = true;
       const cliente = this.maquinariaForm.controls['codtipomaquina'].value;
       const token: string = 'MAQ-'+cliente+'-'+this.DataMaster.generateRandomString(15);
-    
-    
-    this.maquinariaModel = {
-      // nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
-      codtipomaquina: this.maquinariaForm.controls['codtipomaquina'].value.trim(),
-      codmaquina: token,
-      modulo: this.modulo.nombre,
-      state: 1,
-      accion: 1
-    };
 
-    this.modelMaquinaria = {
-      "codmaquina": token,
-      "codtipomaquina": this.maquinariaForm.controls['codtipomaquina'].value.trim(),
-      "observacion":    this.maquinariaForm.controls['observacion'].value,
-      "modelo":         this.maquinariaForm.controls['modelo'].value,
-      "marca":          this.maquinariaForm.controls['marca'].value,
-      "nserie":         this.maquinariaForm.controls['nserie'].value,
-      "ninventario":    this.maquinariaForm.controls['ninventario'].value,
-      "codigobp":       this.maquinariaForm.controls['codigobp'].value,
-      "codusercrea" :   this.xuser, 
-      "feccrea"  :      new Date(),
-      "codcia"      :   this.ccia,
-      "contadorinicial":       this.maquinariaForm.controls['contadorinicial'].value,
-      "contadorfinal":       this.maquinariaForm.controls['contadorfinal'].value
-    }
-
-    console.warn('MAQUINARIA');
-    console.warn(this.modelMaquinaria);
-    this.maquinaria.guardarMaquinaria( this.modelMaquinaria ).subscribe({
-
-      next: (x) => {
-        this._show_spinner = false;
-        Swal.fire(
-          'Máquina: '+this.maquinariaForm.controls['nombremaquina'].value+' agregada',
-          'La máquina se ha guardado con éxito',
-          'success'
-        )
-      }, error: (e) => {
-        console.error(e);
-        Swal.fire(
-          'Oops!',
-          'Esta máquina no se ha podido guardar',
-          'error'
-        )
-      }, complete: () => {
-        this.obtenerMaquinaria();
-        this.limpiar();
+      this.modelMaquinaria = {
+        "codmaquina":       token,
+        "codtipomaquina":   this.maquinariaForm.controls['codtipomaquina'].value.trim(),
+        "observacion":      this.maquinariaForm.controls['observacion'].value,
+        "modelo":           this.maquinariaForm.controls['codmodelo'].value,
+        "marca":            this.maquinariaForm.controls['codmarca'].value,
+        "nserie":           this.maquinariaForm.controls['nserie'].value,
+        "ninventario":      this.maquinariaForm.controls['ninventario'].value,
+        "codigobp":         this.maquinariaForm.controls['codigobp'].value,
+        "codusercrea":      this.xuser,
+        "feccrea":          new Date(),
+        "codcia":           this.ccia,
+        "contadorinicial":  this.maquinariaForm.controls['contadorinicial'].value || 0,
+        "contadorfinal":    this.maquinariaForm.controls[ 'contadorfinal' ].value || 0
       }
 
-    })
-    }
-    
+      this.maquinaria.guardarMaquinaria( this.modelMaquinaria ).subscribe(
+        {
+          next: (x) => {
+            this._show_spinner = false;
+            Swal.fire(
+              'Máquina agregada',
+              'La máquina con número de serie '+this.maquinariaForm.controls['nserie'].value+' se ha guardado con éxito',
+              'success'
+            )
+          }, error: (e) => {
+            console.error(e);
+            Swal.fire(
+              'Oops!',
+              'Esta máquina no se ha podido guardar',
+              'error'
+            )
+          }, complete: () => {
+            this.obtenerMaquinaria();
+            this.limpiar();
+          }
+        }
+      )
+     }
   }
+
+  
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  obtenerMaquinaria() {
+    this._show_spinner = true;
+    this.maquinaria.obtenerMaquinaria( this.ccia ).subscribe({
+      next: (maquinas) => {
+        this.maquinariaLista = maquinas
+        // console.log('LISTA MAQUINARIA GUARDADO');
+        // console.log(this.maquinariaLista);
+        this._show_spinner = false;
+      },
+      error: (e) => {
+        this._show_spinner = false;
+        console.error(e);
+      },
+      complete: () => {
+        this.dataSource = new MatTableDataSource(this.maquinariaLista);
+        this.dataSource.paginator = this.paginator;
+      }
+    })
+  }
+
+  
+  capturainfo(data:any) {
+
+    for ( let i = 0; i<=2; i++ ) {
+      this.catchData(data);
+    }
+
+  }
+
+  limpiar() {
+    this.maquinariaForm.controls['codtipomaquina'].setValue('');
+    this.maquinariaForm.controls['observacion'].setValue('');
+    this.maquinariaForm.controls['modelo'].setValue('');
+    this.maquinariaForm.controls['codmodelo'].setValue('');
+    this.maquinariaForm.controls['marca'].setValue('');
+    this.maquinariaForm.controls['codmarca'].setValue('');
+    this.maquinariaForm.controls['nserie'].setValue('');
+    this.maquinariaForm.controls['ninventario'].setValue('');
+    this.maquinariaForm.controls['codigobp'].setValue('');
+    this.maquinariaForm.controls['contadorinicial'].setValue(0);
+    this.maquinariaForm.controls['contadorfinal'].setValue(0);
+    this._action_butto      = 'Crear';
+    this._icon_button       = 'add';
+    this._cancel_button     = false;  
+    this._IMGE = '';
+    this.sgrupolista = [];
+    this.grupolista = [];
+  }
+
+  validacionMenorContador() {
+      if(this.maquinariaForm.controls['contadorfinal'].value.toString().length > 1 ) {
+        if(this.maquinariaForm.controls['contadorinicial'].value > this.maquinariaForm.controls['contadorfinal'].value) {
+          this.maquinariaForm.controls['contadorfinal'].setValue('')
+        }
+      }
+
+  }
+
 
   editarMaquinaria() {
     
     if ( this.maquinariaForm.controls['codtipomaquina'].value == undefined || this.maquinariaForm.controls['codtipomaquina'].value == null || this.maquinariaForm.controls['codtipomaquina'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El tipo de maquina no debe estar vacío' })
-    else if ( this.maquinariaForm.controls['modelo'].value == undefined || this.maquinariaForm.controls['modelo'].value == null || this.maquinariaForm.controls['modelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
-    else if ( this.maquinariaForm.controls['marca'].value == undefined || this.maquinariaForm.controls['marca'].value == null || this.maquinariaForm.controls['marca'].value == ''  )  Toast.fire({ icon: 'warning', title: 'La marca de la maquina no debe estar vacío' })
+    else if ( this.maquinariaForm.controls['codmarca'].value == undefined || this.maquinariaForm.controls['codmarca'].value == null || this.maquinariaForm.controls['codmarca'].value == ''  )  Toast.fire({ icon: 'warning', title: 'La marca de la maquina no debe estar vacío' })
+    else if ( this.maquinariaForm.controls['codmodelo'].value == undefined || this.maquinariaForm.controls['codmodelo'].value == null || this.maquinariaForm.controls['codmodelo'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El modelo de la maquina no debe estar vacío' })
     else {
     this._show_spinner = true;
     
-    this.maquinariaModel = {
-      // nombreMaquina: this.maquinariaForm.controls['nombremaquina'].value,
-      codtipomaquina: this.maquinariaForm.controls['codtipomaquina'].value.trim(),
-      codmaquina: this.codmaquinaria,
-      modulo: this.modulo.nombre,
-      state: 1,
-      accion: 2
-    };
-
     this.modelMaquinaria = {
       "codmaquina":     this.codmaquinaria,
       "codtipomaquina": this.maquinariaForm.controls['codtipomaquina'].value.trim(),
       "observacion":    this.maquinariaForm.controls['observacion'].value,
-      "modelo":         this.maquinariaForm.controls['modelo'].value,
-      "marca":          this.maquinariaForm.controls['marca'].value,
+      "modelo":         this.maquinariaForm.controls['codmodelo'].value,
+      "marca":          this.maquinariaForm.controls['codmarca'].value,
       "nserie":         this.maquinariaForm.controls['nserie'].value,
       "ninventario":    this.maquinariaForm.controls['ninventario'].value,
       "codigobp":       this.maquinariaForm.controls['codigobp'].value,
       "codusercrea" :   this.xuser, 
       "feccrea"  :      new Date(),
       "codcia"      :   this.ccia,
-      "contadorinicial":       this.maquinariaForm.controls['contadorinicial'].value,
-      "contadorfinal":       this.maquinariaForm.controls['contadorfinal'].value
+      "contadorinicial":       this.maquinariaForm.controls['contadorinicial'].value || 0,
+      "contadorfinal":       this.maquinariaForm.controls['contadorfinal'].value || 0
     }
 
     console.warn('MAQUINARIA');
@@ -210,8 +334,8 @@ export class MaquinariaComponent implements OnInit {
       next: (x) => {
         this._show_spinner = false;
         Swal.fire(
-          'Máquina: '+this.maquinariaForm.controls['nombremaquina'].value+' agregada',
-          'La máquina se ha guardado con éxito',
+          'Máquina : ' + this.nombreMaquinaria + ' actualizada. ',
+          'La máquina con número de serie '+this.maquinariaForm.controls['nserie'].value+' se ha actualizado con éxito',
           'success'
         )
       }, error: (e) => {
@@ -228,6 +352,41 @@ export class MaquinariaComponent implements OnInit {
 
     })
     }
+  }
+
+  codmaquinaria: string = '';
+  maquinariaModel: any = [];
+  nombreMaquinaria: string = '';
+  catchData(data: any) {    
+    // console.warn("DATA----------------")
+    // console.warn(data)
+
+    this.maquinariaForm.controls['codtipomaquina'].setValue(data.codtipomaquina.trim());
+
+    console.warn(data.codtipomaquina.trim())
+
+    this.getGrupos();
+    this.maquinariaForm.controls['marca'].setValue(data.codmarca.trim());
+    this.maquinariaForm.controls['codmarca'].setValue(data.codmarca.trim());
+    this.getSubgrupos();
+    this.maquinariaForm.controls['modelo'].setValue(data.codmodelo.trim());
+    this.maquinariaForm.controls['codmodelo'].setValue(data.codmodelo.trim());
+
+
+    this.maquinariaForm.controls['observacion'].setValue(data.observacion);
+    this.maquinariaForm.controls['nserie'].setValue(data.nserie);
+    this.maquinariaForm.controls['ninventario'].setValue(data.ninventario);
+    this.maquinariaForm.controls['codigobp'].setValue(data.codigobp);
+    this.maquinariaForm.controls['contadorinicial'].setValue(data.contadorinicial);
+    this.maquinariaForm.controls['contadorfinal'].setValue(data.contadorfinal);
+    this.codmaquinaria  = data.codmaquina;
+    this._icon_button   = 'sync_alt';
+    this._action_butto  = 'Actualizar';
+    this._cancel_button = true;
+    this.nombreMaquinaria = data.nombretipomaquina;
+
+    this.obtenerImagen();
+
   }
 
   eliminarMaquinaria(data:any) {
@@ -242,16 +401,13 @@ export class MaquinariaComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this._show_spinner = true;  
-
-        console.log(data.codcliente)
-        console.log(this.ccia)
-
+        
         this.maquinaria.eliminarMaquinaria( data.codmaquina ).subscribe({
           next: (x) => {
             this._show_spinner = false;
             Swal.fire(
               'Deleted!',
-              'Máquina: '+ data.nombreMaquina +' eliminado',
+              'Máquina: '+ data.nombretipomaquina +' eliminado',
               'success'
             )
           }, error: (e) => {
@@ -270,76 +426,6 @@ export class MaquinariaComponent implements OnInit {
     })
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
 
-  obtenerMaquinaria() {
-    this._show_spinner = true;
-    this.maquinaria.obtenerMaquinaria( this.ccia ).subscribe({
-      next: (maquinas) => {
-        this.maquinariaLista = maquinas
-        console.log('LISTA MAQUINARIA GUARDADO');
-        console.log(this.maquinariaLista);
-        this._show_spinner = false;
-      },
-      error: (e) => {
-        this._show_spinner = false;
-        console.error(e);
-      },
-      complete: () => {
-        this.dataSource = new MatTableDataSource(this.maquinariaLista);
-        this.dataSource.paginator = this.paginator;
-      }
-    })
-  }
-
-  codmaquinaria: string = '';
-  maquinariaModel: any = [];
-  
-  catchData(data: any) {
-
-    this.maquinariaModel = {
-      // nombreMaquina: data.nombremaquina,
-      codtipomaquina: data.codtipomaquina.trim(),
-      codmaquina: data.codmaquina,
-      modulo: this.modulo.nombre,
-      state: 2
-    };
-    
-    this.maquinariaForm.controls['codtipomaquina'].setValue(data.codtipomaquina.trim());
-    this.maquinariaForm.controls['observacion'].setValue(data.observacion);
-    this.maquinariaForm.controls['modelo'].setValue(data.modelo);
-    this.maquinariaForm.controls['marca'].setValue(data.marca);
-    this.maquinariaForm.controls['nserie'].setValue(data.nserie);
-    this.maquinariaForm.controls['ninventario'].setValue(data.ninventario);
-    this.maquinariaForm.controls['codigobp'].setValue(data.codigobp);
-    this.maquinariaForm.controls['contadorinicial'].setValue(data.contadorinicial);
-    this.maquinariaForm.controls['contadorfinal'].setValue(data.contadorfinal);
-    this.codmaquinaria  = data.codmaquina;
-    this._icon_button   = 'sync_alt';
-    this._action_butto  = 'Actualizar';
-    this._cancel_button = true;
-
-  }
-
-  limpiar() {
-  
-    // this.maquinariaForm.controls['nombremaquina'].setValue('');
-    this.maquinariaForm.controls['codtipomaquina'].setValue('');
-    this.maquinariaForm.controls['observacion'].setValue('');
-    this.maquinariaForm.controls['modelo'].setValue('');
-    this.maquinariaForm.controls['marca'].setValue('');
-    this.maquinariaForm.controls['nserie'].setValue('');
-    this.maquinariaForm.controls['ninventario'].setValue('');
-    this.maquinariaForm.controls['codigobp'].setValue('');
-    this.maquinariaForm.controls['contadorinicial'].setValue(0);
-    this.maquinariaForm.controls['contadorfinal'].setValue(0);
-    this._action_butto      = 'Crear';
-    this._icon_button       = 'add';
-    this._cancel_button     = false;
-  
-  }
-
+ 
 }

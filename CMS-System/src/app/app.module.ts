@@ -55,14 +55,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashboardmods.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorServices } from './components/shared/http-interceptor/http-interceptor-services';
-import { ConfiguracionComponent } from './components/dashboard/app-dashboards/configuracion/configuracion.component';
-import { AsignModUserComponent } from './components/dashboard/app-dashboards/configuracion/asign-mod-user/asign-mod-user.component';
+import { GarantiasComponent } from './components/dashboard/app-dashboards/garantias/garantias.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    GarantiasComponent
   ],
   imports: [
     //#region 

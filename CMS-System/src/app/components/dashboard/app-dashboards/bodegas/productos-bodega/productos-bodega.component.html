@@ -29,6 +29,7 @@
         </span>
        </div>
     </div>
+    
     <section class="filtros mt-2 mb-2">
         <div class="mb-2 d-flex">
             <input class=" w-100 form-control rounded-pill"
@@ -59,15 +60,13 @@
                             <span class="text-secondary"> {{maquinaria.nombretipomaquina}} </span>
                         </div>
                         <div class="d-flex flex-column ">
-                            <small>Modelo:</small>
-                            <span class="text-secondary"> {{maquinaria.modelo}} </span>
-                        </div>
-                    
-                    
-                        <div class="d-flex flex-column ">
                             <small>Marca:</small>
-                            <span class="text-secondary"> {{maquinaria.marca}} </span>
+                            <span class="text-secondary"> {{maquinaria.nombremarca}} </span>
                         </div>
+                        <div class="d-flex flex-column ">
+                            <small>Modelo:</small>
+                            <span class="text-secondary"> {{maquinaria.nombremodelo}} </span>
+                        </div>                    
                         <div class="d-flex flex-column ">
                             <small>Contador:</small>
                             <span class="text-secondary"> {{maquinaria.contador}} </span>
@@ -102,22 +101,22 @@
 
         <table class="table table-primary table-hover table-striped w-100"  >
             <thead>
-                <th>Nombre</th>
                 <th>T. Maquina</th>
-                <th>Modelo</th>
                 <th>Marca</th>
-                <th>Contador</th>
+                <th>Modelo</th>
+                <th>Contador In,</th>
+                <th>Contador Fin,</th>
                 <th>N. Serie</th>
             <th>N. Inv</th>
             <th>C.B.P.</th>
         </thead>
         <tbody>
             <tr style="cursor: pointer;" *ngFor="let maquinaria of maquinariaLista" (click)="guardarAsignacion(maquinaria)">
-                <td>{{maquinaria.nombremaquina}}</td>
                 <td>{{maquinaria.nombretipomaquina}}</td>
-                <td>{{maquinaria.modelo}}</td>
-                <td>{{maquinaria.marca}}</td>
-                <td>{{maquinaria.contador}}</td>
+                <td>{{maquinaria.nombremarca}}</td>
+                <td>{{maquinaria.nombremodelo}}</td>
+                <td>{{maquinaria.contadorinicial}}</td>
+                <td>{{maquinaria.contadorfinal}}</td>
                 <td>{{maquinaria.nserie}}</td>
                 <td>{{maquinaria.ninventario}}</td>
                 <td>{{maquinaria.codigobp}}</td>
@@ -199,31 +198,35 @@
                         <div class="imagen-container shadow" style="cursor: none !important;" [ngStyle]="{'background-image': 'url('+maquina.imagen+')', 'background-size': '100% 100%'}"></div>
                     </label>
                 </div>                
-                <div class="textdetail" >
-                    <small>Nombre:</small><span>{{maquina.nombremaquina}}</span><br>
+                <div class="textdetail d-flex flex-column" >
+                    <small>Nombre:</small><span>{{maquina.nombremaquina}}</span>
                 </div>
-                <div class="textdetail" >
-                    <small>Modelo:</small><span>{{maquina.modelo}}</span><br>
+                <div class="textdetail  w-100 d-flex justify-content-between">
+                    <small>Marca:</small><span>{{maquina.nombremarca}}</span>
                 </div>
-                <div class="textdetail" >
-                    <small>Marca:</small><span>{{maquina.marca}}</span><br>
+                <div class="textdetail  w-100 d-flex justify-content-between">
+                    <small>Modelo:</small><span>{{maquina.nombremodelo}}</span>
                 </div>
-                <div class="textdetail" >
-                    <small>N. Serie:</small><span>{{maquina.nserie}}</span><br>
+                <div class="textdetail  w-100 d-flex justify-content-between">
+                    <small>N. Serie:</small><span>{{maquina.nserie}}</span>
                 </div>
-                <div class="textdetail" >
-                    <small>Contador:</small><span>{{maquina.contador}}</span><br>
+                <div class="textdetail  w-100 d-flex justify-content-between">
+                    <small>Contador Inicial:</small><span>{{maquina.contadorinicial}}</span>  
                 </div>
-                <div class="textdetail" >
-                    <small>Fecha de Ingreso:</small><span>{{maquina.feccrea | date: 'dd-MM-yyyy'}}</span><br>
+                <div class="textdetail  w-100 d-flex justify-content-between">
+                    <small>Contador Final:</small><span>{{maquina.contadorfinal}}</span>
+                </div>
+                <div class="textdetail  w-100 d-flex justify-content-between">
+                    <small>Fecha de Ingreso:</small>
+                    <span>{{maquina.feccrea | date: 'dd-MM-yyyy'}}</span>
                 </div>
                 <div class="" >
                     <small>Observación:</small>
-                    <br>
-                    <span>{{maquina.observacion}}</span><br>
+                      
+                    <span>{{maquina.observacion}}</span>  
                 </div>
-                <div>
-                    <button mat-raised-button color="warn" class="w-100" (click)="verDetallePalets(2)">
+                <div class="mt-4">
+                    <button mat-raised-button color="warn" class="w-100" (click)="verDetallePalets(maquina, 2)">
                         <mat-icon>visibility_off</mat-icon>Cerrar detalle
                     </button>
                 </div>
@@ -243,37 +246,34 @@
             </div>
             <div class="d-flex w-100" >
                 <div class="cajas-contenido w-100"   *ngIf="_view_palets">
-                    <!-- <form [formGroup]="maquinabodegaAsignForm" class="d-flex justify-content-start align-items-end flex-wrap"> -->
+                    
                         <div class="p-2 m-1  cajas animate__animated animate__fadeInUp"
                              [ngStyle]="{'border': _border_cajas}" 
-                             *ngFor="let item of listaMaquinaBodegas; let i = index" 
+                             *ngFor="let item of listaMaquinaBodegas; let i = index"
                              (contextmenu)="openMenu($event, item)"
                              (click)="ProcesoTransdferenciaBod(item.codmaquinaria, 1)"
                              >
-                            <!-- <label [for]="item.codmaquinaria"> -->
-                                <!-- <div class="checkcajas form-check">
-                                    <input class="form-check-input" type="checkbox"
-                                           *ngIf="_select_lote"  
-                                           formControlName="nombreMaq"
-                                           #nombreMaq
-                                           name="nombreMaq"
-                                           [value]="item.codmaquinaria"
-                                           [id]="item.codmaquinaria"
-                                           (change)="handleCheckboxChange($event, i)">
-                                </div> -->
-                                <div class="notebox">
+                                <div class="notebox d-flex flex-column"  >
                                         <small class="text-secondary">Nombre: </small>
-                                        <br>
+                                          
                                         <span class="text-primary">  {{item.nombremaquina}}</span>
-                                        <br>
+                                          
                                         <small class="text-secondary">N.Serie: </small>
-                                        <br>
+                                          
                                         <span class="text-primary">{{item.nserie}}</span>
-                                        <br>
-                                </div>           
+                                        <div class="d-flex justify-content-between " style="font-size: 7pt;">
+                                            <small class="text-secondary">Marca: </small>                                            
+                                            <span class="text-primary">{{item.nombremarca}}</span>
+                                            <small class="text-secondary">Modelo: </small>                                            
+                                            <span class="text-primary">{{item.nombremodelo}}</span>
+                                        </div>
+                                          
+                                </div>
+
                                 <mat-menu-trigger #myTrigger="matMenuTrigger" [matMenuTriggerFor]="myMenu" *ngIf="item.menuAbierto"></mat-menu-trigger>
+                                
                                 <mat-menu #myMenu="matMenu">
-                                    <button mat-menu-item (click)="verDetallePalets(1)" >
+                                    <button mat-menu-item (click)="verDetallePalets( item, 1)" >
                                         <mat-icon>visibility</mat-icon>Ver Detalle
                                     </button>
                                     <button mat-menu-item (click)="eliminarItemBodega(item)">
@@ -282,10 +282,9 @@
                                     <button mat-menu-item color="warn" (click)="modoTransferencia()" >
                                         <mat-icon>alt_route</mat-icon>Transferir
                                     </button>
-                                </mat-menu>  
-                            <!-- </label>  -->
+                                </mat-menu>                                
                         </div>
-                    <!-- </form> -->
+                        
                 </div>
                 
             </div>
@@ -343,7 +342,7 @@
                         <mat-icon>cancel</mat-icon></span>
                     <span>
                         {{itemtransfer.nombremaquina}} 
-                        <br>
+                          
                         <small class="text-secondary" >{{itemtransfer.nserie}}</small>
                     </span>
                 </li>

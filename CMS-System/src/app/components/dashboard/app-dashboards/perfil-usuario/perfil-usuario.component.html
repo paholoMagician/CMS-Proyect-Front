@@ -56,33 +56,38 @@
            
            <div class="mb-3 col-4">
                <label for="Contrasenia" class="form-label text-secondary">
-                   Contraseña:
+                   Contraseña: 
+                   <span [class]="colortext" >
+                        <!-- <strong> {{pass}} </strong> -->
+                        <small>{{descrip}}</small>
+                   </span>
                </label>
-               <input type="password" class="form-control" formControlName="Contrasenia" #Contrasenia id="Contrasenia" placeholder="***">
+               <input type="text" [class]="colortext + ' form-control'" (keyup)="viewpass()"  formControlName="Contrasenia" #Contrasenia id="Contrasenia" placeholder="***">
            </div>
            </div>
            <div class=" d-flex flex-wrap justify-content-between ">
            <div class="mb-3 col-3  ">
-               <label for="Cargo" class="form-label text-secondary">
+               <label for="Cargo" class="form-label text-secondary"  >
                    Cargo:
                </label>
-               <select class="inpForms form-select   w-100"
+               <select class="inpForms form-select   w-100" *ngIf="select"
                        formControlName="Cargo" #Cargo id="Cargo" aria-label="">
-                       <option *ngFor="let cargo of cargoLista" [value]="cargo.codigo" >
-                           {{cargo.nombre | titlecase }}
-                       </option>
-               </select>
+                       <option *ngFor="let cargo of cargoLista" [value]="cargo.codigo">{{cargo.nombre | titlecase }}</option>
+               </select> 
+               <input type="text" class="form-control" disabled [value]="nombrecargo" *ngIf="read" [title]="nombrecargo">
            </div>
            <div class="mb-3 col-4 ">
                <label for="Estado" class="form-label text-secondary">
                    Estado del trabajador:
                </label>
-               <select class="inpForms form-select   w-100"
+               <select class="inpForms form-select w-100" *ngIf="select"
                        formControlName="Estado" #Estado id="Estado" aria-label="">
                        <option *ngFor="let estadoTrabajador of estadoTrabajadorLista" [value]="estadoTrabajador.codigo" >
                            {{estadoTrabajador.nombre | titlecase }}                                
                        </option>
                </select>
+
+               <input type="text" class="form-control" disabled [value]="estadotrabajador" *ngIf="read" [title]="estadotrabajador">
            </div>
            <div class="mb-3 col-2">
                <label for="CodEstadoCivil" class="form-label text-secondary">
@@ -140,23 +145,28 @@
            <div class="d-flex flex-wrap justify-content-between">
            <div class="mb-3">
                <label for="CodDepartamento">Departamento:</label>
-               <select class="inpForms form-select   w-100"
+               <select class="inpForms form-select   w-100" *ngIf="select"
                        formControlName="CodDepartamento" #CodDepartamento id="CodDepartamento" aria-label="">
                        <option *ngFor="let departamento of departamentoLista" [value]="departamento.codigo" >
                            {{departamento.nombre | titlecase }}                                
                        </option>
                </select>
+
+               <input type="text" class="form-control" disabled [value]="departamentonombre" *ngIf="read" [title]="departamentonombre">
+
            </div>
 
            <div class="mb-3">
                <label for="Tipo">Tipo:</label>
-               <select class="inpForms form-select   w-100"
+               <select class="inpForms form-select   w-100" *ngIf="select"
                        formControlName="Tipo" #Tipo id="Tipo" aria-label="">
                        <option *ngFor="let tipo of tipoLista"
                                [value]="tipo.codigo" >
                            {{tipo.nombre | titlecase }}                                
                        </option>
                </select>
+
+               <input type="text" class="form-control" disabled [value]="nombretipo" *ngIf="read" [title]="nombrecargo">
            </div>
            <div class="mb-3">
                <label for="Codcaracteristicas"  >Habilidades:</label>
@@ -199,7 +209,7 @@
                    <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
                        <mat-icon>cancel</mat-icon>
                    </button>
-                   <button type="submit" mat-raised-button color="primary">
+                   <button type="submit" mat-raised-button color="primary" [disabled]="_show_btn" >
                        <mat-icon>{{_icon_button}}</mat-icon> {{_action_butto}} {{modulo.nombre}}
                    </button>
 

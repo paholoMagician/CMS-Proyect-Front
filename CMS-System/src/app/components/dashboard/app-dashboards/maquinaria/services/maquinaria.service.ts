@@ -9,7 +9,6 @@ export class MaquinariaService {
   public url: string = environment.deploy_url;
   constructor(private http: HttpClient) { }
 
-
   guardarMaquinaria(model: any []) {
     return this.http.post( this.url + 'Maquinaria/GuardarMaquinaria', model );
   }
@@ -34,8 +33,12 @@ export class MaquinariaService {
     return this.http.get( this.url + 'Maquinaria/ObtenerMaquinasSinBodega/'+ ccia + '/' + option);
   }
 
-  ObtenerMaquinaUnit( codmaquina: string, ccia: string ) {
-    return this.http.get( this.url + 'Maquinaria/ObtenerMaquinaUnit/' + codmaquina +'/'+ ccia );
+  ObtenerMaquinaUnit( tpmaq:string, marca:string, modelo:string, tipo:number, codmaquina: string ) {
+    return this.http.get( this.url + 'Maquinaria/ObtenerMaquinaUnit/'+ tpmaq + '/' + marca + '/' + modelo + '/' + tipo + '/' + codmaquina  );
+  }
+
+  guardarImagenMaquinaria(model:any[]) {
+    return this.http.post( this.url+ 'Maquinaria/GuardarImagenProductos', model );
   }
 
 }

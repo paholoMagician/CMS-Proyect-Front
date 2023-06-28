@@ -20,6 +20,8 @@ const Toast = Swal.mixin({
   styleUrls: ['./perfil-usuario.component.scss']
 })
 export class PerfilUsuarioComponent implements OnInit, OnChanges {
+  _show_btn:                    boolean = false;
+  pass: any;
   ccia: any;
   _delete_show:                 boolean = true;
   public sexoLista:             any = [];
@@ -82,8 +84,13 @@ export class PerfilUsuarioComponent implements OnInit, OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges) { }
-
+  read:boolean = false;
+  select: boolean = true;
   usuarioPerfil: any = [];
+  nombretipo:string = '';
+  nombrecargo:string = '';
+  departamentonombre:string = '';
+  estadotrabajador:string = '';
   obtnerPerfilUsuario() {
 
     let coduser: any = sessionStorage.getItem('UserCod');
@@ -95,13 +102,14 @@ export class PerfilUsuarioComponent implements OnInit, OnChanges {
         console.error(e);
       }, complete: () => {
         this.usuarioPerfil.filter( (element:any) => {
-          // console.log(element);
+          console.log(element);
           this.userForm.controls['Email'].setValue(element.email);
           this.userForm.controls['Nombre'].setValue(element.nombre);
           this.userForm.controls['Apellido'].setValue(element.apellido);
           this.userForm.controls['Cedula'].setValue(element.cedula);
           this.userForm.controls['Cargo'].setValue(element.cargo.trim());
           this.userForm.controls['Contrasenia'].setValue(element.contrasenia);
+          this.pass = element.contrasenia;
           this.userForm.controls['Estado'].setValue(element.estado.trim());
           this.userForm.controls['Edad'].setValue(element.edad);
           this.userForm.controls['Tipo'].setValue(element.tipo.trim());
@@ -116,10 +124,57 @@ export class PerfilUsuarioComponent implements OnInit, OnChanges {
           this.userForm.controls['CodLicencia'].setValue(element.codLicencia.trim());
           this.userForm.controls['Telf'].setValue(element.telf);
           this.userForm.controls['Direccion'].setValue(element.direccion);
+          this.nombrecargo = element.nombrecargo;
+          this.nombretipo = element.nombretipo;
+          this.departamentonombre = element.departamentonombre;
+          this.estadotrabajador = element.estadotrabajador;
+          if ( element.tipo.trim() == '003' || element.tipo.trim() == '002' ) {
+            this.read = true
+            this.select = false;
+          }
+          else {
+            this.read = false;
+            this.select = true;
+          }
+
+
 
         })
       }
     })
+  }
+  colortext: any;
+  descrip: any;
+  viewpass() {
+    if(this.userForm.controls['Contrasenia'].value.length > 4 ) {
+      this.pass = this.userForm.controls['Contrasenia'].value;
+
+      console.log(this.userForm.controls['Contrasenia'].value.length)
+      this._show_btn = false;
+      this.colortext = 'text-success';
+      this.descrip = 'Normal';
+    }
+
+    // else if(this.userForm.controls['Contrasenia'].value.length > 10 && this.userForm.controls['Contrasenia'].value.length < 15) {
+    //   this._show_btn = false;
+    //   this.colortext = 'text-success';
+    //   this.pass = this.userForm.controls['Contrasenia'].value;
+    //   this.descrip = 'Fuerte - deberías anotarla';
+
+    // } 
+    else if(this.userForm.controls['Contrasenia'].value.length < 5 ){
+      this._show_btn = true;
+      this.colortext = 'text-danger';
+      
+        this.pass = this.userForm.controls['Contrasenia'].value;
+        this.descrip = 'Muy Baja - Actualización deshabilitada';
+    
+    }
+
+    setTimeout(() => {
+      this.descrip = '';
+    }, 2000);
+
   }
 
 
@@ -290,7 +345,7 @@ export class PerfilUsuarioComponent implements OnInit, OnChanges {
         })
         this._show_spinner = false;
       }, complete: () => {
-        this.limpiar();
+        // this.limpiar();
       }
     })
 

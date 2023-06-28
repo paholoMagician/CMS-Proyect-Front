@@ -14,44 +14,55 @@
     <div class="form-section">
         <form [formGroup]="maquinariaForm" class="mb-2" (ngSubmit)="onSubmit()">
             <div class="d-flex justify-content-between " >
-                <!-- <div class="mb-3 col-7 ">
-                    <label for="nombremaquina" class="form-label   ">
-                        Nombre de la Maquinaria <span class="text-danger">*</span>
-                    </label>
-                    <input type="text" class="form-control" 
-                           formControlName="nombremaquina" 
-                           #nombremaquina id="nombremaquina"
-                           placeholder="Newton R12...">
-                </div> -->
                 <div class="mb-3 col-4  ">
                     <label for="codtipomaquina" class="form-label ">
-                        Tipo de Maquinaria:<span class="text-danger">*</span> <br>
-                        <!-- <small class="text-secondary" > Categoriza la máquina seleccionando un tipo. </small>   -->
+                        Tipo de Maquinaria:<span class="text-danger">*</span>
                     </label>
-                    <select class="inpForms form-select   w-100"
-                            formControlName="codtipomaquina" #codtipomaquina id="codtipomaquina" aria-label="">
-                            <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo" >
-                                {{tipomaquina.nombre | titlecase }}                                
-                            </option>
-                    </select>
+                    <div class="d-flex" >
+                        <select class="inpForms form-select w-100"
+                                formControlName="codtipomaquina" #codtipomaquina id="codtipomaquina" aria-label="">
+                                <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo">
+                                    {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
+                                </option>
+                        </select>
+                        <button class="btn btn-warning" type="button" (click)="getGrupos()" >
+                            <mat-icon>search</mat-icon>
+                        </button>
+                    </div>
                 </div>
-                <div class="mb-3 col-3 ">
-                    <label for="modelo" class="form-label   ">
-                        Modelo <span class="text-danger">*</span>
+                <div class="mb-3 col-4 ">
+                    <label for="marca" class="form-label ">
+                        Marca:<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="form-control" 
-                           formControlName="modelo" 
-                           #marca id="modelo"
-                           placeholder="125521A...">
+                    <div class="d-flex" >
+                        <select class="inpForms form-select w-100"
+                                formControlName="marca" #marca id="marca" aria-label="">
+                                <option *ngFor="let marca of grupolista" [value]="marca.codmarca">
+                                    {{ marca.codmarca }} - {{ marca.nombremarca | titlecase }} 
+                                </option>
+                        </select>                           
+                        <button type="button" class="btn btn-warning d-flex align-item-center " (click)="getSubgrupos()" >
+                            <mat-icon>search</mat-icon>
+                        </button>
+                        <input type="text" readonly formControlName="codmarca" #codmarca id="codmarca" class="form-control" style="width: 80px;"  >
+                    </div>
                 </div>
                 <div class="mb-3 col-2 ">
-                    <label for="nombre" class="form-label   ">
-                        Marca <span class="text-danger">*</span>
+                    <label for="modelo" class="form-label ">
+                        Modelo:<span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="form-control" 
-                           formControlName="marca" 
-                           #marca id="marca"
-                           placeholder="MT-125521A...">
+                    <div class="d-flex flex-column" >
+                            <input type="text" readonly formControlName="codmodelo" #codmodelo id="codmodelo" 
+                                   class="form-control">
+                        <ul class="p-0">
+                            <li class="modelomaquina d-flex justify-content-between animate__animated animate__fadeInLeft" 
+                                *ngFor="let modelo of sgrupolista"
+                                [ngClass]="{ 'active1': modeloActivo === modelo }"
+                                (click)="obtenerCodigoModelo(modelo.codmodelo); obtenerImagen(); modeloActivo = modelo;">
+                                        {{modelo.nombremodelo | uppercase}} - {{modelo.codmodelo}}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="d-flex justify-content-between align-item-start ">
@@ -59,7 +70,7 @@
                     <label for="nombre" class="form-label   ">
                         Número de Serie <span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="form-control" 
+                    <input type="text" class="form-control"  
                            formControlName="nserie" 
                            #nserie id="nserie"
                            placeholder="A-000111223221...">
@@ -69,7 +80,7 @@
                     <label for="nombre" class="form-label" title="Número de Inventario" >
                         Número de Inv. 
                     </label>
-                    <input type="text" class="form-control" 
+                    <input type="text" class="form-control"  
                            formControlName="ninventario" 
                            #ninventario id="ninventario"
                            placeholder="55881">
@@ -78,7 +89,7 @@
                     <label for="nombre" class="form-label   ">
                         Código BP. 
                     </label>
-                    <input type="text" class="form-control" 
+                    <input type="text" class="form-control"  
                            formControlName="codigobp" 
                            #codigobp id="codigobp"
                            placeholder="00012-B">
@@ -87,18 +98,19 @@
                     <label for="contadorinicial" class="form-label   ">
                         Contador Inicial: 
                     </label>
-                    <input type="number" class="form-control" 
-                           formControlName="contadorinicial" 
+                    <input type="number" class="form-control"
+                    (keyup)="validacionMenorContador()" 
+                           formControlName="contadorinicial"  
                            #contadorinicial id="contadorinicial"
                            placeholder="0">
                 </div>
                 <div class="mb-3 col-2 ">
-                    <label for="contadorfinal" class="form-label   ">
+                    <label for="contadorfinal" class="form-label   "  >
                         Contador Final: 
                     </label>
                     <input type="number" class="form-control" 
-                           formControlName="contadorfinal" 
-                           #contadorfinal id="contadorfinal"
+                           formControlName="contadorfinal" (keyup)="validacionMenorContador()"
+                           #contadorfinal id="contadorfinal"  
                            placeholder="0">
                 </div>
             </div>
@@ -123,9 +135,7 @@
                             <mat-icon>{{_icon_button}}</mat-icon> {{_action_butto}} {{modulo.nombre}}
                         </button>
         
-                </div>
-
-                 
+                </div>                 
             
         </form>
     </div>
@@ -138,7 +148,9 @@
 
     <hr>
 
-    <app-image-control [datalisten]="maquinariaModel"></app-image-control>
+    <label for="fileUp" id="imageUp" class="d-flex justify-content-center">
+        <div class="imagen-container shadow" [ngStyle]="{'background-image': 'url('+_IMGE+')', 'background-size': '100% 100%'}"></div>
+    </label>
 
 </div>
 </div>
@@ -183,16 +195,14 @@
                   </span>
                 </th>
                 
-                <td mat-cell *matCellDef="let row">
-                  <span class="edit" (click)="catchData(row)">
+                <td mat-cell *matCellDef="let row" >
+                  <span class="edit" (click)="capturainfo(row)" >
                     <mat-icon>
                       edit
                     </mat-icon>
                   </span>
-                  <span *ngIf="_delete_show" class="delete" (click)="eliminarMaquinaria(row)">
-                    <mat-icon  >
-                      delete
-                    </mat-icon>
+                  <span *ngIf="_delete_show" class="delete"  (click)="eliminarMaquinaria(row)">
+                    <mat-icon>delete</mat-icon>
                   </span>
                 </td>
     

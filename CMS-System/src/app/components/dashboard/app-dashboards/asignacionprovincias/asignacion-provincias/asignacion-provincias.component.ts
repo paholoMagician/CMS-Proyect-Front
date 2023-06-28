@@ -24,6 +24,12 @@ const Toast = Swal.mixin({
   styleUrls: ['./asignacion-provincias.component.scss']
 })
 export class AsignacionProvinciasComponent implements OnInit {
+
+  _delete_show: boolean = true;
+  _edit_show: boolean = true;
+  _create_show: boolean = true;
+  _form_create: boolean = true;
+
   _show_spinner: boolean = false;
   @Input() modulo: any = [];
   public ccia:any;
@@ -38,6 +44,7 @@ export class AsignacionProvinciasComponent implements OnInit {
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
     this.obtenerUsuario();
+    this.permisos();
   }
 
   constructor( private DataMaster: SharedService, private us: UserService, public dialog: MatDialog ) {  }
@@ -62,6 +69,42 @@ export class AsignacionProvinciasComponent implements OnInit {
         })
       }
     })
+  }
+
+  permisos() {
+    
+    switch(this.modulo.permiso) {
+      case 1:
+        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
+        this._delete_show = true;
+        this._edit_show   = true;
+        this._create_show = true;
+        this._form_create = true;
+        break;
+      case 2:
+        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
+        this._delete_show = false;
+        this._edit_show   = true;
+        this._create_show = true;
+        this._form_create = true;
+        break;
+      case 3:
+        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
+        this._delete_show = false;
+        this._edit_show   = true;
+        this._create_show = false;
+        this._form_create = true;
+        break;      
+      case 4:
+        alert('nivel de permiso ' + this.modulo.permiso)
+        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia' ];
+        this._delete_show = false;
+        this._edit_show   = false;
+        this._create_show = false;
+        this._form_create = false;
+        break;
+    }
+
   }
 
   applyFilter(event: Event) {

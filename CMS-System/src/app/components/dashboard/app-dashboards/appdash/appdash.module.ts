@@ -64,6 +64,7 @@ import { KardexTransferenciaComponent } from '../bodegas/kardex-transferencia/ka
 import { EmpresaComponent } from '../empresa/empresa.component';
 import { ConfiguracionComponent } from '../configuracion/configuracion.component';
 import { AsignModUserComponent } from '../configuracion/asign-mod-user/asign-mod-user.component';
+import { ImagenesProductosComponent } from '../imagenes-productos/imagenes-productos.component';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { AsignModUserComponent } from '../configuracion/asign-mod-user/asign-mod
     KardexTransferenciaComponent,
     EmpresaComponent,
     ConfiguracionComponent,
-    AsignModUserComponent
+    AsignModUserComponent,
+    ImagenesProductosComponent
   ],
   imports: [
     CommonModule,
@@ -148,7 +150,8 @@ import { AsignModUserComponent } from '../configuracion/asign-mod-user/asign-mod
     KardexTransferenciaComponent,
     EmpresaComponent,
     ConfiguracionComponent,
-    AsignModUserComponent
+    AsignModUserComponent,
+    ImagenesProductosComponent
   ]
 })
 export class AppdashModule { }

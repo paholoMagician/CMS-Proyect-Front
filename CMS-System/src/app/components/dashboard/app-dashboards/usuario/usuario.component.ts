@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 import { UserService } from './services/user.service';
@@ -23,8 +23,11 @@ const Toast = Swal.mixin({
   templateUrl: './usuario.component.html',
   styleUrls: ['./usuario.component.scss']
 })
-export class UsuarioComponent implements OnInit {
-  _delete_show:             boolean = true;
+export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
+  _delete_show:                 boolean = true;
+  _edit_show:                   boolean = true;
+  _create_show:                 boolean = true;
+  _form_create:                 boolean = true;
   public sexoLista:             any = [];
   public provinciaLista:        any = [];
   public estadoCivilLista:      any = [];
@@ -79,7 +82,7 @@ export class UsuarioComponent implements OnInit {
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
     this.obtenerUsuario();
-    this.validatePersonal();
+    // this.validatePersonal();
         // Provincia  
         this.getDataMaster('PRV00');
         // Estado Civil
@@ -104,15 +107,52 @@ export class UsuarioComponent implements OnInit {
         this.getDataMaster('LIC');
   }
 
-  validatePersonal() {
-
-    let xtipo: any = sessionStorage.getItem('tipo');
-    if(xtipo.trim() == '001') {
-      this._delete_show = true;
-    } else {
-      this._delete_show = false;
+  ngAfterViewInit(): void {
+    this.permisos();
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {    
+    if(changes) {
+      this.permisos();
     }
-
+  }
+  _edit_btn: boolean = false;
+  permisos() {
+    
+    switch(this.modulo.permiso) {
+      case 1:
+        // alert('Nivel de acceso ' + this.modulo.permiso)
+        this._delete_show = true;
+        this._edit_show   = true;
+        this._edit_btn   = false;
+        this._create_show = true;
+        this._form_create = true;
+        break;
+      case 2:
+          // alert('Nivel de acceso ' + this.modulo.permiso)
+          this._delete_show = false;
+          this._edit_show   = true;
+          this._create_show = true;
+          this._form_create = true;
+          this._edit_btn = true;
+          break;
+      case 3:
+        // alert('Nivel de acceso ' + this.modulo.permiso)
+        this._delete_show = false;
+        this._edit_show   = true;
+        this._create_show = false;
+        this._form_create = true;
+        this._edit_btn = true;
+        break;      
+      case 4:
+        // alert('Nivel de acceso ' + this.modulo.permiso)
+        this._delete_show = false;
+        this._edit_show   = false;
+        this._create_show = false;
+        this._form_create = false;
+        this._edit_btn = false;
+        break;
+    }
   }
 
   onSubmit() {
@@ -198,7 +238,7 @@ export class UsuarioComponent implements OnInit {
 
   public modeluser: any = []
   guardarUsuario() {
-
+    if( this.modulo.permiso == 1 || this.modulo.permiso == 2 ) {
     if( this.userForm.controls['Nombre'].value == '' || this.userForm.controls['Nombre'].value == undefined || this.userForm.controls['Nombre'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
     else if( this.userForm.controls['Apellido'].value == '' || this.userForm.controls['Apellido'].value == undefined || this.userForm.controls['Apellido'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Apellido no puede ir vacío' })
     else if( this.userForm.controls['Contrasenia'].value == '' || this.userForm.controls['Contrasenia'].value == undefined || this.userForm.controls['Contrasenia'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Contrasenia no puede ir vacío' })
@@ -261,7 +301,7 @@ export class UsuarioComponent implements OnInit {
         this.limpiar();
       }
     })
-
+  }
   }
   }
 
@@ -336,7 +376,7 @@ export class UsuarioComponent implements OnInit {
   }
 
   editarUsuario() {
-
+    if( this.modulo.permiso == 1 || this.modulo.permiso == 2 || this.modulo.permiso == 3 ) {
     if( this.userForm.controls['Nombre'].value == '' || this.userForm.controls['Nombre'].value == undefined || this.userForm.controls['Nombre'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
     else if( this.userForm.controls['Apellido'].value == '' || this.userForm.controls['Apellido'].value == undefined || this.userForm.controls['Apellido'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Apellido no puede ir vacío' })
     else if( this.userForm.controls['Contrasenia'].value == '' || this.userForm.controls['Contrasenia'].value == undefined || this.userForm.controls['Contrasenia'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Contrasenia no puede ir vacío' })
@@ -398,7 +438,7 @@ export class UsuarioComponent implements OnInit {
         // this.crearCuenta();
       }
     })
-
+  }
   }
 
   }

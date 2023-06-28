@@ -20,6 +20,7 @@ const Toast = Swal.mixin({
 export interface Modulo {
   nombre: string;
   icono: string;
+  permiso: string;
 }
 
 @Component({
@@ -64,7 +65,7 @@ export class NavsideComponent implements OnInit {
           this._show_spinner = false;
         },
         complete: () => {
-          console.log(this.modulosLista);
+          // console.log(this.modulosLista);
           // this.getUser(this.codUser);
           let x: any = localStorage.getItem('imgperfil'); 
           if( x == undefined || x == null || x == '' ) {
@@ -81,15 +82,6 @@ export class NavsideComponent implements OnInit {
       }
     )
   }
-
-
-
-  
-  // getUser(user: string) {
-  //   this.Shared.getUser(user).subscribe( x => {
-  //     console.log(x)
-  //   })
-  // }
 
   data: boolean = true;
   constrolNavside() {
@@ -128,7 +120,8 @@ export class NavsideComponent implements OnInit {
 
     let modulo: Modulo = {
       nombre: data.moduleName,
-      icono: data.icon
+      icono: data.icon,
+      permiso: data.permisos
     }
 
     // console.log('Desde navside: ' + nameModule)
@@ -147,8 +140,8 @@ export class NavsideComponent implements OnInit {
     this.fileserv.obtenerImagenCodBinding('IMG-'+codm, tipo).subscribe({
       next: (img) => {
         this.imgList = img;
-        console.log('this.imgList visto desde los modulos')
-        console.log(this.imgList)
+        // console.log('this.imgList visto desde los modulos')
+        // console.log(this.imgList)
       }, error: (e) => {
         this._show_spinner = false;
         console.error(e);

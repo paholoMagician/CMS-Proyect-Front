@@ -212,10 +212,15 @@ export class KardexTransferenciaComponent implements OnInit {
 
 
   obtenerDetalle( codcab:string ) {
+
+    console.log(codcab);
+
     this.kardexTransferencias.obtenerDetalle(codcab).subscribe({
       next: (detalletran) => {
         this.listadetalletrans = detalletran;
         console.log(this.listadetalletrans);
+      }, error: (e) => {
+        console.error(e)
       }
     })
   }

@@ -266,21 +266,24 @@ selectedOption: any;
     }
   }
 
-  filterMaquinarias() {
-  
-    if (this.searchMTerm) {
-      this.maquinariaLista = this.maquinariaListaGhost.filter((maquina:any) =>
-          maquina.nombremaquina.toLowerCase()
-                 .includes(this.searchMTerm.toLowerCase()) ||
-          maquina.modelo.toLowerCase()
-                 .includes(this.searchMTerm.toLowerCase()) ||
-          maquina.nserie.toLowerCase()
-                 .includes(this.searchMTerm.toLowerCase())
+  filterMaquinarias() {    
+    if (this.searchMTerm) {      
+      this.maquinariaLista = this.maquinariaListaGhost.filter( (maquina:any) =>
+        maquina.nombretipomaquina.toLowerCase()
+                  .includes(this.searchMTerm.toLowerCase()) 
+                  ||
+        maquina.nombremarca.toLowerCase()
+                  .includes(this.searchMTerm.toLowerCase())
+                  ||
+        maquina.nserie.toLowerCase()
+                  .includes(this.searchMTerm.toLowerCase())
+                  ||
+        maquina.nombremodelo.toLowerCase()
+                  .includes(this.searchMTerm.toLowerCase())
       );  
     } else {
       this.maquinariaLista = this.maquinariaListaGhost;
-    }
-  
+    }  
   }
 
   filterMaquinariasPreransfer() {
@@ -300,8 +303,6 @@ selectedOption: any;
   
   }
 
-
-  
   obtenerMaquinaria(option:number) {
     this._show_spinner = true;
 
@@ -481,26 +482,46 @@ selectedOption: any;
     }
   }
 
-  filterMaquinariasBodegas(searchTerm: string) {
-  
-    if (searchTerm) {
-      this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost.filter((maquina: any) =>
+  // filterMaquinariasBodegas(searchTerm: string) {
+  //   console.warn(this.listaMaquinaBodegas);
+  //   if (searchTerm) {
+  //     this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost.filter((maquina: any) =>
+  //       maquina.nserie.toLowerCase()       
+  //              .includes(searchTerm.toLowerCase()) ||
+  //       maquina.tipoMaquinas.toLowerCase() 
+  //              .includes(searchTerm.toLowerCase())
+  //     );
+  //     // console.log('listaMaquinaBodegas filtrando');
+  //     // console.log(this.listaMaquinaBodegas);
+  //   } else {      
+  //     this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost;
+  //     // console.log('listaMaquinaBodegas devuelve todo');
+  //     // console.log(this.listaMaquinaBodegas);
+  //   }
+  // }
+
+
+  filterMaquinariasBodegas(searchTerm: string) {    
+
+    console.log(searchTerm)
+    console.log(this.listaMaquinaBodegasGhost)
+    if (searchTerm) {      
+      this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost.filter( (maquina:any) =>
         maquina.nombremaquina.toLowerCase()
-               .includes(searchTerm.toLowerCase()) ||
-        maquina.modelo.toLowerCase()       
-               .includes(searchTerm.toLowerCase()) ||
-        maquina.nserie.toLowerCase()       
-               .includes(searchTerm.toLowerCase()) ||
-        maquina.tipoMaquinas.toLowerCase() 
-               .includes(searchTerm.toLowerCase())
-      );
-      console.log('listaMaquinaBodegas filtrando');
-      console.log(this.listaMaquinaBodegas);
-    } else {      
+                  .includes(searchTerm.toLowerCase()) 
+                  ||
+        maquina.nombremarca.toLowerCase()
+                  .includes(searchTerm.toLowerCase())
+                  ||
+        maquina.nserie.toLowerCase()
+                  .includes(searchTerm.toLowerCase())
+                  ||
+        maquina.nombremodelo.toLowerCase()
+                  .includes(searchTerm.toLowerCase())
+      );  
+    } else {
       this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost;
-      console.log('listaMaquinaBodegas devuelve todo');
-      console.log(this.listaMaquinaBodegas);
-    }
+    }  
   }
   
   
@@ -597,10 +618,6 @@ selectedOption: any;
       next:(itemstransfer) => {
         this.itemsBodegaTransferenciaGhost = itemstransfer;
         this.itemsBodegaTransferencia = itemstransfer;
-        console.warn('xxxxxxxxxxxxxxxxxxxxxxxxxxx');
-        console.warn(this.itemsBodegaTransferencia);
-        console.warn('xxxxxxxxxxxxxxxxxxxxxxxxxxx');
-        console.log(this.itemsBodegaTransferencia.length);
         this._show_spinner = false;
       },error: (e) => {
         console.error(e);
@@ -633,16 +650,21 @@ selectedOption: any;
 
           let array = {            
               "nserie":               element.nserie,
-              "modelo":               element.modelo,
+              "modelo":               element.modelo.trim(),
+              "marca":                element.marca.trim(),
+              "contadorinicial":      element.contadorinicial,
+              "contadorfinal":        element.contadorfinal,
               "nombremaquina":        element.nombremaquina,
-              "tipoMaquinas":         element.tipoMaquinas,
+              "tipoMaquinas":         element.codtipomaquina.trim(),
               "codmaquinaria":        element.codmaquinaria,
               "codbodega":            element.codbodega,
-              "fecrea":               element.fecre,
+              "fecrea":               element.fecrea,
               "codmaquinariabodega":  element.codmaquinariabodega,
               "coduser":              element.coduser,
-              "menuAbierto":          false,
-              "estado":               element.estado
+              "menuAbierto":          true,
+              "estado":               element.estado,
+              "nombremodelo":         element.nombremodelo,
+              "nombremarca":          element.nombremarca
           }
 
           this.listaMaquinaBodegas.push(array);
@@ -659,8 +681,6 @@ selectedOption: any;
   codmaquinaria: string = '';
   openMenu(event: MouseEvent, item: any): void {
     event.preventDefault();
-    
-    console.log( item )
     this.codmaquinaria = item.codmaquinaria
     console.log( this.codmaquinaria );
     // Cerrar los menús desplegables de los demás elementos
@@ -677,20 +697,21 @@ selectedOption: any;
 
   }
 
-  verDetallePalets(option:number) {
-
+  verDetallePalets( data:any, option:number ) {
     switch(option) {
       case 1:
         this._view_details_palets = true;
-        this.maquinaria.ObtenerMaquinaUnit( this.codmaquinaria, this.ccia ).subscribe({
+
+        console.warn(data);
+
+        this.maquinaria.ObtenerMaquinaUnit( data.tipoMaquinas.trim(), data.marca.trim(), data.modelo.trim(), 2, this.codmaquinaria ).subscribe({
           next:(maquina) => {
             this.listMaquinaUnit = maquina;
-            console.log(this.listMaquinaUnit);
+            console.warn(this.listMaquinaUnit);
           }
         })
         break;
       case 2:
-        console.log('Cerrando')
         this._view_details_palets = false;
         break;
     }

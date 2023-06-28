@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   _perfil_usuario: boolean = false;
   _bodegas: boolean = false;
   _configuracion: boolean = false;
+  _imagenes_productos: boolean = false;
 
   constructor( private dash: DashboardService, private log: LoginService ) { }
 
@@ -44,6 +45,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas = false;
         this._configuracion = false;
+        this._imagenes_productos = false;
         break;
       case 'Cobertura Técnica':
         this._usuario    = false;
@@ -54,6 +56,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas = false;
         this._configuracion = false;
+        this._imagenes_productos = false;
         break;
       case 'Clientes':
         this._usuario    = false;
@@ -65,6 +68,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas = false;
         this._configuracion = false;
+        this._imagenes_productos = false;
         break;
       case 'Agencias':
         this._usuario    = false;
@@ -76,6 +80,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas = false;
         this._configuracion = false;
+        this._imagenes_productos = false;
         break;
       case 'Maquinaria':
         this._usuario    = false;
@@ -87,6 +92,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas = false;
         this._configuracion = false;
+        this._imagenes_productos = false;
         break;
       case 'Perfil':
         this._usuario    = false;
@@ -98,6 +104,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = true;
         this._bodegas = false;
         this._configuracion = false;
+        this._imagenes_productos = false;
         break;
       case 'Bodegas Virtuales':
         this._usuario    = false;
@@ -109,6 +116,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas = true;
         this._configuracion = false;
+        this._imagenes_productos = false;
         break;
       case 'Configuración':
         this._usuario    = false;
@@ -120,6 +128,19 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas = false;
         this._configuracion = true;
+        this._imagenes_productos = false;
+        break;
+      case 'Imagenes Productos':
+        this._usuario    = false;
+        this._dashboard  = false;
+        this._asignacion = false;
+        this._clientes   = false;
+        this._agencias   = false;
+        this._maquinaria = false;
+        this._perfil_usuario = false;
+        this._bodegas = false;
+        this._configuracion = false;
+        this._imagenes_productos = true;
         break;
     }
   }

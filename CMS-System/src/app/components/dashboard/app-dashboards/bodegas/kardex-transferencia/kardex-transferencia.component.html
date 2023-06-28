@@ -104,14 +104,15 @@
             <table class="table" id="myTable" #myTable >
                 <thead class="text-black" style="border-radius:  5px;" [ngStyle]="{'background-color': _color_transfer}" >
                     <th class="p-3">Nombre del producto</th>
-                    <!-- <th>Número de Serie</th> -->
+                    
                     <th class="p-3">Descripción del proceso</th>
                 </thead>
                 <tbody>
                     <tr *ngFor="let detalle of listadetalletrans" >
-                        <td class="p-3">{{detalle.nombremaquina}}</td>
-                        <!-- <td>{{detalle.nserie}}</td> -->
-                        <td class="p-3" style="text-align: justify;" >{{detalle.descripcion}}</td>
+                        <td class="p-3">
+                            {{detalle.nombremaquina}}
+                        </td>                        
+                        <td class="p-3" style="text-align: justify;">{{detalle.descripcion}}</td>
                     </tr>
                 </tbody>
             </table>
