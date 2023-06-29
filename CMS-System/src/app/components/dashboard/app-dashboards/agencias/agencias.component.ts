@@ -6,6 +6,8 @@ import { ClienteService } from '../clientes/services/cliente.service';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 
 import Swal from 'sweetalert2'
+import { MatDialog } from '@angular/material/dialog';
+import { ModalAsignacionProductosComponent } from './modal-asignacion-productos/modal-asignacion-productos.component';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -31,7 +33,7 @@ export class AgenciasComponent implements OnInit {
 
   _show_form_agency: boolean = false;
 
-  columnHead:         any = [ 'edit', 'nombreCliente', 'nombre', 'centrocostos', 'mantenimiento', 'horarioatenciond', 'horarioatenciondm', 'C.Maq.', 'tipoAgencia'];
+  columnHead:         any = [ 'edit', 'maqu', 'nombreCliente',  'nombre', 'centrocostos', 'mantenimiento', 'horarioatenciond', 'horarioatenciondm', 'C.Maq.', 'tipoAgencia'];
   public dataSource!: MatTableDataSource<any>;
   _cancel_button:     boolean = false;
   _icon_button:       string = 'add';
@@ -76,7 +78,7 @@ export class AgenciasComponent implements OnInit {
   })
 
 
-  constructor( private client: ClienteService, private DataMaster: SharedService ) { }
+  constructor( private client: ClienteService, private DataMaster: SharedService, public dialog: MatDialog ) { }
 
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
@@ -508,5 +510,24 @@ export class AgenciasComponent implements OnInit {
     }
   }
 
+  openDialog(data:any): void {
+
+    const dialogRef = this.dialog.open( ModalAsignacionProductosComponent, {
+      height: '600px',
+      width: '80%',
+      data: data, 
+    });
+
+
+    dialogRef.afterClosed().subscribe( result => {      
+      
+      console.warn( result );
+
+      // this.obtenerConvenioMacro();
+
+    });
+
+
+  }
 
 }

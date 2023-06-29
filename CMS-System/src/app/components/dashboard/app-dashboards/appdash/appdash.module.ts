@@ -65,6 +65,8 @@ import { EmpresaComponent } from '../empresa/empresa.component';
 import { ConfiguracionComponent } from '../configuracion/configuracion.component';
 import { AsignModUserComponent } from '../configuracion/asign-mod-user/asign-mod-user.component';
 import { ImagenesProductosComponent } from '../imagenes-productos/imagenes-productos.component';
+import { GarantiasComponent } from '../garantias/garantias.component';
+import { ModalAsignacionProductosComponent } from '../agencias/modal-asignacion-productos/modal-asignacion-productos.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +84,9 @@ import { ImagenesProductosComponent } from '../imagenes-productos/imagenes-produ
     EmpresaComponent,
     ConfiguracionComponent,
     AsignModUserComponent,
-    ImagenesProductosComponent
+    ImagenesProductosComponent,
+    GarantiasComponent,
+    ModalAsignacionProductosComponent
   ],
   imports: [
     CommonModule,
@@ -151,7 +155,8 @@ import { ImagenesProductosComponent } from '../imagenes-productos/imagenes-produ
     EmpresaComponent,
     ConfiguracionComponent,
     AsignModUserComponent,
-    ImagenesProductosComponent
+    ImagenesProductosComponent,
+    GarantiasComponent
   ]
 })
 export class AppdashModule { }

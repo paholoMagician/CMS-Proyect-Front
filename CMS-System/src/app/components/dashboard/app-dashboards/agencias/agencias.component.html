@@ -276,6 +276,21 @@
     
               </ng-container>
     
+            <ng-container matColumnDef="maqu"  >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-icon></mat-icon>
+                </th>
+                <!-- [matTooltip]="" -->
+                <td style="cursor: pointer;" mat-cell  [ngStyle]="{'background-color': 'rgba( 234, 172, 0,0.2 )'}"
+                    *matCellDef="let row"  (click)="openDialog(row)" >
+                    <div class="d-flex align-items-center justify-content-center robot " >
+                        <mat-icon >
+                            point_of_sale
+                        </mat-icon>
+                    </div>
+                </td>
+            </ng-container>
+    
             <ng-container matColumnDef="nombreCliente" >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Nombre Cliente
@@ -284,7 +299,9 @@
                 <td style="cursor: pointer;" mat-cell 
                     *matCellDef="let row" 
                     >
-                  {{row.nombreCliente}}
+                    <div class="p-2 "  >
+                        {{row.nombreCliente}}
+                    </div>
                 </td>
             </ng-container>
     

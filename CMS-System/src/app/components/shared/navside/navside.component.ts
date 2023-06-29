@@ -47,8 +47,7 @@ export class NavsideComponent implements OnInit {
   constructor( private validate: LoginService, public Shared: NavsideService, private fileserv: ImagecontrolService ) { }
   
   ngOnInit(): void {
-    this.getModulos();
-  
+    this.getModulos();  
   }
 
   getModulos() {    
@@ -124,7 +123,7 @@ export class NavsideComponent implements OnInit {
       permiso: data.permisos
     }
 
-    // console.log('Desde navside: ' + nameModule)
+    console.log('Desde navside: ' + data.moduleName)
     this.modulo.emit(modulo)
   }
 
