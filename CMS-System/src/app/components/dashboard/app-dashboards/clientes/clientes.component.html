@@ -11,150 +11,164 @@
          <span class="fs-5">{{modulo.nombre}}</span>
     </div>
     <hr>
-    <div class="form-section">
-
-        <form [formGroup]="clienteForm" class="mb-2" (ngSubmit)="onSubmit()">
-            <div class=" d-flex justify-content-between  flex-wrap    ">
-                <div class="mb-3 col-2 ">
-                    <label for="ruc" class="form-label">
-                        R.U.C.: <span class="text-danger">*</span>
-                    </label>
-                    <input type="text" class="form-control"
-                           formControlName="ruc" #ruc id="ruc" 
-                           (keyup)="validarCadena($event, 'ruc', 'N')">
-                </div>
-                <div class="mb-3 col-5">
-                    <label for="nombre" class="form-label">
-                        Nombre del Cliente (Empresa):<span class="text-danger">*</span>
-                    </label>
-                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombre', 'L')"
-                           formControlName="nombre" 
-                           #nombre id="nombre"
-                           placeholder="Corporación Naranja S.A.">
-                </div>
-                <div class="mb-3 col-4 ">
-                    <label for="replegal" class="form-label   ">
-                        Representante Legal:<span class="text-danger">*</span>
-                    </label>
-                    <input type="text"  class="form-control" 
-                           (keyup)="validarCadena($event, 'ruc', 'L')"
-                           formControlName="replegal" #replegal id="replegal" placeholder="Abg. Mauricio Pimentel">
+    <div class="form-section d-flex justify-content-between ">
+        <div class="d-flex justify-content-center align-items-center flex-column p-4">
+            <div class="imagen" [ngStyle]="{'background-image': 'url('+_IMGE+')', 'background-size': '100% 100%'}"></div>
+            <div class="w-100 mt-4">
+                <div class="input-group">
+                    <input type="file" class="form-control" (change)="encodeImageFileAsURL(); onFileSelected($event); validarImagen()"
+                           id="fileUp2" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                           <!-- <button class="btn btn-outline-secondary " type="button" [disabled]="_validate_img" id="inputGroupFileAddon04" >
+                                Button
+                           </button> -->
                 </div>
             </div>
-            <div  class=" d-flex justify-content-between  flex-wrap    "  >
-            <div class="mb-3 col-5 ">
-                <label for="descripcion" class="form-label   ">
-                    Descripcion:
-                </label>
-                <input type="text" class="form-control" (keyup)="validarCadena($event, 'descripcion', 'L')"  formControlName="descripcion" #descripcion id="descripcion" placeholder="Empresa dedicada a elaborar...">
-            </div>
-            <div class="mb-3 col-6 ">
-                <label for="observacion" class="form-label   ">
-                    Observacion:
-                </label>
-                <input type="text" class="form-control" (keyup)="validarCadena($event, 'observacion', 'L')"  formControlName="observacion" 
-                       #observacion id="observacion" placeholder="La persona que se encarga de dar paso se llama Juan Mendoza guardia de seguridad...">
-            </div>
-            </div>
-            <div  class=" d-flex justify-content-start  flex-wrap    "  >
-                <div class="m-2 col-3 ">
-                    <label for="telfpago" class="form-label   ">
-                        Nombre persona mantenimiento: 
-                        <br>
-                        <!-- <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small> -->
-                    </label>
-                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombreMantenimiento', 'L')"  formControlName="nombreMantenimiento" #nombreMantenimiento id="nombreMantenimiento" placeholder="Carlos Vera">
-                </div>
-                <div class="m-2 col-3 ">
-                    <label for="telfclimanteni" class="form-label   ">
-                        Telefono mantenimiento: <span class="text-danger">*</span>
-                        <br>
-                        <small class="text-secondary">Teléfono de la persona encargada del mantenimiento por parte del cliente.</small>
-                    </label>
-                    <div class="d-flex">
-                        <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfclimanteni', 'N')"  formControlName="telfclimanteni" #telfclimanteni id="telfclimanteni" placeholder="0987654321">
-                        <input type="text" style="width: 80px;" class="form-control" (keyup)="validarCadena($event, 'extension1', 'N')"  formControlName="extension1" #extension1 id="extension1" placeholder="Ext.:141">
+            <!-- <app-image-control [datalisten]="maquinariaModel"></app-image-control> -->
+        </div>
+        <div class="d-flex" style="width: 75%;">
+            <form [formGroup]="clienteForm" class="w-100"
+                  (ngSubmit)="onSubmit()">
+                <div class=" d-flex justify-content-between flex-wrap">
+                    <div class="mb-3 col-2 ">
+                        <label for="ruc" class="form-label">
+                            R.U.C.:<span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control"
+                               formControlName="ruc" #ruc id="ruc"
+                               (keyup)="validarCadena($event, 'ruc', 'N')">
+                    </div>
+                    <div class="mb-3 col-5">
+                        <label for="nombre" class="form-label">
+                            Nombre del Cliente (Empresa):<span class="text-danger">*</span>
+                        </label>
+                        <input type="text" class="form-control"
+                               (keyup)="validarCadena($event, 'nombre', 'L')"
+                               formControlName="nombre"
+                               #nombre id="nombre"
+                               placeholder="Corporación Naranja S.A.">
+                    </div>
+                    <div class="mb-3 col-4 ">
+                        <label for="replegal" class="form-label   ">
+                            Representante Legal:<span class="text-danger">*</span>
+                        </label>
+                        <input type="text"  class="form-control" 
+                               (keyup)="validarCadena($event, 'ruc', 'L')"
+                               formControlName="replegal" #replegal id="replegal" placeholder="Abg. Mauricio Pimentel">
                     </div>
                 </div>
-                <div class="m-2 col-4 ">
-                    <label for="correomantenimiento" class="form-label   ">
-                        Email mantenimiento: <span class="text-danger">*</span>
-                        <br>
-                        <small class="text-secondary">Email de la persona encargada del mantenimiento por parte del cliente.</small>
+                <div  class=" d-flex justify-content-between  flex-wrap    "  >
+                <div class="mb-3 col-5 ">
+                    <label for="descripcion" class="form-label   ">
+                        Descripcion:
                     </label>
-                    <input type="email" class="form-control" formControlName="correomantenimiento" #correomantenimiento id="correomantenimiento" placeholder="mateni@mail.com">
-                    
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'descripcion', 'L')"  formControlName="descripcion" #descripcion id="descripcion" placeholder="Empresa dedicada a elaborar...">
                 </div>
-            </div>
-            <div  class=" d-flex justify-content-start  flex-wrap    "  >
-                <div class="m-2 col-3 ">
-                    <label for="telfpago" class="form-label   ">
-                        Nombre persona cobro: 
-                        <br>
-                        <!-- <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small> -->
+                <div class="mb-3 col-6 ">
+                    <label for="observacion" class="form-label   ">
+                        Observacion:
                     </label>
-                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombrePago', 'L')"  formControlName="nombrePago" #nombrePago id="nombrePago" placeholder="Paola Gonzabay">
+                    <input type="text" class="form-control" (keyup)="validarCadena($event, 'observacion', 'L')"  formControlName="observacion" 
+                           #observacion id="observacion" placeholder="La persona que se encarga de dar paso se llama Juan Mendoza guardia de seguridad...">
                 </div>
-                <div class="m-2 col-3 ">
-                    <label for="telfpago" class="form-label   ">
-                        Telf. cobro: <span class="text-danger">*</span>
-                        <br>
-                        <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small>
-                    </label>
-                    <div class="d-flex">
-                        <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfpago', 'N')"  formControlName="telfpago" #telfpago id="telfpago" placeholder="0987654321">
-                        <input type="text" style="width: 80px;" class="form-control" (keyup)="validarCadena($event, 'extension2', 'N')"  formControlName="extension2" #extension2 id="extension2" placeholder="Ext.:182">
+                </div>
+                <div  class=" d-flex justify-content-start  flex-wrap    "  >
+                    <div class="m-2 col-3 ">
+                        <label for="telfpago" class="form-label   ">
+                            Nombre persona mantenimiento: 
+                            <br>
+                            <!-- <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small> -->
+                        </label>
+                        <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombreMantenimiento', 'L')"  formControlName="nombreMantenimiento" #nombreMantenimiento id="nombreMantenimiento" placeholder="Carlos Vera">
+                    </div>
+                    <div class="m-2 col-3 ">
+                        <label for="telfclimanteni" class="form-label   ">
+                            Telefono mantenimiento: <span class="text-danger">*</span>
+                            <br>
+                            <small class="text-secondary">Teléfono de la persona encargada del mantenimiento por parte del cliente.</small>
+                        </label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfclimanteni', 'N')"  formControlName="telfclimanteni" #telfclimanteni id="telfclimanteni" placeholder="0987654321">
+                            <input type="text" style="width: 80px;" class="form-control" (keyup)="validarCadena($event, 'extension1', 'N')"  formControlName="extension1" #extension1 id="extension1" placeholder="Ext.:141">
+                        </div>
+                    </div>
+                    <div class="m-2 col-4 ">
+                        <label for="correomantenimiento" class="form-label   ">
+                            Email mantenimiento: <span class="text-danger">*</span>
+                            <br>
+                            <small class="text-secondary">Email de la persona encargada del mantenimiento por parte del cliente.</small>
+                        </label>
+                        <input type="email" class="form-control" formControlName="correomantenimiento" #correomantenimiento id="correomantenimiento" placeholder="mateni@mail.com">
+
                     </div>
                 </div>
-                <div class="m-2 col-4 ">
-                    <label for="telfpago" class="form-label   ">
-                        Email cobro: <span class="text-danger">*</span>
-                        <br>
-                        <small class="text-secondary">Email de la persona encargada del pago por nuestros servicios. <br>
-                        &nbsp;&nbsp;&nbsp;                       
-                        </small>
-                    </label>
-                    <input type="email" class="form-control" formControlName="correopago" #correopago id="correopago" placeholder="pago@mail.com">
+                <div  class=" d-flex justify-content-start  flex-wrap    "  >
+                    <div class="m-2 col-3 ">
+                        <label for="telfpago" class="form-label   ">
+                            Nombre persona cobro: 
+                            <br>
+                            <!-- <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small> -->
+                        </label>
+                        <input type="text" class="form-control" (keyup)="validarCadena($event, 'nombrePago', 'L')"  formControlName="nombrePago" #nombrePago id="nombrePago" placeholder="Paola Gonzabay">
+                    </div>
+                    <div class="m-2 col-3 ">
+                        <label for="telfpago" class="form-label   ">
+                            Telf. cobro: <span class="text-danger">*</span>
+                            <br>
+                            <small class="text-secondary">Teléfono de la persona encargada del pago por nuestros servicios.</small>
+                        </label>
+                        <div class="d-flex">
+                            <input type="text" class="form-control" (keyup)="validarCadena($event, 'telfpago', 'N')"  formControlName="telfpago" #telfpago id="telfpago" placeholder="0987654321">
+                            <input type="text" style="width: 80px;" class="form-control" (keyup)="validarCadena($event, 'extension2', 'N')"  formControlName="extension2" #extension2 id="extension2" placeholder="Ext.:182">
+                        </div>
+                    </div>
+                    <div class="m-2 col-4 ">
+                        <label for="telfpago" class="form-label   ">
+                            Email cobro: <span class="text-danger">*</span>
+                            <br>
+                            <small class="text-secondary">Email de la persona encargada del pago por nuestros servicios. <br>
+                            &nbsp;&nbsp;&nbsp;                       
+                            </small>
+                        </label>
+                        <input type="email" class="form-control" formControlName="correopago" #correopago id="correopago" placeholder="pago@mail.com">
+                    </div>
                 </div>
-            </div>
-            <div  class=" d-flex justify-content-between  flex-wrap    "  >
-                <div class="mb-3 col-3  ">
-                    <label for="tipo" class="form-label ">
-                        Tipo de persona:
-                    </label>
-                    <select class="inpForms form-select   w-100"
-                            formControlName="tipo" #tipo id="tipo" aria-label="">
-                            <option *ngFor="let tipo of tipoEmpresaLista" [value]="tipo.codigo" >
-                                {{tipo.nombre | titlecase }}                                
-                            </option>
-                    </select>
+                <div  class=" d-flex justify-content-between  flex-wrap    "  >
+                    <div class="mb-3 col-3  ">
+                        <label for="tipo" class="form-label ">
+                            Tipo de persona:
+                        </label>
+                        <select class="inpForms form-select   w-100"
+                                formControlName="tipo" #tipo id="tipo" aria-label="">
+                                <option *ngFor="let tipo of tipoEmpresaLista" [value]="tipo.codigo" >
+                                    {{tipo.nombre | titlecase }}                                
+                                </option>
+                        </select>
+                    </div>
+                    <div class="mb-3 col-4 ">
+                        <label for="fechacontinicio" class="form-label   ">
+                            Fecha inicial del contrato:
+                        </label>
+                        <input type="date" class="form-control" formControlName="fechacontinicio" #fechacontinicio id="fechacontinicio" >
+                    </div>
+                    <div class="mb-3 col-4 ">
+                        <label for="fechacontfinal" class="form-label   ">
+                            Fecha final del contrato:
+                        </label>
+                        <input type="date" class="form-control" formControlName="fechacontfinal" #fechacontfinal id="fechacontfinal" >
+                    </div>
                 </div>
-                <div class="mb-3 col-4 ">
-                    <label for="fechacontinicio" class="form-label   ">
-                        Fecha inicial del contrato:
-                    </label>
-                    <input type="date" class="form-control" formControlName="fechacontinicio" #fechacontinicio id="fechacontinicio" >
+                <div class="floating-button">
+
+                    <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                    <button type="submit" mat-raised-button color="primary">
+                        <mat-icon>{{_icon_button}}</mat-icon> {{_action_butto}} {{modulo.nombre}}
+                    </button>
+
                 </div>
-                <div class="mb-3 col-4 ">
-                    <label for="fechacontfinal" class="form-label   ">
-                        Fecha final del contrato:
-                    </label>
-                    <input type="date" class="form-control" formControlName="fechacontfinal" #fechacontfinal id="fechacontfinal" >
-                </div>
-            </div>
-            <div class="floating-button">
-
-                <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
-                    <mat-icon>cancel</mat-icon>
-                </button>
-                <button type="submit" mat-raised-button color="primary">
-                    <mat-icon>{{_icon_button}}</mat-icon> {{_action_butto}} {{modulo.nombre}}
-                </button>
-
-            </div>
-
-        </form>
-
+            </form>
+        </div>
     </div>
 
 </div>
@@ -214,6 +228,15 @@
     
               </ng-container>    
     
+            <ng-container matColumnDef="imagen" >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                    <mat-icon>photo</mat-icon>
+                </th>
+                <td style="cursor: pointer;" mat-cell 
+                    *matCellDef="let row">
+                    <div class="icono" [ngStyle]="{'background-image': 'url('+row.imagen+')', 'background-size': '100% 100%'}"></div>
+                </td>
+            </ng-container>    
             <ng-container matColumnDef="N.Agen." >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     N.Agen.

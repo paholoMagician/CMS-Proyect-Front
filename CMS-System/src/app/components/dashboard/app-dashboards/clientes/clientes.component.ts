@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ClienteService } from './services/cliente.service';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 import Swal from 'sweetalert2'
+import { ImagecontrolService } from 'src/app/components/shared/image-control/services/imagecontrol.service';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -33,8 +34,8 @@ export class ClientesComponent implements OnInit {
   _icon_button:       string = 'add';
   _action_butto:      string = 'Crear';
   tipoEmpresaLista:   any = [];
-  _show_spinner:      boolean = false; 
-  columnHead:         any = [ 'edit', 'N.Agen.', 'nombre', 'R.U.C.', 'replegal', 'descripcion', 'fechas' ];
+  _show_spinner:      boolean = false;
+  columnHead:         any = [ 'edit', 'N.Agen.', 'imagen', 'nombre', 'R.U.C.', 'replegal', 'descripcion', 'fechas' ];
   public dataSource!: MatTableDataSource<any>;
 
   @Input() modulo: any = [];
@@ -56,20 +57,18 @@ export class ClientesComponent implements OnInit {
     nombre:               new FormControl(''),
     tipo:                 new FormControl(''),
     nombreMantenimiento:  new FormControl(''),
-    nombrePago:          new FormControl(''),
-    extension1:          new FormControl(''),
-    extension2:          new FormControl(''),
+    nombrePago:           new FormControl(''),
+    extension1:           new FormControl(''),
+    extension2:           new FormControl(''),
   })
 
-  constructor( private client: ClienteService,private DataMaster: SharedService  ) { }
+  constructor( private client: ClienteService,private DataMaster: SharedService, private fileserv: ImagecontrolService,  ) { }
 
   ngOnInit(): void {
-
     // Provincia  
     this.getDataMaster('TP');
     this.ccia = sessionStorage.getItem('codcia');
     this.obtenerCliente();
-
   }
 
   validarCadena(event:any, controlname:any, tipo: string) {
@@ -106,6 +105,7 @@ export class ClientesComponent implements OnInit {
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;
+    this._IMGE = '';
   }
 
   validatePersonal() {
@@ -142,6 +142,79 @@ export class ClientesComponent implements OnInit {
       }
     }) 
   }
+  public file!: File;
+  onFileSelected(event: any): void {
+    this.file = event.target.files[0];
+  }
+
+  _IMGE:any;
+  nameFile: string = '';
+  public fileId: any;
+  encodeImageFileAsURL() {    
+    this._show_spinner = true;
+    const filesSelected: any = document.getElementById('fileUp2') as HTMLInputElement;
+    this.fileId = filesSelected.files;
+    let s = this.fileId[0].name.split('.');
+    this.nameFile = s[0];
+    let base;
+    if (this.fileId.length > 0) {
+      
+      const fileToLoad: any = filesSelected[0];
+      const fileReader: any = new FileReader();
+      
+      fileReader.onload = () => {
+        base = fileReader.result;
+      };
+      
+      fileReader.onloadend = () => {
+        this._IMGE = fileReader.result;
+        console.log(this._IMGE)
+        this.validarImagen()
+      };
+
+      fileReader.readAsDataURL(this.fileId[0]);
+      this._show_spinner = false;
+      
+    }
+
+  }
+
+  _validate_img: boolean = true;
+  validarImagen() {
+    
+    if( this._IMGE == '' || this._IMGE == undefined || this._IMGE == null ) this._validate_img = true;
+    else this._validate_img = false;
+
+  }
+
+  imagenModel: any = [];
+  guardarImagen(token:any) {
+
+    this.imagenModel = {
+      codentidad: token,
+      imagen:    this._IMGE,
+      tipo:      'Cliente'
+    }
+
+    this.DataMaster.guardarImagenEntidadGeneral( this.imagenModel ).subscribe({
+    next: (x) => {
+      this._show_spinner = false;
+      Swal.fire(
+        'Imagen agregada',
+        'Imagen de cliente se ha guardado con éxito',
+        'success'
+      ) 
+    }, error: (e) => {
+      console.error(e);
+      this._show_spinner = false;
+      Swal.fire(
+        'Oops!',
+        'Algo ha salido mal.',
+        'success'
+      ) 
+    }, complete: () => {}
+  })
+}
 
   modelCliente: any = [];
   guardarClientes() {
@@ -203,8 +276,9 @@ export class ClientesComponent implements OnInit {
           )
         },
         complete: () => {
-          this.limpiar();
+          this.guardarImagen(token);
           this.obtenerCliente();
+          this.limpiar();
         }
       }
     )
@@ -223,6 +297,9 @@ export class ClientesComponent implements OnInit {
     this.client.obtenerClientes(this.ccia).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
+
+        
+
         console.log(this.listaClientes)
       },
       error: (e) => {
@@ -235,6 +312,19 @@ export class ClientesComponent implements OnInit {
         this._show_spinner = false;
       }
     })
+  }
+
+  obtenerImagen(codec:string) {
+    this._show_spinner = true;
+    this.fileserv.obtenerImagenCodBinding(codec, 'Cliente').subscribe({
+      next: (imagen:any) => {
+        this._show_spinner = false;
+        this._IMGE = imagen[0].imagen;
+      }, error: (e) => {
+        this._show_spinner = false;
+      }
+    })
+  
   }
 
   eliminarClientes(data: any) {
@@ -276,7 +366,6 @@ export class ClientesComponent implements OnInit {
         })
       }
     })
-    
 
   }
 
@@ -306,6 +395,8 @@ export class ClientesComponent implements OnInit {
     this._icon_button   = 'sync_alt';
     this._action_butto  = 'Actualizar';
     this._cancel_button = true;
+    this.obtenerImagen(this.codcli);
+
   }
 
   editaClientes() {
@@ -358,8 +449,9 @@ export class ClientesComponent implements OnInit {
           )
         },
         complete: () => {
-          this.limpiar();
+          this.guardarImagen( this.codcli);
           this.obtenerCliente();
+          this.limpiar();
         }
       })
 

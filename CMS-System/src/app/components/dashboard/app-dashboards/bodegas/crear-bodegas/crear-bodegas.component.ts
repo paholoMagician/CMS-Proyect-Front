@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CrearBodegasService } from './services/crear-bodegas.service';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import Swal from 'sweetalert2'
+import { ModalClientesComponent } from './modal-clientes/modal-clientes.component';
+import { MatDialog } from '@angular/material/dialog';
 
+import Swal from 'sweetalert2'
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -15,8 +17,6 @@ const Toast = Swal.mixin({
     toast.addEventListener('mouseleave', Swal.resumeTimer);
   }
 })
-
-
 
 @Component({
   selector: 'app-crear-bodegas',
@@ -33,7 +33,7 @@ export class CrearBodegasComponent implements OnInit {
   modelBodegas: any = []
   
   
-  constructor(private bodega: CrearBodegasService) { }
+  constructor(private bodega: CrearBodegasService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
@@ -166,7 +166,6 @@ export class CrearBodegasComponent implements OnInit {
       next:(bodegas) => {
         this.listBodegas = bodegas;
         this.filteredBodegas = bodegas;
-        console.log(this.listBodegas);
       }
     })
   }
@@ -216,6 +215,36 @@ export class CrearBodegasComponent implements OnInit {
     })
   }
 
-  
+  openDialog(data:any): void {
+
+    const reasignData = {
+      "cantidadItems": data.cantidadItems,
+      "id": data.id,
+      "nombrebodega": data.nombrebodega,
+      "descripcion": data.descripcion,
+      "fecrea": data.fecrea,
+      "ccia": data.ccia,
+      "nombre": data.nombre,
+      "ruc": data.ruc,
+      "estado": 1
+    }
+
+    const dialogRef = this.dialog.open( ModalClientesComponent, {
+      height: '600px',
+      width: '50%',
+      data: reasignData, 
+    });
+
+
+    dialogRef.afterClosed().subscribe( result => {      
+      
+      console.warn( result );
+
+      this.obtenerBodegas();
+
+    });
+
+
+  }
 
 }

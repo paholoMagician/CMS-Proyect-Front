@@ -3,16 +3,20 @@ import { UserService } from '../../usuario/services/user.service';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalProvicComponent } from '../modal/modal-provic/modal-provic.component';
+import { CrononewdisService } from '../../crononewdis/services/crononewdis.service';
+import { ClienteService } from '../../clientes/services/cliente.service';
+import { FormControl, FormGroup } from '@angular/forms';
+
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
   showConfirmButton: false,
   timer: 3000,
   timerProgressBar: true,
-  didOpen: (toast) => {
+  didOpen: (toast) => {    
     toast.addEventListener('mouseenter', Swal.stopTimer);
     toast.addEventListener('mouseleave', Swal.resumeTimer);
   }
@@ -23,8 +27,34 @@ const Toast = Swal.mixin({
   templateUrl: './asignacion-provincias.component.html',
   styleUrls: ['./asignacion-provincias.component.scss']
 })
-export class AsignacionProvinciasComponent implements OnInit {
 
+export class AsignacionProvinciasComponent implements OnInit {
+  clientesel: string = 'Escoge un cliente a visualizar'
+  listaAgenciasRes: any = [];
+  resultadosFiltrados: any = [];
+  _IMGE: any;
+  resultadosFiltradosNorte:any = [];
+  resultadosFiltradosCentro:any = [];
+  resultadosFiltradosSur:any = [];
+  resultadosFiltradosGeneral:any = [];
+
+  zlist1:any = [];
+  zlist2:any = [];
+  zlist3:any = [];
+  zlist4:any = [];
+  zlist5:any = [];
+  zlist6:any = [];
+  zlist7:any = [];
+
+  N:string='';
+  S:string='';
+  C:string='';
+  G:string='';
+
+  codeZone:string = '';
+  codAgencia: string = '';
+  nombrelocalizacion: string = '';
+  idlocalidad: number = 0;
   _delete_show: boolean = true;
   _edit_show: boolean = true;
   _create_show: boolean = true;
@@ -34,6 +64,10 @@ export class AsignacionProvinciasComponent implements OnInit {
   @Input() modulo: any = [];
   public ccia:any;
   lisTecnicos: any = [];
+
+  public clienteForm = new FormGroup({
+    codcliente:           new FormControl('')
+  })
 
   columnHead: any = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
   public dataSource!: MatTableDataSource<any>;
@@ -45,12 +79,19 @@ export class AsignacionProvinciasComponent implements OnInit {
     this.ccia = sessionStorage.getItem('codcia');
     this.obtenerUsuario();
     this.permisos();
+    this.getDataMaster('ZNF');
+    this.obtenerCliente();
+    this.asignarColores();
   }
 
-  constructor( private DataMaster: SharedService, private us: UserService, public dialog: MatDialog ) {  }
+  constructor( private client: ClienteService, 
+               private crone: CrononewdisService,
+               private DataMaster: SharedService,
+               private us: UserService,
+               public dialog: MatDialog ) {  }
 
   listUsuarios:any = [];
-  obtenerUsuario() {
+  obtenerUsuario() {  
     this.us.obtenerUsuarios(this.ccia).subscribe({
       next: (usuarios) => {
         this.listUsuarios = usuarios;
@@ -58,17 +99,260 @@ export class AsignacionProvinciasComponent implements OnInit {
         console.error(e);
       },complete: () => {
         this.listUsuarios.find( (element:any) => {
-
           if( element.tipo == '003' ) {
-            console.warn(element);
             this.lisTecnicos.push(element);
             this.dataSource = new MatTableDataSource(this.lisTecnicos);
             this.dataSource.paginator = this.paginator;
           }
+        })
+      }
+    })  
+  }
 
+  listaZonificacion: any = [];
+  getDataMaster(cod:string) {
+    this.DataMaster.getDataMaster(cod).subscribe({
+      next: (data) => {
+        switch(cod) {
+          case 'ZNF':
+            this.listaZonificacion = data;
+            console.log(this.listaZonificacion);
+            break;
+        }
+      }, complete: () => {
+
+        this.listaZonificacion.filter((element:any)=>{
+          this.obtenerZonaAgencia(element.codigo);
+        })
+
+      }
+    }) 
+  }
+
+
+  obtenerZonaAgencia(codec:string) {
+    this.resultadosFiltradosNorte   = []
+    this.resultadosFiltradosCentro  = []
+    this.resultadosFiltradosSur     = []
+    this.resultadosFiltradosGeneral = []
+    this.obtenerClienteUnit();
+    this.crone.obtenerZonificacion(codec, this.clienteForm.controls['codcliente'].value).subscribe({
+      next:(x:any) => {        
+        if( codec == '001' ) {
+          this.zlist1 = x;
+          this.resultadosFiltradosNorte = x;
+          console.warn('Norte');
+          console.warn(this.resultadosFiltradosNorte);
+        }      
+        else if (codec == '002') {
+          this.zlist2 = x;
+          this.resultadosFiltradosSur = x;
+          console.warn('SUR');
+          console.warn(this.resultadosFiltradosSur);
+        } 
+        else if (codec == '003') {
+          this.zlist3 = x;
+          this.resultadosFiltradosCentro = x;
+          console.warn('CENTRO');
+          console.warn(this.resultadosFiltradosCentro);
+        }
+        else if (codec == '004') {
+          this.zlist4 = x;
+          this.resultadosFiltradosGeneral = x;
+        }
+        else if (codec == '005') {
+          this.zlist5 = x;
+        }
+        else if (codec == '006') {
+          this.zlist6 = x;
+        }
+        else if (codec == '007') {
+          this.zlist7 = x;
+        }
+
+
+
+      }
+    })
+  }
+
+  getColorForInitial(initial: string): string {
+    
+    const colors: { [key: string]: string } = {
+      N: 'red',
+      C: 'green',
+      S: 'blue',
+      G: 'orange'
+    };
+    
+    return colors[initial] || 'gray';
+
+  }
+
+  asignarColores() {
+    this.N = this.getColorForInitial('N');
+    this.S = this.getColorForInitial('S');
+    this.C = this.getColorForInitial('C');
+    this.G = this.getColorForInitial('G');
+  }
+
+  eliminarDatCrono(id:any) {
+    this._show_spinner = true;
+    this.crone.eliminarZonificacion(id).subscribe (
+      {
+        next:(x) => {
+          this._show_spinner = false;
+          Toast.fire({ icon: 'success', title: 'Asignación eliminada' });
+        },
+        error: (e) => {
+          this._show_spinner = false;
+          Toast.fire({ icon: 'success', title: 'No hemos podido elimar la asignación' });
+        }, complete: () => {
+            this.obtenerAgenciaRes();
+            this.listaZonificacion.filter( (element:any) => {
+              this.obtenerZonaAgencia(element.codigo);
+            }
+          )
+        }
+      }
+    )
+  }
+
+  filtroTexto: string = '';
+  filtrarElementos() {
+    this.resultadosFiltrados = this.listaAgenciasRes.filter((item:any) =>
+      item.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
+      item.nombreProvincia.toLowerCase().includes(this.filtroTexto.toLowerCase())
+    );
+  }
+
+  filtroTextoNorte: string = '';
+  filtrarElementosNorte() {
+    this.resultadosFiltradosNorte = this.zlist1.filter((item:any) =>
+      item.nombreAgencia.toLowerCase().includes(this.filtroTextoNorte.toLowerCase()) ||
+      item.nombreProvincia.toLowerCase().includes(this.filtroTextoNorte.toLowerCase())
+    );
+  }
+
+  filtroTextoCentro: string = '';
+  filtrarElementosCentro() {
+
+    console.log(this.filtroTextoCentro)
+
+    this.resultadosFiltradosCentro = this.zlist3.filter((item:any) =>
+      item.nombreAgencia.toLowerCase().includes(this.filtroTextoCentro.toLowerCase()) ||
+      item.nombreProvincia.toLowerCase().includes(this.filtroTextoCentro.toLowerCase())
+    );
+  }
+
+  filtroTextoSur: string = '';
+  filtrarElementosSur() {
+    this.resultadosFiltradosSur = this.zlist2.filter((item:any) =>
+      item.nombreAgencia.toLowerCase().includes(this.filtroTextoSur.toLowerCase()) ||
+      item.nombreProvincia.toLowerCase().includes(this.filtroTextoSur.toLowerCase())
+    );
+  }
+  
+  filtroTextoGeneral: string = '';
+  filtrarElementosGeneral() {
+    this.resultadosFiltradosGeneral = this.zlist4.filter((item:any) =>
+      item.nombreAgencia.toLowerCase().includes(this.filtroTextoGeneral.toLowerCase()) ||
+      item.nombreProvincia.toLowerCase().includes(this.filtroTextoGeneral.toLowerCase())
+    );
+  }
+
+  validationCliente() {
+    this.obtenerAgenciaRes();
+  }
+
+  obtenerAgenciaRes() {
+    this.resultadosFiltrados = [];
+    this.crone.obtenerAgenciasGeneraCli( this.ccia, this.clienteForm.controls['codcliente'].value ).subscribe(
+      {
+        next:(x) => {
+          this.listaAgenciasRes = x;
+          this.resultadosFiltrados = x;
+          console.log(this.listaAgenciasRes);
+        }, complete: () => {
+          this.listaZonificacion.filter((element:any) => {
+            this.obtenerZonaAgencia(element.codigo);
+          })
+        }
+      }
+    )
+  }
+
+  listaClientes: any = [];
+  obtenerCliente() {
+    this._show_spinner = true;
+    this.client.obtenerClientes(this.ccia).subscribe(
+      {
+        next: (clientes) => {
+          this.listaClientes = clientes;
+          console.log(this.listaClientes)
+        },
+        error: (e) => {
+          console.error(e);
+          this._show_spinner = false;
+        },
+        complete: () => {
+          this._show_spinner = false;
+        }
+      }
+    )
+  }
+
+  obtenerClienteUnit() {
+    this.listaClientes.filter((element:any)=>{
+      if( element.codcliente == this.clienteForm.controls['codcliente'].value ) {
+        console.warn(element);
+        this.clientesel = element.nombre;
+        this._IMGE = element.imagen;
+        // console.warn(this.modelClientUnit);
+      }
+    })
+  }
+
+  catchData(data:any, codecZone: string) {
+    this.codeZone = codecZone;
+    this.codAgencia = data.codAgencia;
+    this.nombrelocalizacion = data.nombrelocalizacion;
+    this.idlocalidad = data.localidadCodigo
+  }
+
+  modelZonificacion:any = [];
+  guardarZonificacion() {
+
+    let xuser = sessionStorage.getItem('UserCod');
+    this._show_spinner = true;
+    this.modelZonificacion = {
+      "nombrelocalizacion": this.codeZone,
+      "feccrea": new Date(),
+      "codusercrea": xuser,
+      "idlocalidad": this.idlocalidad,
+      "campoA": "string",
+      "campoB": 0,
+      "codagencia": this.codAgencia,
+      "codtecnico": null
+    };
+
+    this.crone.guardarZonificacion(this.modelZonificacion).subscribe({
+      next: (x) => {
+        this._show_spinner = false;
+        Toast.fire({ icon: 'success', title: 'Se ha asignado con exito' });
+      },
+      error: (e) => {
+        this._show_spinner = false;
+        Toast.fire({ icon: 'error', title: 'No se ha podido generar la asignación' });
+      },
+      complete: () => {
+        this.obtenerAgenciaRes();
+        this.listaZonificacion.filter((element:any)=>{
+          this.obtenerZonaAgencia(element.codigo);
         })
       }
     })
+
   }
 
   permisos() {
@@ -120,15 +404,9 @@ export class AsignacionProvinciasComponent implements OnInit {
       data: data, 
     });
 
-
     dialogRef.afterClosed().subscribe( result => {      
-      
       console.warn( result );
-
-      // this.obtenerConvenioMacro();
-
     });
-
 
   }
 

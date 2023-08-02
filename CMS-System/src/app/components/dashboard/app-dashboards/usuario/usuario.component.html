@@ -6,11 +6,13 @@
 <div class="module-workarea p-4 " *ngIf="_form_create" >
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
-         <mat-icon>{{modulo.icono}}</mat-icon><span class="fs-5" > {{modulo.nombre}} </span>
+        <mat-icon>{{modulo.icono}}</mat-icon>
+        <span class="fs-5">
+            {{modulo.nombre}}
+        </span>
     </div>
     <hr>
     <div class="form-section">
-
         <form [formGroup]="userForm" class="mb-2" (ngSubmit)="onSubmit()">
             <div class=" d-flex flex-wrap justify-content-between " >
             <div class="mb-3 col-4 ">
@@ -25,8 +27,8 @@
                 </label>
                 <input type="text" class="form-control" formControlName="Apellido" #Apellido id="Apellido" placeholder="Mora Cedeño">
             </div>
-            <div class="mb-3 col-1 ">
-                <label for="Cedula" class="form-label text-secondary ">
+            <div class="mb-3 col-1">
+                <label for="Cedula" class="form-label text-secondary">
                     Edad:
                 </label>
                 <input type="number" class="form-control" formControlName="Edad" #Edad id="Edad" placeholder="21">
@@ -66,10 +68,11 @@
                 </select>
             </div>
             <div class="mb-3 col-4 ">
-                <label for="Estado" class="form-label text-secondary">
-                    Estado del trabajador:
+                <label for="Estado"
+                       class="form-label text-secondary">
+                       Estado del trabajador:
                 </label>
-                <select class="inpForms form-select   w-100"
+                <select class="inpForms form-select w-100"
                         formControlName="Estado" #Estado id="Estado" aria-label="">
                         <option *ngFor="let estadoTrabajador of estadoTrabajadorLista" [value]="estadoTrabajador.codigo" >
                             {{estadoTrabajador.nombre | titlecase }}                                
@@ -201,8 +204,6 @@
                 </div>
             </div>
         </form>
-
-
     </div>
 </div>
 

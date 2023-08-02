@@ -68,6 +68,7 @@
             <div class="contain-bodegas" >
             <ul>
                 <li *ngFor="let bodegas of filteredBodegas" class="m-3" style="list-style: none;" >
+                    <div class="d-flex justify-content-between  " >
                     <div class="d-flex align-items-center">
                         <span>
                             <button mat-mini-fab (click)="catchData(bodegas)" style="background-color: rgb(51, 75, 112); color: white;" >
@@ -78,9 +79,25 @@
                             </button>
                         </span>
                         <div class="d-flex flex-column" style="margin-left: 15px !important;">
+                            <div class="d-flex flex-column" style="font-size: 9pt !important; ">
+                                <small class="text-secondary d-flex align-items-center  "  >
+                                    ...asignado a: {{bodegas.nombre}} - {{bodegas.ruc}}
+                                    <!-- <span class="badge bg-warning text-dark ">{{bodegas.cantidadItems}}</span> -->
+                                </small>
+                            </div>
                             <div class="fs-4 text-primary d-flex align-items-center  "  >{{bodegas.nombrebodega}} <span class="badge bg-warning text-dark ">{{bodegas.cantidadItems}}</span>  </div>
                             <small class="text-secondary">{{bodegas.fecrea | date: 'dd-MM-yyyy'}}</small>
+                            
                         </div>
+                        
+                    </div>
+                    <div>
+                        <button mat-raised-button 
+                                (click)="openDialog(bodegas)"
+                                style="background-color: steelblue;" >
+                            <mat-icon>villa</mat-icon>
+                        </button>
+                    </div>
                     </div>
                     <div class="m-3">
                         {{bodegas.descripcion}}

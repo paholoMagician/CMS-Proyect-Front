@@ -209,13 +209,25 @@
               </ng-container>    
 
     
+            <ng-container matColumnDef="icon">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+                <td style="cursor: pointer;" mat-cell 
+                    *matCellDef="let row">
+                    <span class="w-100 d-flex align-items-center" 
+                          [matTooltip]="row.nombreCliente"
+                          matTooltipPosition="before"
+                          [ngStyle]="{'color': row.colorestado}" >
+                        <mat-icon>{{row.icon}}</mat-icon>
+                    </span>
+                </td>
+            </ng-container>
+    
             <ng-container matColumnDef="nombretipomaquina" >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Nombre tipo máquina
                 </th>
                 <td style="cursor: pointer;" mat-cell 
-                    *matCellDef="let row" 
-                    >
+                    *matCellDef="let row" >
                   {{row.nombretipomaquina}}
                 </td>
             </ng-container>
@@ -232,19 +244,18 @@
                 </td>
             </ng-container>
     
-            <ng-container matColumnDef="marca" >
+            <ng-container matColumnDef="marca">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     Marca
                 </th>
                 <!-- [matTooltip]="'Nombre Mant.: ' +row.nombreMantenimiento+ '  Telf Mant.: ' + row.telfclimanteni +'  Correo: '+ row.correomantenimiento +'Nombre Cobro:  ' +row.nombrePago+  '   Telf. Cobro: ' + row.telfpago + '    Correo: ' + row.correopago + ' Observacion: ' + row.observacion" -->
                 <td style="cursor: pointer;" mat-cell 
-                    *matCellDef="let row" 
-                    >
+                    *matCellDef="let row">
                   {{row.marca}}
                 </td>
             </ng-container>
     
-            <ng-container matColumnDef="ninventario" >
+            <ng-container matColumnDef="ninventario">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     N. Inventario
                 </th>
@@ -256,7 +267,7 @@
                 </td>
             </ng-container>
     
-            <ng-container matColumnDef="nserie" >
+            <ng-container matColumnDef="nserie">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>
                     N. Serie
                 </th>

@@ -64,18 +64,13 @@ export class NavsideComponent implements OnInit {
           this._show_spinner = false;
         },
         complete: () => {
-          // console.log(this.modulosLista);
-          // this.getUser(this.codUser);
           let x: any = localStorage.getItem('imgperfil'); 
           if( x == undefined || x == null || x == '' ) {
-            // alert('consumiremos la api')
             this.obtenerImagen(this.codUser, 'Perfil'); 
           }
           else {
-            // alert('ya tienes una imagen yano consumiremos la api')
             this._IMGE = localStorage.getItem('imgperfil');
-          }
-          
+          }          
           this._show_spinner = false;
         }
       }
@@ -123,8 +118,8 @@ export class NavsideComponent implements OnInit {
       permiso: data.permisos
     }
 
-    console.log('Desde navside: ' + data.moduleName)
     this.modulo.emit(modulo)
+
   }
 
 
@@ -133,14 +128,9 @@ export class NavsideComponent implements OnInit {
   obtenerImagen(codBinding:string, tipo:string) {
     this._show_spinner = true;
     let codm : any = codBinding;
-
-    console.warn(codm)
-
     this.fileserv.obtenerImagenCodBinding('IMG-'+codm, tipo).subscribe({
       next: (img) => {
         this.imgList = img;
-        // console.log('this.imgList visto desde los modulos')
-        // console.log(this.imgList)
       }, error: (e) => {
         this._show_spinner = false;
         console.error(e);

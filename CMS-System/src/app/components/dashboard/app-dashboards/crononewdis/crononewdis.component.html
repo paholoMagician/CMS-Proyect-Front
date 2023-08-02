@@ -1,0 +1,148 @@
+
+<p-splitter [style]="{ height: '78vh' }"
+            [panelSizes]="[20, 80]"
+            [minSizes]="[10, 0]"
+            styleClass="mb-5">
+            <ng-template pTemplate>
+                     <p-splitter layout="vertical"
+                                 [panelSizes]="[33, 33, 33]">
+                                 <ng-template pTemplate>
+                                    <div class="flex align-items-center justify-content-center">
+                                        Panel 1A
+                                    </div>
+                                 </ng-template>
+                                 <ng-template pTemplate>
+                                    <div class="flex align-items-center p-2 justify-content-center" style="height: 50vh; overflow-y: auto;">
+                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2" style="border: dashed 1px gray;" >
+                                            <div class="title-data p-2 rounded-pill shadow-sm text-light" [ngStyle]="{'background-color': N}">
+                                                Norte <strong> ({{resultadosFiltradosNorte.length}}) </strong>
+                                            </div>
+                                            <div class="m-1 p-2">
+                                                <input type="text" class="form-control form-control-sm shadow rounded-pill"
+                                                       [(ngModel)]="filtroTextoNorte"
+                                                       placeholder="Buscar agencias Norte por nombre"
+                                                       (ngModelChange)="filtrarElementosNorte()">
+                                            </div>
+                                            <div class="d-flex data-box-h flex-wrap justify-content-between">
+                                                <div class="block-data p-2 d-flex flex-column" *ngFor="let xnorte of resultadosFiltradosNorte">
+                                                    <!-- <small class="text-success" style="text-align: right; font-size: 7pt;" >
+                                                        <strong>{{xnorte.nombreCliente}}</strong>
+                                                    </small> -->
+                                                    <div style="font-size: 9pt;"  class="d-flex justify-content-between align-items-center" > 
+                                                        <div class="icono" [ngStyle]="{'background-image': 'url('+xnorte.imagen+')', 'background-size': '100% 100%'}"></div>
+                                                        <span class="p-1">{{xnorte.nombreAgencia}}</span>
+                                                        <small class="text-secondary p-1" style="font-size: 7pt;"> 
+                                                            {{xnorte.nombreProvincia}}
+                                                        </small>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2 " style="border: dashed 1px gray;">
+                                            <div class="title-data p-2 rounded-pill shadow-sm text-light" [ngStyle]="{'background-color': C}">
+                                                Centro <strong> ({{resultadosFiltradosCentro.length}}) </strong>
+                                            </div>
+                                            <div class="m-1 p-2">
+                                                <input type="text" class="form-control form-control-sm shadow rounded-pill"
+                                                       [(ngModel)]="filtroTextoCentro"
+                                                       placeholder="Buscar agencias Centro por nombre"
+                                                       (ngModelChange)="filtrarElementosCentro()">
+                                            </div>
+                                            <div class="d-flex data-box-h flex-wrap justify-content-between">
+                                                <div class="block-data p-2 d-flex flex-column" *ngFor="let xcentro of resultadosFiltradosCentro">
+                                                    <div style="font-size: 9pt;"  class="d-flex justify-content-between align-items-center" > 
+                                                        <div class="icono" [ngStyle]="{'background-image': 'url('+xcentro.imagen+')', 'background-size': '100% 100%'}"></div>
+                                                        <span class="p-1">{{xcentro.nombreAgencia}}</span>
+                                                        <small class="text-secondary p-1" style="font-size: 7pt;"> 
+                                                            {{xcentro.nombreProvincia}}
+                                                        </small>
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2 " style="border: dashed 1px gray;">
+                                            <div class="title-data p-2 rounded-pill shadow-sm text-light" [ngStyle]="{'background-color': S}">
+                                                Sur <strong> ({{resultadosFiltradosSur.length}}) </strong>
+                                            </div>
+                                            <div class="m-1 p-2">
+                                                <input type="text" class="form-control form-control-sm shadow rounded-pill"
+                                                       [(ngModel)]="filtroTextoSur"
+                                                       placeholder="Buscar agencias Sur por nombre"
+                                                       (ngModelChange)="filtrarElementosSur()">
+                                            </div>
+                                            <div class="d-flex data-box-h flex-wrap justify-content-between">
+                                                <div class="block-data p-2 d-flex flex-column" *ngFor="let xsur of resultadosFiltradosSur">
+                                                    <div style="font-size: 9pt;"  class="d-flex justify-content-between align-items-center" > 
+                                                        <div class="icono" 
+                                                             [ngStyle]="{'background-image': 'url('+xsur.imagen+')', 'background-size': '100% 100%'}">
+                                                        </div>
+                                                        <span class="p-1">{{xsur.nombreAgencia}}</span>
+                                                        <small class="text-secondary p-1" style="font-size: 7pt;"> 
+                                                            {{xsur.nombreProvincia}}
+                                                        </small>
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2 " style="border: dashed 1px gray;">
+                                            <div class="title-data p-2 rounded-pill shadow-sm text-light" [ngStyle]="{'background-color': G}">
+                                                General <strong> ({{resultadosFiltradosGeneral.length}}) </strong>  
+                                            </div>
+                                            <div class="m-1 p-2">
+                                                <input type="text" class="form-control form-control-sm shadow rounded-pill"
+                                                       [(ngModel)]="filtroTextoGeneral"
+                                                       placeholder="Buscar agencias General por nombre"
+                                                       (ngModelChange)="filtrarElementosGeneral()">
+                                            </div>
+                                            <div class="d-flex data-box-h flex-wrap justify-content-between">
+                                                <div class="block-data p-2 d-flex flex-column" *ngFor="let xgeneral of resultadosFiltradosGeneral">
+                                                    <div style="font-size: 9pt;"  class="d-flex justify-content-between align-items-center" > 
+                                                        <div class="icono" [ngStyle]="{'background-image': 'url('+xgeneral.imagen+')', 'background-size': '100% 100%'}"></div>
+                                                        <span class="p-1">{{xgeneral.nombreAgencia}}</span>
+                                                        <small class="text-secondary p-1" style="font-size: 7pt;"> 
+                                                            {{xgeneral.nombreProvincia}}
+                                                        </small>
+                                                    </div>                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                 </ng-template>
+                     </p-splitter>
+            </ng-template>   
+            <ng-template pTemplate>
+                <!-- <div style="flex-grow: 1;"
+                     class="flex align-items-center justify-content-center">
+                     
+                </div> -->
+                <div class="example-container">
+                    <h2>To do</h2>
+                  
+                    <div
+                      cdkDropList
+                      #todoList="cdkDropList"
+                      [cdkDropListData]="todo"
+                      [cdkDropListConnectedTo]="[doneList]"
+                      class="example-list"
+                      (cdkDropListDropped)="drop($event)">
+                      <div class="example-box" *ngFor="let item of todo" cdkDrag>{{item}}</div>
+                    </div>
+                  </div>
+                  
+                  <div class="example-container">
+                    <h2>Done</h2>
+                  
+                    <div
+                      cdkDropList
+                      #doneList="cdkDropList"
+                      [cdkDropListData]="done"
+                      [cdkDropListConnectedTo]="[todoList]"
+                      class="example-list"
+                      (cdkDropListDropped)="drop($event)">
+                      <div class="example-box" *ngFor="let item of done" cdkDrag>{{item}}</div>
+                    </div>
+                  </div>
+                  
+            </ng-template>
+</p-splitter>

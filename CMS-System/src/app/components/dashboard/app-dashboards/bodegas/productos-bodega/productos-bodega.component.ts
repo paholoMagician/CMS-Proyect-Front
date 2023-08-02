@@ -431,6 +431,9 @@ selectedOption: any;
 
   guardarAsignacion(data:any) {
 
+
+    console.warn(data);
+
     if ( this.codBodega == 0 ) {
       Swal.fire(
         'Bodega sin seleccionar',
@@ -458,7 +461,7 @@ selectedOption: any;
 
           Toast.fire({
             icon: 'success',
-            title: 'Item: '+data.nombremaquina+' agregada'
+            title: 'Item: '+data.nombretipomaquina+' agregada'
           })
 
           this._show_spinner = false;

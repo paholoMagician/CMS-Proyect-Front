@@ -26,4 +26,8 @@ export class CrearBodegasService {
     return this.http.get( this.url + 'Bodegas/eliminarBodegas/' + id );
   }
 
+  updateProdCliBodegas(ccli:string, cmaq:string) {
+    return this.http.get( this.url + 'Transferencias/CliBodegAsign/' + ccli + '/' + cmaq )
+  }
+
 }

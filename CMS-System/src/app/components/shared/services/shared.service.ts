@@ -52,7 +52,8 @@ export class SharedService {
     }
   }
 
-
-
+  guardarImagenEntidadGeneral(model:any[]) {
+    return this.http.post( this.url + 'Imagen/GuardarImagenEntidad', model );
+  }
 
 }

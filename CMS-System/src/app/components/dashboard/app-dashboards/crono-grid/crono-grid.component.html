@@ -1,0 +1,501 @@
+<div class="d-flex justify-content-between" >
+
+<section class="settings m-2 animate__animated animate__fadeInLeft"
+         *ngIf="_conf_crono" style="border-right: dashed 1px gray; width: 400px;">
+    <h3 class="d-flex align-items-center"> 
+        <mat-icon>build</mat-icon> Configuración del cronograma.
+    </h3>
+    <div class="form-section p-3" >
+
+        <form [formGroup]="activateForm" (ngSubmit)="onSubmitTypeCheck()" >
+            <div class="d-flex flex-column justify-content-center rounded-2 bg-warning p-2 mt-2 mb-1" >
+                <div class="form-check form-switch w-100 d-flex align-items-start">
+                    <input class="form-check-input"  style="margin-left: 15px; cursor: pointer;"
+                           (change)="_multi_agen = !_multi_agen; _multi_tecnic = !_multi_agen"
+                           type="checkbox" formControlName="activateCheckAgencia"
+                           #activateCheckAgencia id="activateCheckAgencia">
+                    <label class="form-check-label p2" style="margin-left: 15px;" for="">
+                        <strong> Multi-técnicos </strong>
+                    </label>
+                </div>
+            </div>
+        </form>
+
+        <form [formGroup]="agenciaForm" class="mb-2" (ngSubmit)="onSubmit()">
+            <small>Seleccionar el cliente a asignar:</small>
+            <p-autoComplete formControlName="codcliente"
+                            #codcliente
+                            (click)="limpiarAgencias()"
+                            id="codcliente" 
+                            [dropdown]="true"
+                            [suggestions]="filteredcliente"
+                            (completeMethod)="filterCliente($event)"
+                            [style]="{'width':'100%'}"
+                            field="name">
+            </p-autoComplete>
+            <hr>
+            <small>Seleccionar las agencias a asignar:</small>
+            <p-multiSelect [options]="agencia"
+                           *ngIf="_multi_agen"
+                           (click)="obtenerAgencias()" 
+                           formControlName="codagencia"
+                           #codagencia
+                           id="codagencia" 
+                           optionLabel="name"
+                           [style]="{'width':'100%'}">
+            </p-multiSelect>
+
+            <p-autoComplete (click)="obtenerAgencias()" 
+                            [dropdown]="true" *ngIf="_multi_tecnic"
+                            formControlName="codagencia"
+                            #codagencia
+                            id="codagencia" 
+                            [suggestions]="filteredAgencias"
+                            (completeMethod)="filterAgencia($event)"
+                            field="name">
+            </p-autoComplete>
+            
+            <hr>
+            <small>Seleccionar el usuario técnico:</small>
+            <p-autoComplete *ngIf="_multi_agen"
+                            formControlName="codusertecnico" 
+                            #codusertecnico id="codusertecnico" 
+                            [dropdown]="true"
+                            [suggestions]="filteredusers"
+                            (completeMethod)="filterUsuario($event)"
+                            [style]="{'width':'100%'}"
+                            field="name">
+            </p-autoComplete>
+            <p-multiSelect [options]="users"
+                           *ngIf="_multi_tecnic"
+                           formControlName="codusertecnico" 
+                           #codusertecnico id="codusertecnico"
+                           optionLabel="name"
+                           [style]="{'width':'100%'}">
+            </p-multiSelect>
+
+            <div class="dias d-flex flex-column mt-2 p-2">
+                <span class="text-secondary">Escoger un día o rango de días:</span>
+                <div class="d-flex justify-content-around flex-wrap mt-2">
+                    <div *ngFor="let dia of resultado"
+                         class="btn-group m-1"
+                         role="group" 
+                         [title]="dia.dia | titlecase"
+                         aria-label="Basic checkbox toggle button group">
+                        <input type="checkbox" class="btn-check"
+                               (change)="onCheckboxChange(dia.numero)"
+                               [id]="dia.numero+'_'+dia.dia"
+                               autocomplete="off" [checked]="_bol_check" >
+                               <label class="btn btn-outline-primary"
+                                      [for]="dia.numero+'_'+dia.dia">
+                                      {{dia.numero}}
+                               </label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-2 mb-2">
+                <textarea class="form-control" 
+                          formControlName="observacion"
+                          #observacion
+                          id="observacion"
+                          rows="4"
+                          placeholder="observacion">
+                </textarea>
+            </div>
+            <div class="w-100 p-2" style="z-index: 1000 !important;">
+                <button type="submit"
+                        mat-raised-button 
+                        color="primary"
+                        class="d-flex align-items-center w-100">
+                        <mat-icon>done</mat-icon> Generar
+                </button>
+            </div> 
+        </form>
+    </div>
+    
+</section>
+
+<section class="d-flex flex-column w-100">
+    <div class="d-flex justify-content-between " >
+        <div class="local d-flex align-items-center">
+            <button class="btn btn-warning m-2 d-flex align-items-center " [disabled]="_dis_btn_setts" (click)="_conf_crono = !_conf_crono" >
+                <mat-icon>tune</mat-icon>
+            </button>
+            <button class="btn btn-warning m-2 d-flex align-items-center " (click)="rep = !rep" >
+                <mat-icon>donut_large</mat-icon>
+            </button>
+            <div class="d-flex align-items-center ">
+                <mat-icon>place</mat-icon> Localidad a gestionar
+            </div>
+        </div>
+        <div class="localidades d-flex justify-content-between w-75">
+            <div class="btn-group-sm" *ngFor="let localidad of listaLocalidades; let i = index">
+                <input  type="radio"
+                        class="btn-check"
+                        name="listaLocalidades"
+                        [id]="localidad.id"
+                        autocomplete="off"
+                        (click)="obtenerLocalidadId(localidad.codprov)">
+                        <label [class]="_class_btn"
+                              [for]="localidad.id">
+                              {{localidad.nombreLocalidad | uppercase}}
+                        </label>
+            </div>
+        </div>
+    </div>
+    
+<!-- _showMes -->
+<div *ngIf="true" class="selmes  w-100">
+    <div class="d-flex align-items-center"><mat-icon>event</mat-icon> Escoger un mes </div>
+    <hr>
+    <section class="crono-header w-100 rounded-pill d-flex justify-content-between p-2">
+        <div class="btn-group"
+             *ngFor="let mes of meses; let i = index"
+             role="group"
+             aria-label="Basic radio toggle button group">
+             <input type="radio" 
+                   class="btn-check"
+                   name="meses"
+                   [id]="mes"
+                   autocomplete="off">
+                   <label [class]="_class_btn_2"
+                          [for]="mes"
+                          (click)="selectDate(i)">
+                          {{mes | titlecase}}
+                   </label>
+        </div>
+    </section>
+    <hr>
+    <div class="table-responsive-lg">
+        <section class="filter-crono w-100 d-flex
+                        justify-content-between align-items-center">
+            <section class="filtros  mt-2 mb-2 w-75">
+                <div class="mb-2 d-flex">
+                  <input class=" w-100 shadow-sm form-control rounded-pill"
+                         fxFlex="auto" type="text"
+                         [(ngModel)]="searchTerm"
+                         (keyup)="filterCronos()" 
+                         #input placeholder="Búsqueda general del cronograma...">
+                </div>
+            </section>
+            <section class="bg-dark text-warning shadow p-2 d-flex justify-content-between rounded-2">
+                <button (click)="ordenarPorDia()" class="btn btn-outline-warning  d-flex m-1 align-items-center">
+                    <mat-icon>format_list_numbered</mat-icon>
+                </button>
+                <button (click)="ordenarAlfabeticamente()" class="btn btn-outline-warning d-flex m-1 align-items-center">
+                    <mat-icon>sort_by_alpha</mat-icon>
+                </button>
+                <button (click)="restaurarOrdenOriginal()" class="btn btn-outline-warning d-flex m-1 align-items-center">
+                    <mat-icon>restore</mat-icon>
+                </button>
+            </section>
+        </section>
+    <table class="table align-middle table-secondary table-sm table-hover table-bordered mt-3" >
+
+        <thead class="bg-primary text-light">
+            <th style="background-color: transparent !important;">
+                <!-- <mat-icon style="background-color: transparent !important;">edit</mat-icon> -->
+            </th>
+            <th>
+                Día
+            </th>
+            <th>
+                Cliente
+            </th>
+            <th>
+                Agencia
+            </th>
+            <th>
+                Técnico
+            </th>
+            <th>
+                N. Máquinas
+            </th>
+        </thead>
+        <tbody>
+            <tr *ngFor=" let crono of filteredCronos">
+                <td class="edit">
+                    <div class="w-100 d-flex justify-content-center align-items-center">
+                        <span class="func" (click)="openDialog(crono)">
+                            <mat-icon>edit</mat-icon>
+                        </span>
+                        <span class="func" (click)="obtenerCronoUnit(crono.codcrono)" 
+                              data-bs-toggle="offcanvas"
+                              data-bs-target="#offcanvasRight"
+                              aria-controls="offcanvasRight">
+                            <mat-icon>list_alt</mat-icon>
+                        </span>
+                    </div>
+                </td>
+                <td>
+                    <form [formGroup]="diaform">
+                        <input type="text"
+                               name="dia"
+                               style="width: 100px;"
+                               class="form-control form-control-sm rounded-2"
+                               [placeholder]="crono.dia"
+                               id="dia"
+                               formControlName="diaCrono"
+                               #diaCrono
+                               id="diaCrono"
+                               (keyup)="capturarIdCrono(crono)"
+                               (keyup.enter)="actualizarCrono()">
+                    </form>
+                </td>
+                <td>
+                    <!-- <input class="form-control form-control-sm w-100"
+                           type="text" type="text"
+                           [placeholder]="crono.nombreCliente"
+                           [readonly]="kal"
+                           (click)="openDialog(crono)"> -->
+                           {{crono.nombreCliente}}
+                </td>
+                <td>
+                    <div class="d-flex flex-column">
+                        <div class="p-1 w-100" >
+                            <!-- <input class="form-control form-control-sm w-100"
+                                   type="text" 
+                                   [placeholder]="crono.nombreAgencia"
+                                   [readonly]="kal" > -->
+                            <span>{{crono.nombreAgencia}}</span>
+                            <br>
+                            <small class="text-secondary">{{crono.observacion}}</small>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="p-1 w-100">
+                    <!-- <input class="form-control form-control-sm w-100"
+                           type="text"
+                           [placeholder]="crono.nombreTecnico"
+                           [readonly]="kal"> -->
+                           {{crono.nombreTecnico}}
+                    </div>
+                </td>
+                <td>
+                    <form [formGroup]="valoresform">
+                        <input type="text"
+                               name="dia"
+                               style="width: 100px;"
+                               class="form-control form-control-sm rounded-2"
+                               placeholder="0"
+                               id="dia"
+                               formControlName="cantidadCrono"
+                               #cantidadCrono
+                               id="cantidadCrono"
+                               [placeholder]="crono.maquinasmanuales"
+                               (keyup)="capturarValorCrono(crono);
+                                        sumatoriaCronoMaquinas()"
+                               (keyup.enter)="actualizarCrono()">
+                    </form>
+                </td>
+            </tr>
+            
+
+        </tbody>
+
+    </table>
+    <div  class=" table-tots table-responsive w-100" [ngStyle]="{'opacity': opacity_tots}">
+        <table class="table table-sm w-100" style="border: solid 0px transparent !important;">
+            <tbody>
+                <tr class="p-2">
+                    <td class="col-2"></td>
+                    <td class="col-1"></td>
+                    <td class="col-2"></td>
+                    <td class="col-2"></td>
+                    <td class="col-3"
+                        style="background-color: orange;" >
+                        <strong>Total de maquianarias filtradas:</strong>
+                    </td>
+                    <td class="col-2 fs-4 p-2"
+                        style="color: orange;
+                               background-color: rgb(120, 120, 120) !important;">
+                        <span>
+                            <strong> 
+                                {{sumatoriaFilter}}
+                            </strong>
+                        </span>
+                    </td>
+                </tr>
+                <tr class="p-2">
+                    <td class="col-2"></td>
+                    <td class="col-1"></td>
+                    <td class="col-2"></td>
+                    <td class="col-2"></td>
+                    <td class="col-3" style="background-color: yellowgreen;" ><strong>Total de maquianarias:</strong></td>
+                    <td class="col-2 fs-3 p-2" style="color: yellowgreen; background-color: rgb(120, 120, 120) !important;">
+                        <span><strong> {{sumatoria}} </strong> </span>
+                    </td>
+                </tr>    
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+</section>
+
+<div class="medidores" *ngIf="rep">
+    <form [formGroup]="reporCrono">
+        <div class="mantrep animate__animated animate__zoomInRight">
+            <small>Mantenimiento Finalizado</small>
+            <div class="w-100 d-flex justify-content-center ">
+                <p-knob formControlName="mantenimientoCompletados"></p-knob>
+            </div>
+        </div>
+        <div class="mantrep animate__animated animate__zoomInLeft">
+            <small>Total de técnicos asignados al crono</small>
+            <div class="w-100 d-flex justify-content-center ">
+                <p-knob formControlName="tecnicosAsignados"></p-knob>
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+
+<div class="offcanvas offcanvas-end " tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+      <h2 id="offcanvasRightLabel">Detalle de la selección</h2>
+      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <section class="d-flex flex-column p-3 animate__animated animate__backInUp">
+        <div class="card shadow p-3">
+            <div class="d-flex align-items-center">
+                <mat-icon>person</mat-icon> Cliente
+            </div>
+            <hr>
+            <div>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Nombre:</small>
+                    <strong>{{modelUnitCronoDetalle.nombreCliente}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Rep. Legal:</small>
+                    <strong>{{modelUnitCronoDetalle.replegal}}</strong>
+                </span>
+            </div>
+        </div>
+        <div class="card shadow mt-2 p-3">
+            <div class="d-flex align-items-center">
+                <mat-icon>villa</mat-icon> Agencia
+            </div>
+            <hr>
+            <div class="mt-3">
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Nombre:</small>
+                    <strong>{{modelUnitCronoDetalle.nombreAgencia}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Frecuencia:</small>
+                    <strong>{{modelUnitCronoDetalle.frecuencia}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Horario de atención:</small>
+                    <strong>{{modelUnitCronoDetalle.horarioatenciond}} - {{modelUnitCronoDetalle.horarioatencionhm}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Dirección:</small>
+                    <strong style="text-align: right;" >{{modelUnitCronoDetalle.direccionAgencia}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Cantidad de máquinas asignadas:</small>
+                    <strong>{{modelUnitCronoDetalle.maquinasReales}} <span style="font-size: 8pt;" class="text-secondary">{{modelUnitCronoDetalle.maquinasManuales}}</span> </strong>
+                </span>
+            </div>
+        </div>
+        <div class="card shadow mt-2 p-3">
+            <div class="d-flex align-items-center">
+                <mat-icon>engineering</mat-icon> Técnico asignado
+            </div>
+            <hr>
+            <div class="mt-3">
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Nombre:</small>
+                    <strong>{{modelUnitCronoDetalle.tecnico}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Provincia de residencia:</small>
+                    <strong>{{modelUnitCronoDetalle.residenciaProvinciaTecnico}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Cantón de residencia:</small>
+                    <strong>{{modelUnitCronoDetalle.residenciaCantonTecnico}}</strong>
+                </span>
+                <br>
+                <span class="d-flex justify-content-between">
+                    <small class="text-secondary">Licencia:</small>
+                    <strong>{{modelUnitCronoDetalle.licenciaTecnico}}</strong>
+                </span>
+            </div>
+        </div>
+        <div class="card shadow mt-2 p-3">
+            <div class="d-flex align-items-center">
+                <mat-icon>point_of_sale</mat-icon> Máquinas &nbsp;&nbsp; <span class="text-primary" >({{resultadosFiltrados.length}})</span>
+            </div>
+            <div class="m-1 p-2">
+                <input type="text" class="form-control form-control-sm shadow rounded-pill"
+                       [(ngModel)]="filtroTexto"
+                       placeholder="Buscar por marca, modelo, serie o tipo de máquina"
+                       (ngModelChange)="filtrarElementos()">
+            </div>
+            <hr>
+            <div class="mt-3">
+                <div class="d-flex flex-column">
+                    <div *ngFor="let maquinas of resultadosFiltrados" class="datamaq p-2">
+                        <div class="m-1 d-flex justify-content-between">
+                            <small class="text-secondary">
+                                Número de serie:
+                            </small>
+                            <span> {{maquinas.nserie}} </span>
+                        </div>
+                        <div class="m-1 d-flex justify-content-between">
+                            <small class="text-secondary">
+                                Tipo de máquina:
+                            </small>
+                            <span> {{maquinas.nombreTipoMaquina}} </span>
+                        </div>
+                        <div class="m-1 d-flex justify-content-between">
+                            <small class="text-secondary">
+                                Modelo:
+                            </small>
+                            <span> {{maquinas.nombremodelo}} </span>
+                        </div>
+                        <div class="m-1 d-flex justify-content-between">
+                            <small class="text-secondary">
+                                Marca:
+                            </small>
+                            <span> {{maquinas.nombremarca}} </span>
+                        </div>
+                        <div class="m-1 d-flex justify-content-between">
+                            <small class="text-secondary">
+                                Contador inicial:
+                            </small>
+                            <span> {{maquinas.contadorinicial}} </span>
+                        </div>
+                        <div class="m-1 d-flex justify-content-between">
+                            <small class="text-secondary">
+                                Contador final:
+                            </small>
+                            <span> {{maquinas.contadorfinal}} </span>
+                        </div>
+                        <div class="m-1 d-flex justify-content-between">
+                            <small class="text-secondary">
+                                Observación:
+                            </small>
+                            <span> {{maquinas.observacion}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+    </div>
+</div>
+

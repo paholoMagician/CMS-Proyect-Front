@@ -40,6 +40,7 @@ export class GarantiasComponent implements OnInit {
 
   public dataSource!: MatTableDataSource<any>;
   columnHead:         any = [ 'edit', 'Nombre', 'BreveDescripcion', 'Frecuencia', 'TipoMant' ];
+  
   public garantiaForm =   new FormGroup({
     descripcionbreve:     new FormControl(''),
     nombre:               new FormControl(''),
@@ -47,7 +48,7 @@ export class GarantiasComponent implements OnInit {
     codtipomant:          new FormControl('')
   })
 
-  constructor(private DataMaster: SharedService, private garantias: GarantiasService ) { }
+  constructor( private DataMaster: SharedService, private garantias: GarantiasService ) { }
 
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');

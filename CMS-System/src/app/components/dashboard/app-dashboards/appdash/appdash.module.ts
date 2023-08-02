@@ -67,6 +67,24 @@ import { AsignModUserComponent } from '../configuracion/asign-mod-user/asign-mod
 import { ImagenesProductosComponent } from '../imagenes-productos/imagenes-productos.component';
 import { GarantiasComponent } from '../garantias/garantias.component';
 import { ModalAsignacionProductosComponent } from '../agencias/modal-asignacion-productos/modal-asignacion-productos.component';
+import { ModalClientesComponent } from '../bodegas/crear-bodegas/modal-clientes/modal-clientes.component';
+import { ContratosComponent } from '../garantias/contratos/contratos.component';
+import { MaquinariaContratoComponent } from '../garantias/maquinaria-contrato/maquinaria-contrato.component';
+import { CronogramaComponent } from '../cronograma/cronograma.component';
+import { ModalCronogramaComponent } from '../cronograma/modal-cronograma/modal-cronograma.component';
+import { CronoGridComponent } from '../crono-grid/crono-grid.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ListboxModule } from 'primeng/listbox';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InplaceModule } from 'primeng/inplace';
+import { KnobModule } from 'primeng/knob';
+import { ModalDetalleCronoComponent } from '../crono-grid/modal-detalle-crono/modal-detalle-crono.component';
+import { CrononewdisComponent } from '../crononewdis/crononewdis.component';
+
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SplitterModule } from 'primeng/splitter';
+
+
 
 @NgModule({
   declarations: [
@@ -86,9 +104,18 @@ import { ModalAsignacionProductosComponent } from '../agencias/modal-asignacion-
     AsignModUserComponent,
     ImagenesProductosComponent,
     GarantiasComponent,
-    ModalAsignacionProductosComponent
+    ModalAsignacionProductosComponent,
+    ModalClientesComponent,
+    ContratosComponent,
+    MaquinariaContratoComponent,
+    CronogramaComponent,
+    ModalCronogramaComponent,
+    CronoGridComponent,
+    ModalDetalleCronoComponent,
+    CrononewdisComponent
   ],
   imports: [
+    KnobModule,
     CommonModule,
     CdkStepperModule,
     CdkTableModule,
@@ -135,12 +162,18 @@ import { ModalAsignacionProductosComponent } from '../agencias/modal-asignacion-
     SharedModuleModule,
     //#endregion
     FormsModule,
+    AutoCompleteModule,
     HttpClientModule,
     ReactiveFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
     InputNumberModule,
-    ButtonModule 
+    ButtonModule ,
+    MultiSelectModule,
+    ListboxModule,
+    InplaceModule,
+    SplitButtonModule,
+    SplitterModule
   ],
   exports: [
     UsuarioComponent,
@@ -156,7 +189,11 @@ import { ModalAsignacionProductosComponent } from '../agencias/modal-asignacion-
     ConfiguracionComponent,
     AsignModUserComponent,
     ImagenesProductosComponent,
-    GarantiasComponent
+    GarantiasComponent,
+    ContratosComponent,
+    CronogramaComponent,
+    CronoGridComponent,
+    CrononewdisComponent
   ]
 })
 export class AppdashModule { }

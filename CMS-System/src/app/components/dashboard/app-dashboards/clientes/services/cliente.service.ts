@@ -35,6 +35,22 @@ export class ClienteService {
   guardarClientes( model: any [] ) {
     return this.http.post( this.url + 'ClienteAgencia/guardarCliente', model );
   }
+  
+  guardarMagencia( model: any [] ) {
+    return this.http.post( this.url + 'MaquinaAgencia/GuardarMaquinaAgencia', model );
+  }
+
+  obtenerMaquinaAgenciaAsignada(codagencia:string, ccia:string) {
+    return this.http.get( this.url + 'MaquinaAgencia/obtenerAsignacionmaquinacliente/' + codagencia + '/' + ccia );
+  }
+
+  eliminarMaquinaAgenciaAsignada(codprod:string, ccia:string) {
+    return this.http.get( this.url + 'MaquinaAgencia/elimianarAsignacionmaquinacliente/' + codprod + '/' + ccia );
+  }
+  
+  obtenerAgenciasMaquinarias( codcli:string, ccia:string ) {
+    return this.http.get( this.url + 'ClienteAgencia/obtenerAgenciasMaquinarias/'+codcli+'/'+ccia );
+  }
 
   obtenerClientes( ccia: string ) {
     return this.http.get( this.url + 'ClienteAgencia/obtenerClientes/' + ccia );
@@ -53,8 +69,8 @@ export class ClienteService {
     return this.http.post( this.url + 'ClienteAgencia/guardarAgencia', model );
   } 
 
-  obtenerAgencias( ccia: string ) {
-    return this.http.get( this.url + 'ClienteAgencia/obtenerAgencias/' + ccia );
+  obtenerAgencias( ccia: string, filter:string, prov:string ) {
+    return this.http.get( this.url + 'ClienteAgencia/obtenerAgencias/' + ccia + '/' + filter + '/' + prov);
   }
 
   eliminarAgencias( codcli: string, ccia: string ) {

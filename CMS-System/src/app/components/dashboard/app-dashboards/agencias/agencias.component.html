@@ -232,7 +232,7 @@
             <small class="text-secondary">
                 Cantidad de agencias registradas 
                 <strong class="text-primary">
-                   ( {{listaClientes.length}} )
+                   ( {{listAgencias.length}} )
                 </strong>
             </small>
             <div class="mb-2 d-flex">
@@ -337,8 +337,10 @@
                 <!-- [matTooltip]="" -->
                 <td style="cursor: pointer;" mat-cell 
                     *matCellDef="let row" 
-                    >
-                  {{row.campoA}}
+                     >
+                    <div class="d-flex justify-content-center">
+                        <span>{{row.cantidadMaquinaAgencia}}</span> <small class="text-secondary p-2" >{{row.campoA}}</small>
+                    </div>
                 </td>
             </ng-container>
     

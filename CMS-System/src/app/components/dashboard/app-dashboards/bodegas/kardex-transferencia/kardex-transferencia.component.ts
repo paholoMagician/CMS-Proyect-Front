@@ -237,26 +237,25 @@ export class KardexTransferenciaComponent implements OnInit {
       this.listamovimientosG2.filter((element:any)=>{
 
         let array = {            
-          "codmov": element.codmov,
+          "codmov":     element.codmov,
           "codtrancab": element.codtrancab,
-          "feccrea": element.feccrea,
-          "tipomov": element.tipomov,
-          "movcab": element.movcab,
-          "state": element.state,
-          "color": 'yellowgreen'        
+          "feccrea":    element.feccrea,
+          "tipomov":    element.tipomov,
+          "movcab":     element.movcab,
+          "state":      element.state,
+          "color":      'yellowgreen'
         }
 
-        if( array.tipomov == 'E' )      array.color = 'yellowgreen'; 
-        else if( array.tipomov == 'S' ) array.color = 'orange';
+        if      ( array.tipomov == 'E' ) array.color = 'yellowgreen';
+        else if ( array.tipomov == 'S' ) array.color = 'orange';
         this.listamovimientos.push(array);
     
       } 
-    )
-        
+    )        
 
     } else {
 
-      this.listamovimientosghost.filter((element:any)=>{
+      this.listamovimientosghost.filter((element:any) => {
           narray = {            
               "codmov": element.codmov,
               "codtrancab": element.codtrancab,

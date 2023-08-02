@@ -55,8 +55,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashboardmods.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorServices } from './components/shared/http-interceptor/http-interceptor-services';
-import { GarantiasComponent } from './components/dashboard/app-dashboards/garantias/garantias.component';
-import { ModalAsignacionProductosComponent } from './components/dashboard/app-dashboards/agencias/modal-asignacion-productos/modal-asignacion-productos.component';
+import { ModalDetalleCronoComponent } from './components/dashboard/app-dashboards/crono-grid/modal-detalle-crono/modal-detalle-crono.component';
 
 
 @NgModule({

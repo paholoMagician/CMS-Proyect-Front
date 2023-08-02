@@ -22,5 +22,9 @@ export class GarantiasService {
     return this.http.put( this.url+ 'Garantias/EditarGarantia/'+codgarantia, model );
   }
 
+  obtenerContratos(ccia:string) {
+    return this.http.get( this.url + 'Contratos/obtenerContratos/' + ccia );
+  }
+
 }
 

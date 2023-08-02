@@ -41,3 +41,40 @@
     
 
 }
+
+.data-box {
+    width: 350px;
+    min-height: 300px;
+    border: solid 1px gray;
+    max-height:  85vh;
+    border-radius: 10px;
+    overflow-y: auto;
+}
+
+.data-box-g {
+    width: 240px;
+    min-height: 300px;
+    border: dashed 1px gray;
+    max-height:  85vh;
+    border-radius: 10px;
+    overflow-y: auto;
+    cursor: pointer;
+}
+
+
+.buton-data {
+    color: white !important;
+}
+
+.block-data {
+    border-bottom:  solid 1px gray;
+    margin-top: 5px;
+    transition: ease all 0.5s;
+    cursor: pointer;
+}
+
+.block-data:hover {
+    transition: ease all 0.5s;
+    background-color: #d6d6d6;
+}
+

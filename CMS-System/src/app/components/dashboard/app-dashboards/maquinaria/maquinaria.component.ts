@@ -45,7 +45,7 @@ export class MaquinariaComponent implements OnInit {
   grupolista: any = [];
   modeloActivo:   any = null;
 
-  columnHead:         any = [ 'edit', 'nombretipomaquina', 'marca', 'modelo', 'ninventario', 'nserie', 'codigobp', 'continicial', 'contfinal', 'observacion' ];
+  columnHead:         any = [ 'edit', 'nombretipomaquina', 'marca', 'modelo', 'ninventario', 'nserie', 'codigobp', 'continicial', 'contfinal', 'observacion', 'icon' ];
   public dataSource!: MatTableDataSource<any>;
 
   @Input() modulo: any = [];
@@ -123,30 +123,16 @@ export class MaquinariaComponent implements OnInit {
   getGrupos() {
     this.grupolista  = [];
     this.sgrupolista = [];
-    this.maquinariaForm.controls['marca'].setValue('');
-    this.maquinariaForm.controls['codmarca'].setValue('');
-    this.maquinariaForm.controls['modelo'].setValue('');
+    this.maquinariaForm.controls['marca']    .setValue('');
+    this.maquinariaForm.controls['codmarca'] .setValue('');
+    this.maquinariaForm.controls['modelo']   .setValue('');
     this.maquinariaForm.controls['codmodelo'].setValue('');
     this.codtipomaquinaValue = this.maquinariaForm.controls['codtipomaquina'].value.trim();
     this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
         next:( grupo ) => {
           this.grupolista = grupo;
-          // console.warn(this.grupolista);
         },
-        complete: () => {
-          // if(this.grupolista.length == 1) {
-          //     let grupo:    any = this.grupolista[0].codigotipomaq.trim();
-          //     let subgrupo: any = this.grupolista[0].codmarca.trim();
-          //     this.DataMaster.getDataMasterSubGrupo(grupo, subgrupo).subscribe(
-          //       {
-          //         next:( sgrupo ) => {
-          //           this.sgrupolista = sgrupo;
-          //           // console.warn(this.sgrupolista);
-          //         }
-          //       }
-          //     )       
-          // }
-        }
+        complete: () => { }
       }
     )
   }
@@ -154,9 +140,8 @@ export class MaquinariaComponent implements OnInit {
 
   /** OBTENER MODELOS */
   getSubgrupos() {
-    // console.warn(this.maquinariaForm.controls['marca'].value);
     this.maquinariaForm.controls['codmarca'].setValue(this.maquinariaForm.controls['marca'].value);
-    let grupo: any = this.codtipomaquinaValue;
+    let grupo:    any = this.codtipomaquinaValue;
     let subgrupo: any = this.maquinariaForm.controls['marca'].value;
     this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
       next:( sgrupo ) => {
@@ -243,15 +228,72 @@ export class MaquinariaComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-
+  maquinariaListaGhost:any = [];
   obtenerMaquinaria() {
+
+    let controlFecha = new Date();
+    let dia = controlFecha.getDay();
+    let mes = controlFecha.getMonth() + 1;
+    let anio = controlFecha.getFullYear();
+    let diaActual = anio+'-'+mes.toString().padStart(2, '0')+'-'+dia.toString().padStart(2,'0');
+
     this._show_spinner = true;
+    this.maquinariaLista = [];
     this.maquinaria.obtenerMaquinaria( this.ccia ).subscribe({
       next: (maquinas) => {
-        this.maquinariaLista = maquinas
-        // console.log('LISTA MAQUINARIA GUARDADO');
-        // console.log(this.maquinariaLista);
         this._show_spinner = false;
+        // this.maquinariaLista = maquinas;
+        this.maquinariaListaGhost =  maquinas
+        this.maquinariaListaGhost.filter((element:any)=>{
+          let arrmaq = {
+            "numeroContrato": element.numeroContrato,
+            "fecInicialContrato": element.fecInicialContrato,
+            "fecfinalContrato": element.fecfinalContrato,
+            "descripcion": element.descripcion,
+            "observacion": element.observacion,
+            "codmaquina": element.codmaquina,
+            "codtipomaquina": element.codtipomaquina,
+            "nombretipomaquina": element.nombretipomaquina,
+            "codigobp": element.codigobp,
+            "nserie": element.nserie,
+            "codmarca": element.codmarca,
+            "marca": element.marca,
+            "ninventario": element.ninventario,
+            "codcia": element.codcia,
+            "contadorinicial": element.contadorinicial,
+            "contadorfinal": element.contadorfinal,
+            "feccrea": element.feccrea,
+            "codmodelo": element.codmodelo,
+            "modelo": element.modelo,
+            "textestado": '',
+            "colorestado": '',
+            "colorText": '',
+            "icon": 'done',
+            "nombreCliente": element.nombreCliente
+        }
+
+        let fechafinal = element.fecfinalContrato.toString().split('T')
+
+          if( diaActual > fechafinal[0] ) {
+            arrmaq.textestado  = 'Activo';
+            arrmaq.colorestado = 'yellowgreen';
+            arrmaq.colorText   = 'whitesmoke';
+            arrmaq.icon        = 'task';
+          }
+          else {
+            arrmaq.textestado  = 'No Activo';
+            arrmaq.colorestado = 'orangered';
+            arrmaq.colorText   = 'gray';
+            arrmaq.icon        = 'event_busy';
+          }
+
+          this.maquinariaLista.push(arrmaq);
+
+      })
+
+        console.log('LISTA MAQUINARIA GUARDADO');
+        console.log(this.maquinariaLista);
+
       },
       error: (e) => {
         this._show_spinner = false;
@@ -358,12 +400,7 @@ export class MaquinariaComponent implements OnInit {
   maquinariaModel: any = [];
   nombreMaquinaria: string = '';
   catchData(data: any) {    
-    // console.warn("DATA----------------")
-    // console.warn(data)
-
     this.maquinariaForm.controls['codtipomaquina'].setValue(data.codtipomaquina.trim());
-
-    console.warn(data.codtipomaquina.trim())
 
     this.getGrupos();
     this.maquinariaForm.controls['marca'].setValue(data.codmarca.trim());

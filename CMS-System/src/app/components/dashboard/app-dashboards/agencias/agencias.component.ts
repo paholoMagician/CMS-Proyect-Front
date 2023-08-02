@@ -5,10 +5,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ClienteService } from '../clientes/services/cliente.service';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 
-import Swal from 'sweetalert2'
 import { MatDialog } from '@angular/material/dialog';
 import { ModalAsignacionProductosComponent } from './modal-asignacion-productos/modal-asignacion-productos.component';
 
+import Swal from 'sweetalert2'
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -78,7 +78,9 @@ export class AgenciasComponent implements OnInit {
   })
 
 
-  constructor( private client: ClienteService, private DataMaster: SharedService, public dialog: MatDialog ) { }
+  constructor( private client: ClienteService, 
+               private DataMaster: SharedService,
+               public dialog: MatDialog ) { }
 
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
@@ -148,11 +150,11 @@ export class AgenciasComponent implements OnInit {
 
     if( this.agenciaForm.controls['codcliente'].value == undefined || this.agenciaForm.controls['codcliente'].value == null || this.agenciaForm.controls['codcliente'].value == '' ) {
       this._show_form_agency = false;
-      console.log(this._show_form_agency)
+      // console.log(this._show_form_agency)
     }
     else {
       this._show_form_agency = true
-      console.log(this._show_form_agency)
+      // console.log(this._show_form_agency)
     }
 
   }
@@ -164,15 +166,15 @@ export class AgenciasComponent implements OnInit {
         switch(cod) {
           case 'TP1':
             this.tipoAgenciaLista = data;
-            console.log(this.tipoAgenciaLista);
+            // console.log(this.tipoAgenciaLista);
             break;
         case 'PRV00':
           this.provinciaLista = data;
-          console.log(this.provinciaLista);
+          // console.log(this.provinciaLista);
           break;
         case 'TF':
           this.frecuenciaList = data;
-          console.log(this.frecuenciaList);
+          // console.log(this.frecuenciaList);
           break;
         }
       }
@@ -181,8 +183,8 @@ export class AgenciasComponent implements OnInit {
 
   getCantones() {
 
-    console.log('PROVINCIA CODIGO');
-    console.log(this.agenciaForm.controls['codProv'].value);
+    // console.log('PROVINCIA CODIGO');
+    // console.log(this.agenciaForm.controls['codProv'].value);
 
     this.DataMaster.getDataMaster(this.agenciaForm.controls['codProv'].value).subscribe({
       next: (cantones) => {
@@ -214,9 +216,9 @@ export class AgenciasComponent implements OnInit {
 
   codagencia: string = '';
   catchData(data: any) {
-    console.warn('==============================')
-    console.warn(data)
-    console.warn('==============================')
+    // console.warn('==============================')
+    // console.warn(data)
+    // console.warn('==============================')
     this.agenciaForm.controls['codcliente']   .setValue(data.codcliente);
     this.validationCliente();
     setTimeout(() => {
@@ -236,9 +238,9 @@ export class AgenciasComponent implements OnInit {
       this.agenciaForm.controls['codProv']       .setValue(data.codProv.trim());
       this.getCantones();
       this.agenciaForm.controls['codCanton']    .setValue(data.codCanton.trim());
-      console.log( 'CODIGO CANTON' )
-      console.log( this.agenciaForm.controls['codCanton'].value )
-      console.log( data.codCanton.trim() )
+      // console.log( 'CODIGO CANTON' )
+      // console.log( this.agenciaForm.controls['codCanton'].value )
+      // console.log( data.codCanton.trim() )
       this.agenciaForm.controls['horarioatencion1'].setValue(h1[0]);
       this.agenciaForm.controls['horarioatencion2'].setValue(h1[1]);
       this.agenciaForm.controls['horarioatencion3'].setValue(h2[0]);
@@ -261,7 +263,7 @@ export class AgenciasComponent implements OnInit {
     this.client.obtenerClientes(this.ccia).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
-        console.log(this.listaClientes)
+        // console.log(this.listaClientes)
       },
       error: (e) => {
         console.error(e);
@@ -467,7 +469,7 @@ export class AgenciasComponent implements OnInit {
   listAgencias:any = [];
   obtenerAgencias() {
     this._show_spinner = true;
-    this.client.obtenerAgencias(this.ccia).subscribe({
+    this.client.obtenerAgencias(this.ccia, 'void', 'void').subscribe({
       next: (agencias) => {
         this.listAgencias = agencias;
         console.log(this.listAgencias);      
@@ -521,7 +523,7 @@ export class AgenciasComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe( result => {      
       
-      console.warn( result );
+      // console.warn( result );
 
       // this.obtenerConvenioMacro();
 
