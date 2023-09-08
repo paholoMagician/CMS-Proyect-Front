@@ -431,9 +431,6 @@ selectedOption: any;
 
   guardarAsignacion(data:any) {
 
-
-    console.warn(data);
-
     if ( this.codBodega == 0 ) {
       Swal.fire(
         'Bodega sin seleccionar',
@@ -513,18 +510,22 @@ selectedOption: any;
         maquina.nombremaquina.toLowerCase()
                   .includes(searchTerm.toLowerCase()) 
                   ||
-        maquina.nombremarca.toLowerCase()
+        maquina.marca.toLowerCase()
                   .includes(searchTerm.toLowerCase())
                   ||
         maquina.nserie.toLowerCase()
                   .includes(searchTerm.toLowerCase())
                   ||
-        maquina.nombremodelo.toLowerCase()
+        maquina.modelo.toLowerCase()
                   .includes(searchTerm.toLowerCase())
       );  
     } else {
       this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost;
     }  
+
+    console.warn('this.listaMaquinaBodegas');
+    console.warn(this.listaMaquinaBodegas);
+
   }
   
   

@@ -40,8 +40,8 @@ export class ModalDetalleCronoComponent implements OnInit {
   clientes: any[] = [];
   filteredcliente: any[] = [];
   users: any[] = [];
-  ccia:               any;
-  resultado:any = [];
+  ccia:      any;
+  resultado: any = [];
   public cronoForm = new FormGroup({
     ndia:            new FormControl(),
     codcliente:      new FormControl(),
@@ -59,23 +59,27 @@ export class ModalDetalleCronoComponent implements OnInit {
   agenciacod:any;
   tecnicocod:any; 
   ngOnInit(): void {
+
+    console.warn('%%%%%%%%%%%%%%%%%%%%%%%%%')
+    console.warn('DATA ENVIADA AL MODAL')
+    console.warn(this.data)
+    console.warn('%%%%%%%%%%%%%%%%%%%%%%%%%')
+
     this.cronoForm.controls['ndia'].setValue(this.data.dia);
     this.cronoForm.controls['codcliente'].setValue(this.data.codcli);
     this.cronoForm.controls['codagencia'].setValue(this.data.codagencia);
     this.cronoForm.controls['codusertecnico'].setValue(this.data.codusertecnic);
     this.cronoForm.controls['nmaquinas'].setValue(this.data.maquinasmanuales);
     this.cronoForm.controls['observacion'].setValue(this.data.observacion);
-
     this.ccia = sessionStorage.getItem('codcia');   
     this.obtnClientes();
-    // this.catchdata();
     this.obtnUsuarioTecnicos();
     this.diasdelMes(this.data.mes, this.data.anio);
   }
 
   obtnClientes () {
     
-    this.client.obtenerClientes(this.ccia).subscribe({
+    this.client.obtenerClientes(this.ccia,2).subscribe({
       next: (x) => {
         if (Array.isArray(x)) {
           this.listaClientes = x;
@@ -98,6 +102,7 @@ export class ModalDetalleCronoComponent implements OnInit {
 
 
   filterUsuario(event: AutoCompleteCompleteEvent) {
+    
     let filtered: any[] = [];
     let query = event.query;
     for (let i = 0; i < (this.users as any[]).length; i++) {
@@ -108,7 +113,6 @@ export class ModalDetalleCronoComponent implements OnInit {
     }
 
     this.filteredusers = filtered;
-
     console.log(this.filteredusers)
 
   }
@@ -233,7 +237,7 @@ export class ModalDetalleCronoComponent implements OnInit {
   obtenerAgencias() {
       this.client.obtenerAgencias( this.ccia, 
                                    this.cronoForm.controls['codcliente'].value.code.trim(),
-                                   this.data.localidad.trim() )
+                                   this.data.localidad )
                  .subscribe((x) => {
 
         if (Array.isArray(x)) {
@@ -299,9 +303,6 @@ export class ModalDetalleCronoComponent implements OnInit {
   onSubmit() {}
 
   catchdata() {
-
-    console.warn(this.data.dia);
-
     this.cronoForm.controls['codcliente'].setValue(this.data.nombreCliente);
     this.cronoForm.controls['ndia'].setValue(this.data.dia);
   }

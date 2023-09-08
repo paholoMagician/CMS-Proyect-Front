@@ -190,6 +190,26 @@
                     </label>
                     <input type="text" class="form-control" formControlName="Telf" #Telf id="Telf" placeholder="098212252">
                 </div>
+                <div class="mb-3 col-2 ">
+                    <label for="Cedula" class="form-label text-secondary">
+                        Fecha de Ingreso:
+                    </label>
+                    <input type="date" class="form-control" 
+                           formControlName="fecingreso"
+                           #fecingreso 
+                           id="fecingreso"
+                           >
+                </div>
+                <div class="mb-3 col-2 ">
+                    <label for="Cedula" class="form-label text-secondary">
+                        Fecha de Salida:
+                    </label>
+                    <input type="date" class="form-control" 
+                           formControlName="fecsalida"
+                           #fecsalida 
+                           id="fecsalida"
+                           >
+                </div>
                 <div class="floating-button">
                     <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
                         <mat-icon>cancel</mat-icon>

@@ -1,8 +1,8 @@
-<!-- <div class="spinner-overlay">
+<div class="spinner-overlay" *ngIf="_show_spinner">
     <div class="spinner-container">
       <mat-spinner></mat-spinner>
     </div>
-</div> -->
+</div>
 
 <div class="mini-module-workarea p-4 w-100" style="height: 550px !important;">
     <section class="head">
@@ -76,6 +76,7 @@
                                     [dropdown]="true"
                                     [suggestions]="filteredcliente"
                                     [placeholder]="data.nombreCliente"
+                                    (chage)="obtenerAgencias()"
                                     (completeMethod)="filterCliente($event)"
                                     [style]="{'width':'100%'}"
                                     field="name">
@@ -153,12 +154,12 @@
                             color="primary">
                             <mat-icon>sync_alt</mat-icon> Actualizar datos
                     </button>
-                    <button mat-raised-button
+                    <!-- <button mat-raised-button
                             type="number"
                             (click)="sendCrono(2)"
                             color="accent">
                             <mat-icon>add</mat-icon> Generar a partir de estos datos
-                    </button>
+                    </button> -->
                 </div>
             </form>
         </div>

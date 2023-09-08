@@ -28,6 +28,7 @@ export interface Modulo {
   templateUrl: './navside.component.html',
   styleUrls: ['./navside.component.scss']
 })
+
 export class NavsideComponent implements OnInit {
   _show_spinner:      boolean = false; 
   public modulosLista: any        = [];
@@ -117,6 +118,8 @@ export class NavsideComponent implements OnInit {
       icono: data.icon,
       permiso: data.permisos
     }
+
+    localStorage.setItem('modulo',modulo.nombre);
 
     this.modulo.emit(modulo)
 

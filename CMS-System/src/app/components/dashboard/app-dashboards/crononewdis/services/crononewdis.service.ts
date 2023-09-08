@@ -23,6 +23,10 @@ export class CrononewdisService {
     return this.http.get( this.url + 'Zonificacion/ObtenerAgenciaZonificada/' + codzone + '/' + cli );
   }
 
+  obtenerAgenciaLocalizacion(codlocalidad:number, codzone:string) {
+    return this.http.get( this.url + 'Zonificacion/ObtenerAgenciasLocalidad/' + codlocalidad + '/' + codzone   );
+  }
+
   eliminarZonificacion(id:number) {
     return this.http.get( this.url + 'Zonificacion/eliminarDataCardinal/' + id );
   }

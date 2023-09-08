@@ -15,8 +15,8 @@ export class AsignacionprovinciasService {
     return this.http.post( this.url + 'asignacionProvincias/saveAsignacion', model );
   }
 
-  obtenerTecnicoProvincias( codUser: string, codcia: string ) {
-    return this.http.get( this.url + 'asignacionProvincias/obtenerTecnicoProvincia/' + codUser + '/' + codcia );
+  obtenerTecnicoProvincias( codUser: string, codcia: string, type:number ) {
+    return this.http.get( this.url + 'asignacionProvincias/obtenerTecnicoProvincia/' + codUser + '/' + codcia + '/'+ type );
   }
 
   eliminarTecnicoProvincia( id: number ) {

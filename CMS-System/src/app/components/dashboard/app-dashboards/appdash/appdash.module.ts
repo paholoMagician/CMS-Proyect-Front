@@ -79,12 +79,17 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { InplaceModule } from 'primeng/inplace';
 import { KnobModule } from 'primeng/knob';
 import { ModalDetalleCronoComponent } from '../crono-grid/modal-detalle-crono/modal-detalle-crono.component';
-import { CrononewdisComponent } from '../crononewdis/crononewdis.component';
-
+import { CrononewdisComponent, FilterPipe } from '../crononewdis/crononewdis.component';
+import { DragDropModule as dmod } from 'primeng/dragdrop';
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { SplitterModule } from 'primeng/splitter';
-
-
+import { ScrollTopModule } from 'primeng/scrolltop';
+import { SpeedDialModule } from 'primeng/speeddial';
+import { ChipModule } from 'primeng/chip';
+import { ChipsModule } from 'primeng/chips';
+import { ChartModule } from 'primeng/chart';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ModalAsignMaqtecnicoComponent } from '../crono-grid/modal-asign-maqtecnico/modal-asign-maqtecnico.component';
 
 @NgModule({
   declarations: [
@@ -112,9 +117,17 @@ import { SplitterModule } from 'primeng/splitter';
     ModalCronogramaComponent,
     CronoGridComponent,
     ModalDetalleCronoComponent,
-    CrononewdisComponent
+    CrononewdisComponent,
+    FilterPipe,
+    ModalAsignMaqtecnicoComponent
   ],
   imports: [
+    OverlayPanelModule,
+    ChipModule,
+    ChipsModule,
+    dmod,
+    ScrollTopModule,
+    SpeedDialModule,
     KnobModule,
     CommonModule,
     CdkStepperModule,
@@ -133,6 +146,7 @@ import { SplitterModule } from 'primeng/splitter';
     MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
+    ChartModule,
     MatExpansionModule,
     MatGridListModule,
     MatIconModule,

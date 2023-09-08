@@ -149,7 +149,7 @@
   <span style="cursor: pointer; position: absolute; top: 125px; z-index: 10;" (click)="funcHTML('usuario')" > <mat-icon>{{_func}}</mat-icon> </span>
   <div id="usuario" class="usuario detalle d-flex flex-column ">
     <div  class="w-100 d-flex justify-content-center mb-2 " *ngIf="_user" >
-        <div class="perfil"></div>
+        <div class="perfil" [ngStyle]="{'background-image': 'url('+data.imagenPerfil+')', 'background-size': '100% 110%'}" ></div>
     </div>
     <span class="userspan    " *ngIf="_user" >
        <span class="text-warning" > Nombres:       </span> 
@@ -169,13 +169,22 @@
     </span>
 </div>
 <div class="provincias"  >
-  <div>
-    <span class="bg-warning p-2 rounded-2 text-black" >Provincias asignadas: ({{listtecnicoProvincia.length}}) </span>
-    <span>
+  <div class="d-flex justify-content-between">
+    <div class="bg-warning p-2 rounded-2 text-black" style="cursor: pointer;" (click)="op.show($event)">
+      Provincias asignadas: ({{cantprov}})
+      <p-overlayPanel #op>
+        <ol>
+          <li *ngFor="let provincias of cantidadprovincias" >
+            {{provincias.provinciaAsignadas}}
+          </li>
+        </ol>
+      </p-overlayPanel>
+    </div>
+    <div>
       <button (click)="eliminarTodasProvincias()" mat-mini-fab color="warn">
         <mat-icon> delete_all</mat-icon>
       </button>
-    </span>
+    </div>
   </div>
     <div class="bodyprov" id="bodyProv">
 

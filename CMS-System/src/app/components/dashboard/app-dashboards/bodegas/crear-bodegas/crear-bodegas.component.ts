@@ -98,8 +98,13 @@ export class CrearBodegasComponent implements OnInit {
     })
     }
   }
+
+  
   idBodegas: number = 0;
+  ccli:any;
   catchData(data:any) {
+
+    console.log(data);
 
     this.bodegaForm.controls['nombrebodega'].setValue(data.nombrebodega);
     this.bodegaForm.controls['descripcion'].setValue(data.descripcion);
@@ -107,6 +112,7 @@ export class CrearBodegasComponent implements OnInit {
     this._icon_button   = 'sync_alt';
     this._action_butto  = 'Actualizar';
     this._cancel_button = true;
+    this.ccli = data.codcliente;
 
   }
 
@@ -121,7 +127,8 @@ export class CrearBodegasComponent implements OnInit {
       descripcion:  this.bodegaForm.controls['descripcion'].value,
       fecrea: new Date(),
       codusercrea: xuser,
-      ccia: this.ccia
+      ccia: this.ccia,
+      ccli: this.ccli
     }
     console.warn(this.modelBodegas);
     this.bodega.editarBodegas( this.idBodegas, this.modelBodegas).subscribe({

@@ -52,8 +52,8 @@ export class ClienteService {
     return this.http.get( this.url + 'ClienteAgencia/obtenerAgenciasMaquinarias/'+codcli+'/'+ccia );
   }
 
-  obtenerClientes( ccia: string ) {
-    return this.http.get( this.url + 'ClienteAgencia/obtenerClientes/' + ccia );
+  obtenerClientes( ccia: string, type: number ) {
+    return this.http.get( this.url + 'ClienteAgencia/obtenerClientes/' + ccia + '/' + type );
   }
 
   editaCLientes( codcli: string, ccia: string, model: any [] ) {

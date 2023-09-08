@@ -10,7 +10,6 @@ import { CronogramaService } from './services/cronograma.service';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { UserService } from '../usuario/services/user.service';
-
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -89,7 +88,9 @@ export class CronogramaComponent implements OnInit {
   dia:any;
   anio:any;
   mes:any;
-  
+  data: any;
+
+  options: any;
   public agenciaForm = new FormGroup(
     {
       codcliente:        new FormControl('')
@@ -111,6 +112,75 @@ export class CronogramaComponent implements OnInit {
     this.anioActual = new Date().getFullYear();
     this.obtenerCliente();
     this.calcularDiasRestantes();
+
+    /**
+     * INICIO DEL GRAFICO TECNICOS
+     */
+
+
+    const documentStyle = getComputedStyle(document.documentElement);
+        const textColor = documentStyle.getPropertyValue('--text-color');
+        const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
+        const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+
+        this.data = {
+            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            datasets: [
+              {
+                  label: 'Mantenimientos',
+                  backgroundColor: documentStyle.getPropertyValue('--purple-500'),
+                  borderColor: documentStyle.getPropertyValue('--purple-500'),
+                  data: [28, 48, 40, 19, 86, 27, 90]
+              },
+              // {
+              //     label: 'My First dataset',
+              //     backgroundColor: documentStyle.getPropertyValue('--blue-500'),
+              //     borderColor: documentStyle.getPropertyValue('--blue-500'),
+              //     data: [65, 59, 80, 81, 56, 55, 40]
+              // }
+            ]
+        };
+
+        this.options = {
+            indexAxis: 'x',
+            maintainAspectRatio: false,
+            aspectRatio: 0.8,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: textColor
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: textColorSecondary,
+                        font: {
+                            weight: 500
+                        }
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: textColorSecondary
+                    },
+                    grid: {
+                        color: surfaceBorder,
+                        drawBorder: false
+                    }
+                }
+            }
+        };
+
+    /**
+     * FIN
+     */
+
   }
 
   onSubmit() {
@@ -208,7 +278,7 @@ cronograma(anio: number, mes: string) {
   this.listacrono = [];
   this.listacronoGhost = [];
 
-  this.crono.obtenerCronograma(this.ccia, anio, xmes, null).subscribe({
+  this.crono.obtenerCronograma(this.ccia, anio, xmes, 0, 1).subscribe({
     next: (listaCronograma:any) => {
       this.listacronoGhost = listaCronograma;
       const nombresDias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
@@ -465,7 +535,7 @@ cronograma(anio: number, mes: string) {
   listaClientes: any = [];
   obtenerCliente() {
     this._show_spinner = true;
-    this.client.obtenerClientes(this.ccia).subscribe({
+    this.client.obtenerClientes(this.ccia,2).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
       },

@@ -14,7 +14,7 @@ export class HubService {
   
   startConnection() {
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:7130/msj', {
+      .withUrl('http://localhost:5130/msj', {
         skipNegotiation: true,
         transport: signalR.HttpTransportType.WebSockets
       })

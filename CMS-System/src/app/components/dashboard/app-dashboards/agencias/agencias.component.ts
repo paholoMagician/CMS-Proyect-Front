@@ -30,7 +30,7 @@ const Toast = Swal.mixin({
 export class AgenciasComponent implements OnInit {
   ccia:               any;
   _show_spinner:      boolean = false; 
-
+  obsoleto:boolean = false;
   _show_form_agency: boolean = false;
 
   columnHead:         any = [ 'edit', 'maqu', 'nombreCliente',  'nombre', 'centrocostos', 'mantenimiento', 'horarioatenciond', 'horarioatenciondm', 'C.Maq.', 'tipoAgencia'];
@@ -147,7 +147,7 @@ export class AgenciasComponent implements OnInit {
   }
 
   validationCliente() {
-
+    
     if( this.agenciaForm.controls['codcliente'].value == undefined || this.agenciaForm.controls['codcliente'].value == null || this.agenciaForm.controls['codcliente'].value == '' ) {
       this._show_form_agency = false;
       // console.log(this._show_form_agency)
@@ -260,7 +260,7 @@ export class AgenciasComponent implements OnInit {
   listaClientes: any = [];
   obtenerCliente() {
     this._show_spinner = true;
-    this.client.obtenerClientes(this.ccia).subscribe({
+    this.client.obtenerClientes(this.ccia, 2).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
         // console.log(this.listaClientes)

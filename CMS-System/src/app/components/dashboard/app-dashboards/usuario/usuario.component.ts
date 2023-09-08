@@ -75,6 +75,8 @@ export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
     CodLicencia:        new FormControl(''),
     Telf:               new FormControl(''),
     Direccion:          new FormControl(''),
+    fecingreso:         new FormControl(),
+    fecsalida:          new FormControl()
   });
 
   constructor( private DataMaster: SharedService, private us: UserService ) { }
@@ -272,7 +274,9 @@ export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
       "CodLicencia":        this.userForm.controls['CodLicencia'].value, 
       "Telf":               this.userForm.controls['Telf'].value, 
       "Direccion":          this.userForm.controls['Direccion'].value,
-      "CodCia": this.ccia
+      "CodCia": this.ccia,
+      "fecingreso": this.userForm.controls['fecingreso'].value,
+      "fecsalida": this.userForm.controls['fecsalida'].value
       
     }
 
@@ -349,6 +353,22 @@ export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
 
     console.warn(data);
 
+    let xing:any; 
+    let xsal:any; 
+
+    let fecing = null;
+    let fecsal = null;
+
+    if ( data.fecingreso != null) {
+      xing = data.fecingreso.toString().split('T');
+      fecing = xing[0];
+    }
+
+    if ( data.fecsalida != null) {
+      xsal = data.fecsalida.toString().split('T');
+      fecsal = xsal[0];
+    }
+
     this.userForm.controls['Email'].setValue(data.email.trim());
     this.userForm.controls['Nombre'].setValue(data.nombre.trim());
     this.userForm.controls['Apellido'].setValue(data.apellido.trim());
@@ -373,6 +393,9 @@ export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
     this._icon_button = 'sync_alt';
     this._cancel_button = true; 
     this.codUserCatch = data.coduser;
+    this.userForm.controls['fecingreso'].setValue(fecing);
+    this.userForm.controls['fecsalida'].setValue(fecsal);
+
   }
 
   editarUsuario() {
@@ -408,7 +431,9 @@ export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
       "CodLicencia":        this.userForm.controls['CodLicencia'].value, 
       "Telf":               this.userForm.controls['Telf'].value, 
       "Direccion":          this.userForm.controls['Direccion'].value,
-      "CodCia": this.ccia
+      "CodCia": this.ccia,
+      "fecingreso": this.userForm.controls['fecingreso'].value,
+      "fecsalida": this.userForm.controls['fecsalida'].value
       
     }
     

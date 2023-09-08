@@ -19,6 +19,10 @@ export class UserService {
     return this.http.get( this.url + 'User/ObtenerUsuariosExec/'+ccia )
   }
 
+  obtenerUsuariosCronos( idlocalidad:number ) {
+    return this.http.get( this.url + 'User/ObtenerTecniCrono/'+idlocalidad )
+  }
+
   crearCuentas( userCod: string, ccia: string, tcuenta: string ) {
     return this.http.get( this.url + 'User/CrearCuentas/'+ userCod + '/' + ccia + '/' + tcuenta )
   }

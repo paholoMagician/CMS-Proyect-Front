@@ -32,7 +32,7 @@
             
                 </section>
                 <table mat-table [dataSource]="dataSource" class="mtTable shadow" matSort class="w-100" >
-            
+        
                     <ng-container matColumnDef="nombre">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Nombres
@@ -41,7 +41,16 @@
                           {{row.nombre}} {{row.apellido}}
                         </td>
                     </ng-container>
-            
+                    <ng-container matColumnDef="foto">
+                        <th mat-header-cell 
+                            *matHeaderCellDef
+                            mat-sort-header>
+                            Foto
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <div class="icono" [ngStyle]="{'background-image': 'url('+row.imagenPerfil+')', 'background-size': '100% 100%'}"></div>
+                        </td>
+                    </ng-container>
                     <ng-container matColumnDef="nombreDepartamento">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             Departamento
@@ -116,35 +125,6 @@
             </mat-paginator>    
             </div>
 
-
-            <!-- <div class=" d-flex justify-content-stretch align-items-center animate__animated animate__fadeInLeft m-3 " *ngFor="let  tecnicos of lisTecnicos">
-
-                <div class="usuario detalle d-flex flex-column ">
-                    <div  class="w100 d-flex justify-content-center mb-2 ">
-                        <div class="perfil"></div>
-                    </div>
-                    <span class="userspan" > <span class="text-secondary" > Nombre:       </span> 
-                        <span> {{  tecnicos.nombre }} {{  tecnicos.apellido }} </span>
-                    </span>
-                    <span class="userspan" > <span class="text-secondary" > Cargo:        </span> 
-                        <span> {{  tecnicos.nombreCargo }} </span>
-                    </span>
-                    <span class="userspan" > <span class="text-secondary" > Departamento: </span> 
-                        <span> {{  tecnicos.nombreDepartamento }} </span>
-                    </span>
-                    <span class="userspan" > <span class="text-secondary" > Licencia:     </span> 
-                        <span> {{  tecnicos.nombreLicencia }} </span>
-                    </span>
-                    <span class="userspan" > <span class="text-secondary" > Movilidad:    </span> 
-                        <span> {{  tecnicos.nombreMovilidad }} </span>
-                    </span>
-                </div>
-                <div class="provincias">
-                    <span class="p-3 bg-warning text-black" >Provincias:</span>
-
-                </div>
-            </div> -->
-
         </div>
     </div>
 </div>
@@ -211,9 +191,6 @@
                 </div>
             </div>
         </div>
-        <!-- *ngFor="let xzone of listaZonificacion" -->
-        <!--  [style.backgroundColor]="getColorForInitial(xzone.nombre[0])" -->
-        <!-- style="color: white;" -->
         <div class="data-box-g d-flex shadow-lg flex-column p-2"  >
             <div class="title-data p-2 rounded-pill shadow-sm text-light" [ngStyle]="{'background-color': N}">
                 Norte <strong> ({{resultadosFiltradosNorte.length}}) </strong>

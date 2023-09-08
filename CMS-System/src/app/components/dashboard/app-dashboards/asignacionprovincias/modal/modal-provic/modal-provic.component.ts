@@ -60,6 +60,7 @@ export class ModalProvicComponent implements OnInit {
   ccia: any ;
 
   ngOnInit(): void {
+    console.warn(this.data.imagenPerfil);
     this.ccia = sessionStorage.getItem('codcia');
     this.getProvincias();
     this.obtenerTecnicoProvincias();
@@ -226,7 +227,6 @@ export class ModalProvicComponent implements OnInit {
 
   provCodSel: string = '';
   cantCodSel: string = '';
-
   modelAsignacion: any = [];
 
   validacionSelProv() {
@@ -302,21 +302,26 @@ export class ModalProvicComponent implements OnInit {
   }
 
   listtecnicoProvincia: any = [];
+  cantidadprovincias:any =[];
+  cantprov:number = 0;
   obtenerTecnicoProvincias() {
-
-
     if( this.listtecnicoProvincia.length > 0  ) this._dis_button = false;
-
-    
-
-    this.asprov.obtenerTecnicoProvincias(this.data.coduser, this.ccia).subscribe({
+    this.asprov.obtenerTecnicoProvincias(this.data.coduser, this.ccia, 1).subscribe({
       next:(tecnicoProvincia) => {
         this.listtecnicoProvincia = tecnicoProvincia;
         console.warn(this.listtecnicoProvincia);
       },error: (e) => {
         console.error(e);
       }
-
+    })
+    this.asprov.obtenerTecnicoProvincias(this.data.coduser, this.ccia, 2).subscribe({
+      next:(tecnicoProvincia) => {
+        this.cantidadprovincias = tecnicoProvincia;
+        this.cantprov = this.cantidadprovincias.length;
+        console.warn(this.cantidadprovincias);
+      },error: (e) => {
+        console.error(e);
+      }
     })
   }
 

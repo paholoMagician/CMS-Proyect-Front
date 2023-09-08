@@ -97,8 +97,8 @@ export class ModalAsignacionProductosComponent implements OnInit {
       "ccia": this.ccia,
     }
 
-    console.warn('modeloMaquinaAgencia');
-    console.warn(this.modeloMaquinaAgencia);
+    // console.warn('modeloMaquinaAgencia');
+    // console.warn(this.modeloMaquinaAgencia);
 
     this.cli.guardarMagencia(this.modeloMaquinaAgencia).subscribe({
       next:() => {

@@ -5,22 +5,74 @@
 </div>
 <div class="d-flex" >
 <div class="mini-module-workarea w-75 p-4 m-1">
-
+    <div class="d-flex justify-content-between" >
     <div class="text-secondary d-flex align-item-center m-0 p-0">
          <mat-icon>{{modulo.icono}}</mat-icon>
-         <span class="fs-5">{{modulo.nombre}}</span>
+         <span class="fs-5 m-0">{{modulo.nombre}}</span>
+    </div>
+    <div class=" extraconfmaq d-flex align-content-center justify-content-end flex-column " style="z-index: 1000;" >
+        <div >
+            <div>
+
+                <input id="maquinagencia" type="checkbox" (change)="validateEstadoasignMaquina()" [(ngModel)]="_maquinaAgencia" class="form-check-input"> &nbsp;
+                <label for="maquinagencia">Asignar máquina a un cliente al crear</label>
+            </div>
+            <div *ngIf="_show_data_asign" >
+                <span class="text-primary"><small class="text-secondary">Cliente:</small>&nbsp; {{this.clientesAsignado}}</span> &nbsp;&nbsp;
+                <span class="text-primary"><small class="text-secondary">Agencia:</small>&nbsp; {{this.agenciaAsignada}}</span>
+            </div>
+
+        </div>
+        <form [formGroup]="agenciaForm" class="mb-2 mt-2 d-flex aligbn-items-center " *ngIf="_showcliente">
+        <div  class="d-flex m-1 flex-column animate__animated animate__fadeIn  " style="z-index: auto;" >
+            <label for="codcliente"> Seleccionar el cliente </label>
+            <p-autoComplete formControlName="codcliente"
+                #codcliente
+                id="codcliente" 
+                (click)="validationCliente()"
+                [dropdown]="true"
+                [suggestions]="filteredcliente"
+                (completeMethod)="filterCliente($event)"
+                [style]="{'width':'100%'}"
+                field="name">
+            </p-autoComplete>
+        </div>
+        <div *ngIf="_show_form_agency" class="d-flex m-1 flex-column animate__animated animate__fadeIn" style="z-index: auto;">
+            <label for="codcliente"> Seleccionar la agencia a asignar </label>
+            <p-autoComplete [dropdown]="true"
+                            (click)="validacionBtnAsign()"
+                            formControlName="codagencia"
+                            #codagencia
+                            id="codagencia" 
+                            [suggestions]="filteredAgencias"
+                            (completeMethod)="filterAgencia($event)"
+                            field="name">
+            </p-autoComplete>
+        </div>
+
+    </form>
+        <div class="btnsetts mt-2 w-100 d-flex justify-content-end " *ngIf="_show_form_agency">
+            <button class="btn btn-warning d-flex align-items-center" 
+                    (click)="automatizacionAsignacionMaquinaria()">
+                    <mat-icon>done</mat-icon>&nbsp; Terminar Asignación
+            </button>
+        </div>
+    </div>
     </div>
     <hr>
     <div class="form-section">
         <form [formGroup]="maquinariaForm" class="mb-2" (ngSubmit)="onSubmit()">
-            <div class="d-flex justify-content-between " >
-                <div class="mb-3 col-4  ">
-                    <label for="codtipomaquina" class="form-label ">
+            <div class="d-flex justify-content-between">
+                <div class="mb-3 col-4">
+                    <label for="codtipomaquina" class="form-label">
                         Tipo de Maquinaria:<span class="text-danger">*</span>
                     </label>
-                    <div class="d-flex" >
+                    <div class="d-flex">
                         <select class="inpForms form-select w-100"
-                                formControlName="codtipomaquina" #codtipomaquina id="codtipomaquina" aria-label="">
+                                formControlName="codtipomaquina"
+                                #codtipomaquina
+                                id="codtipomaquina"
+                                aria-label="">
                                 <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo">
                                     {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
                                 </option>
@@ -76,15 +128,17 @@
                            placeholder="A-000111223221...">
                 </div>
             
-                <div class="mb-3 col-2 ">
-                    <label for="nombre" class="form-label" title="Número de Inventario" >
-                        Número de Inv. 
+                <div class="mb-3 col-2">
+                    <label for="nombre" class="form-label"
+                           title="Número de Inventario">
+                           Número de Inv.
                     </label>
                     <input type="text" class="form-control"  
                            formControlName="ninventario" 
                            #ninventario id="ninventario"
                            placeholder="55881">
                 </div>
+
                 <div class="mb-3 col-2 ">
                     <label for="nombre" class="form-label   ">
                         Código BP. 
@@ -94,6 +148,7 @@
                            #codigobp id="codigobp"
                            placeholder="00012-B">
                 </div>
+
                 <div class="mb-3 col-2 ">
                     <label for="contadorinicial" class="form-label   ">
                         Contador Inicial: 
@@ -104,6 +159,7 @@
                            #contadorinicial id="contadorinicial"
                            placeholder="0">
                 </div>
+
                 <div class="mb-3 col-2 ">
                     <label for="contadorfinal" class="form-label   "  >
                         Contador Final: 
@@ -113,10 +169,13 @@
                            #contadorfinal id="contadorfinal"  
                            placeholder="0">
                 </div>
-            </div>
-            <div class="d-flex justify-content-between align-item-start ">
+
                 
-                <div class="mb-3 w-100">
+
+            </div>
+            <div class="d-flex justify-content-between align-item-end mb-3">
+                
+                <div class="w-75">
                     <label for="nombre" class="form-label   ">
                         Observación técnica de la máquina. 
                     </label>
@@ -125,17 +184,29 @@
                            #observacion id="observacion"
                            placeholder="Esta máquina viene con los rodillos a parte...">
                 </div>
+                <div class="d-flex align-items-center p-2 bg-warning shadow-sm rounded-2" style="cursor: pointer;">
+                    <div class="form-check">
+                        <input class="form-check-input" 
+                                type="checkbox" value="" 
+                                formControlName="estado"
+                                #estado 
+                                id="estado"
+                                name="estado">
+                        <label class="form-check-label" for="estado" style="cursor: pointer;">
+                            Estado de la máquina: <br>
+                            <span class="text-secondary" > (Fuera de servicio) </span>
+                        </label>
+                      </div>
+                </div>
                 </div>
                 <div class="mini-floating-button">
-
                         <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
                             <mat-icon>cancel</mat-icon>
                         </button>
                         <button type="submit" mat-raised-button color="primary">
                             <mat-icon>{{_icon_button}}</mat-icon> {{_action_butto}} {{modulo.nombre}}
-                        </button>
-        
-                </div>                 
+                        </button>        
+                </div>     
             
         </form>
     </div>
@@ -203,6 +274,11 @@
                   </span>
                   <span *ngIf="_delete_show" class="delete"  (click)="eliminarMaquinaria(row)">
                     <mat-icon>delete</mat-icon>
+                  </span>
+                  <span [ngStyle]="{'color': row.colorEstadoObsoleto}" >
+                    <mat-icon>
+                        warning 
+                    </mat-icon>
                   </span>
                 </td>
     

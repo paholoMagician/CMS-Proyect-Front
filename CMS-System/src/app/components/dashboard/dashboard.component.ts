@@ -11,7 +11,7 @@ import { LoginService } from '../login/services/login.service';
 export class DashboardComponent implements OnInit {
 
   _show_spinner:      boolean = false; 
-  moduloEmitter: any = {};
+  moduloEmitter: any;
   _usuario: boolean = false;
   _asignacion: boolean = false;
   _dashboard: boolean = true;
@@ -34,9 +34,25 @@ export class DashboardComponent implements OnInit {
     this.obtenerVersionCMS();
     this.obtenerEmpresa();
     this.log.validate();
+
+    // /** Persistencia de ubicacion modular */
+    let xmodulo:any = localStorage.getItem('modulo');
+    // this.recibirModulo(xmodulo);  
+
+    let arrmodulo = {
+      nombre: xmodulo
+    }
+
+    console.log(arrmodulo);
+    this.recibirModulo(arrmodulo);
+    
   }
+
+
   recibirModulo(modulo: any) {
+
     this.moduloEmitter = modulo;
+
     switch (this.moduloEmitter.nombre) {
       case 'Usuario':
         this._usuario        = true;
@@ -61,6 +77,7 @@ export class DashboardComponent implements OnInit {
         this._perfil_usuario = false;
         this._bodegas        = false;
         this._configuracion  = false;
+        this._maquinaria     = false;
         this._imagenes_productos = false;
         this._garantias      = false;
         this._cronograma     = false;

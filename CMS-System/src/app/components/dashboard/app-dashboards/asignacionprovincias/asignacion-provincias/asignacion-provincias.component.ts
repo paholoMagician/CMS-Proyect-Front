@@ -79,7 +79,7 @@ export class AsignacionProvinciasComponent implements OnInit {
     this.ccia = sessionStorage.getItem('codcia');
     this.obtenerUsuario();
     this.permisos();
-    this.getDataMaster('ZNF');
+    // this.getDataMaster('ZNF');
     this.obtenerCliente();
     this.asignarColores();
   }
@@ -96,7 +96,7 @@ export class AsignacionProvinciasComponent implements OnInit {
       next: (usuarios) => {
         this.listUsuarios = usuarios;
       }, error: (e) => {
-        console.error(e);
+        // console.error(e);
       },complete: () => {
         this.listUsuarios.find( (element:any) => {
           if( element.tipo == '003' ) {
@@ -104,23 +104,20 @@ export class AsignacionProvinciasComponent implements OnInit {
             this.dataSource = new MatTableDataSource(this.lisTecnicos);
             this.dataSource.paginator = this.paginator;
           }
+
+          // console.warn(this.lisTecnicos);
+
         })
       }
     })  
   }
 
   listaZonificacion: any = [];
-  getDataMaster(cod:string) {
-    this.DataMaster.getDataMaster(cod).subscribe({
+  getDataMaster() {
+    this.DataMaster.getDataMaster('ZNF').subscribe({
       next: (data) => {
-        switch(cod) {
-          case 'ZNF':
-            this.listaZonificacion = data;
-            console.log(this.listaZonificacion);
-            break;
-        }
+        this.listaZonificacion = data;
       }, complete: () => {
-
         this.listaZonificacion.filter((element:any)=>{
           this.obtenerZonaAgencia(element.codigo);
         })
@@ -136,44 +133,45 @@ export class AsignacionProvinciasComponent implements OnInit {
     this.resultadosFiltradosSur     = []
     this.resultadosFiltradosGeneral = []
     this.obtenerClienteUnit();
-    this.crone.obtenerZonificacion(codec, this.clienteForm.controls['codcliente'].value).subscribe({
-      next:(x:any) => {        
-        if( codec == '001' ) {
-          this.zlist1 = x;
-          this.resultadosFiltradosNorte = x;
-          console.warn('Norte');
-          console.warn(this.resultadosFiltradosNorte);
-        }      
-        else if (codec == '002') {
-          this.zlist2 = x;
-          this.resultadosFiltradosSur = x;
-          console.warn('SUR');
-          console.warn(this.resultadosFiltradosSur);
-        } 
-        else if (codec == '003') {
-          this.zlist3 = x;
-          this.resultadosFiltradosCentro = x;
-          console.warn('CENTRO');
-          console.warn(this.resultadosFiltradosCentro);
-        }
-        else if (codec == '004') {
-          this.zlist4 = x;
-          this.resultadosFiltradosGeneral = x;
-        }
-        else if (codec == '005') {
-          this.zlist5 = x;
-        }
-        else if (codec == '006') {
-          this.zlist6 = x;
-        }
-        else if (codec == '007') {
-          this.zlist7 = x;
-        }
 
+    if ( codec != null || codec != undefined || this.clienteForm.controls['codcliente'].value != null || this.clienteForm.controls['codcliente'].value != undefined ) {
+      this.crone.obtenerZonificacion(codec, this.clienteForm.controls['codcliente'].value).subscribe({
+        next:(x:any) => {        
+          if( codec == '001' ) {
+            this.zlist1 = x;
+            this.resultadosFiltradosNorte = x;
+            console.warn('Norte');
+            console.warn(this.resultadosFiltradosNorte);
+          }
+          else if (codec == '002') {
+            this.zlist2 = x;
+            this.resultadosFiltradosSur = x;
+            // console.warn('SUR');
+            // console.warn(this.resultadosFiltradosSur);
+          }
+          else if (codec == '003') {
+            this.zlist3 = x;
+            this.resultadosFiltradosCentro = x;
+            // console.warn('CENTRO');
+            // console.warn(this.resultadosFiltradosCentro);
+          }
+          else if (codec == '004') {
+            this.zlist4 = x;
+            this.resultadosFiltradosGeneral = x;
+          }
+          else if (codec == '005') {
+            this.zlist5 = x;
+          }
+          else if (codec == '006') {
+            this.zlist6 = x;
+          }
+          else if (codec == '007') {
+            this.zlist7 = x;
+          }
+        }
+      })
+    }
 
-
-      }
-    })
   }
 
   getColorForInitial(initial: string): string {
@@ -197,6 +195,7 @@ export class AsignacionProvinciasComponent implements OnInit {
   }
 
   eliminarDatCrono(id:any) {
+    console.warn(id)
     this._show_spinner = true;
     this.crone.eliminarZonificacion(id).subscribe (
       {
@@ -206,7 +205,7 @@ export class AsignacionProvinciasComponent implements OnInit {
         },
         error: (e) => {
           this._show_spinner = false;
-          Toast.fire({ icon: 'success', title: 'No hemos podido elimar la asignación' });
+          Toast.fire({ icon: 'error', title: 'No hemos podido elimar la asignación' });
         }, complete: () => {
             this.obtenerAgenciaRes();
             this.listaZonificacion.filter( (element:any) => {
@@ -237,7 +236,7 @@ export class AsignacionProvinciasComponent implements OnInit {
   filtroTextoCentro: string = '';
   filtrarElementosCentro() {
 
-    console.log(this.filtroTextoCentro)
+    // console.log(this.filtroTextoCentro)
 
     this.resultadosFiltradosCentro = this.zlist3.filter((item:any) =>
       item.nombreAgencia.toLowerCase().includes(this.filtroTextoCentro.toLowerCase()) ||
@@ -262,37 +261,48 @@ export class AsignacionProvinciasComponent implements OnInit {
   }
 
   validationCliente() {
+    this.getDataMaster();
     this.obtenerAgenciaRes();
   }
 
   obtenerAgenciaRes() {
     this.resultadosFiltrados = [];
-    this.crone.obtenerAgenciasGeneraCli( this.ccia, this.clienteForm.controls['codcliente'].value ).subscribe(
-      {
-        next:(x) => {
-          this.listaAgenciasRes = x;
-          this.resultadosFiltrados = x;
-          console.log(this.listaAgenciasRes);
-        }, complete: () => {
-          this.listaZonificacion.filter((element:any) => {
-            this.obtenerZonaAgencia(element.codigo);
-          })
+
+    if( this.clienteForm.controls['codcliente'].value != null || this.clienteForm.controls['codcliente'].value != undefined ) {
+
+      this.crone.obtenerAgenciasGeneraCli( this.ccia, this.clienteForm.controls['codcliente'].value ).subscribe(
+        {
+          next:(x) => {
+            this.listaAgenciasRes = x;
+            this.resultadosFiltrados = x;
+            // console.log(this.listaAgenciasRes);
+          }, complete: () => {
+
+            if ( this.listaZonificacion != null || this.listaZonificacion != undefined || this.listaZonificacion != '' ){
+              this.listaZonificacion.filter((element:any) => {
+                this.obtenerZonaAgencia(element.codigo);
+              })
+            }
+
+          }
         }
-      }
-    )
+      )
+
+    }
+
   }
 
   listaClientes: any = [];
   obtenerCliente() {
     this._show_spinner = true;
-    this.client.obtenerClientes(this.ccia).subscribe(
+    this.client.obtenerClientes(this.ccia,2).subscribe(
       {
         next: (clientes) => {
           this.listaClientes = clientes;
-          console.log(this.listaClientes)
+          // // console.log(this.listaClientes)
         },
         error: (e) => {
-          console.error(e);
+          // console.error(e);
           this._show_spinner = false;
         },
         complete: () => {
@@ -303,21 +313,23 @@ export class AsignacionProvinciasComponent implements OnInit {
   }
 
   obtenerClienteUnit() {
-    this.listaClientes.filter((element:any)=>{
+    this.listaClientes.filter( (element:any) => {
       if( element.codcliente == this.clienteForm.controls['codcliente'].value ) {
-        console.warn(element);
+        // console.warn(element);
         this.clientesel = element.nombre;
         this._IMGE = element.imagen;
-        // console.warn(this.modelClientUnit);
+        // // console.warn(this.modelClientUnit);s
       }
     })
+
   }
 
   catchData(data:any, codecZone: string) {
     this.codeZone = codecZone;
     this.codAgencia = data.codAgencia;
     this.nombrelocalizacion = data.nombrelocalizacion;
-    this.idlocalidad = data.localidadCodigo
+    this.idlocalidad = data.idlocalidad;
+    // console.log(this.idlocalidad);
   }
 
   modelZonificacion:any = [];
@@ -329,8 +341,8 @@ export class AsignacionProvinciasComponent implements OnInit {
       "nombrelocalizacion": this.codeZone,
       "feccrea": new Date(),
       "codusercrea": xuser,
-      "idlocalidad": this.idlocalidad,
-      "campoA": "string",
+      "idlocalidad": null,
+      "campoA": null,
       "campoB": 0,
       "codagencia": this.codAgencia,
       "codtecnico": null
@@ -359,21 +371,21 @@ export class AsignacionProvinciasComponent implements OnInit {
     
     switch(this.modulo.permiso) {
       case 1:
-        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
+        this.columnHead = [ 'foto', 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
         this._delete_show = true;
         this._edit_show   = true;
         this._create_show = true;
         this._form_create = true;
         break;
       case 2:
-        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
+        this.columnHead = [ 'foto', 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
         this._delete_show = false;
         this._edit_show   = true;
         this._create_show = true;
         this._form_create = true;
         break;
       case 3:
-        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
+        this.columnHead = [ 'foto', 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia', 'provincia' ];
         this._delete_show = false;
         this._edit_show   = true;
         this._create_show = false;
@@ -381,7 +393,7 @@ export class AsignacionProvinciasComponent implements OnInit {
         break;      
       case 4:
         alert('nivel de permiso ' + this.modulo.permiso)
-        this.columnHead = [ 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia' ];
+        this.columnHead = [ 'foto', 'nombre', 'nombreDepartamento', 'nombreProvincia', 'nombreEstado', 'nombreMovilidad', 'nombreLicencia' ];
         this._delete_show = false;
         this._edit_show   = false;
         this._create_show = false;
@@ -399,13 +411,13 @@ export class AsignacionProvinciasComponent implements OnInit {
   openDialog(data:any): void {
 
     const dialogRef = this.dialog.open( ModalProvicComponent, {
-      height: '600px',
+      height: '650px',
       width: '80%',
       data: data, 
     });
 
     dialogRef.afterClosed().subscribe( result => {      
-      console.warn( result );
+      // console.warn( result );
     });
 
   }

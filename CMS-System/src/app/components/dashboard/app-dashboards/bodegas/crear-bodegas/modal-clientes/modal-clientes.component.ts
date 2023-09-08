@@ -64,7 +64,7 @@ export class ModalClientesComponent implements OnInit {
   listaClientes: any = [];
   obtenerCliente() {
     this._show_spinner = true;
-    this.client.obtenerClientes(this.ccia).subscribe({
+    this.client.obtenerClientes(this.ccia,2).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
       },

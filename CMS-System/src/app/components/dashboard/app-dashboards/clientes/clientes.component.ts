@@ -6,6 +6,8 @@ import { ClienteService } from './services/cliente.service';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 import Swal from 'sweetalert2'
 import { ImagecontrolService } from 'src/app/components/shared/image-control/services/imagecontrol.service';
+import { CrearBodegasService } from '../bodegas/crear-bodegas/services/crear-bodegas.service';
+import { environment } from 'src/environments/environment.prod';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -26,6 +28,10 @@ const Toast = Swal.mixin({
   styleUrls: ['./clientes.component.scss']
 })
 export class ClientesComponent implements OnInit {
+
+  env = environment.image_url;
+
+  nonuser:any = '../../../../../assets/non-user.webp';
 
   codCliCatch:        string = '';
   _delete_show:       boolean = true;
@@ -62,9 +68,10 @@ export class ClientesComponent implements OnInit {
     extension2:           new FormControl(''),
   })
 
-  constructor( private client: ClienteService,private DataMaster: SharedService, private fileserv: ImagecontrolService,  ) { }
+  constructor( private client: ClienteService,private DataMaster: SharedService, private fileserv: ImagecontrolService, private bodega: CrearBodegasService ) { }
 
   ngOnInit(): void {
+    this._IMGE = this.nonuser;
     // Provincia  
     this.getDataMaster('TP');
     this.ccia = sessionStorage.getItem('codcia');
@@ -199,11 +206,11 @@ export class ClientesComponent implements OnInit {
     this.DataMaster.guardarImagenEntidadGeneral( this.imagenModel ).subscribe({
     next: (x) => {
       this._show_spinner = false;
-      Swal.fire(
-        'Imagen agregada',
-        'Imagen de cliente se ha guardado con éxito',
-        'success'
-      ) 
+      // Swal.fire(
+      //   'Imagen agregada',
+      //   'Imagen de cliente se ha guardado con éxito',
+      //   'success'
+      // ) 
     }, error: (e) => {
       console.error(e);
       this._show_spinner = false;
@@ -217,6 +224,7 @@ export class ClientesComponent implements OnInit {
 }
 
   modelCliente: any = [];
+  automatic_bod:boolean = true;
   guardarClientes() {
 
     if( this.clienteForm.controls['nombre'].value == '' || this.clienteForm.controls['nombre'].value == undefined || this.clienteForm.controls['nombre'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
@@ -257,6 +265,7 @@ export class ClientesComponent implements OnInit {
 
     console.warn( this.modelCliente );
     this._show_spinner = true;
+
     this.client.guardarClientes(this.modelCliente).subscribe(
       {
         next: (x) => {
@@ -277,7 +286,14 @@ export class ClientesComponent implements OnInit {
         },
         complete: () => {
           this.guardarImagen(token);
+          
           this.obtenerCliente();
+          if( this.automatic_bod ) {
+            let bodegacliente:any = '(BODEGA VIRTUAL) '+ this.clienteForm.controls['nombre'].value.toString();
+            this.guardarBodega( token, bodegacliente );
+          }          
+          
+          
           this.limpiar();
         }
       }
@@ -294,13 +310,16 @@ export class ClientesComponent implements OnInit {
   listaClientes: any = [];
   obtenerCliente() {
     this._show_spinner = true;
-    this.client.obtenerClientes(this.ccia).subscribe({
+    this.client.obtenerClientes(this.ccia, 2).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
-
-        
-
         console.log(this.listaClientes)
+
+        this.listaClientes.filter( (cli:any) => {
+          console.warn(this.env + cli.imagen)
+          cli.imagen = this.env + cli.imagen;
+        })
+
       },
       error: (e) => {
         console.error(e);
@@ -367,6 +386,39 @@ export class ClientesComponent implements OnInit {
       }
     })
 
+  }
+
+  modelBodegas: any = []; 
+  guardarBodega(ccli:string, nombrebdega:string) {
+
+    let xuser: any = sessionStorage.getItem('UserCod');
+    this._show_spinner = true;
+    this.modelBodegas = {
+      nombrebodega: nombrebdega,
+      descripcion:  'Creado automáticamente desde el cliente',
+      fecrea: new Date(),
+      codusercrea: xuser,
+      ccia: this.ccia,
+      ccli: ccli
+    }
+
+    this.bodega.guardarBodegas(this.modelBodegas).subscribe({
+      next: (x) => {        
+        this._show_spinner = false;
+        Toast.fire({
+          icon: 'success',
+          title: 'Bodega: '+nombrebdega+' creada automáticamente.'
+        })
+      }, error: (e) => {
+        this._show_spinner = false;
+        console.error(e);
+        Toast.fire({
+          icon: 'error',
+          title: 'No se ha podido generar automáticamente.'
+        })
+      }, complete: () => {}
+    })
+    
   }
 
   codcli: string = '';
