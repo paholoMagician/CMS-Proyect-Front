@@ -91,15 +91,15 @@ export class ModalAsignMaqtecnicoComponent implements OnInit {
   listaMaquinaMantenimiento:any = [];
   listaAgenciaMaquinaGhost: any = [];
   obtenerMantenimiemnto() {
-    this.mantenimineto.obtenerMantenimientos( this.codcrono).subscribe({
-      next: (mantenimiento) => {
-        this.listaMaquinaMantenimiento = mantenimiento;
-        this.listaMaquinariaAsignada = mantenimiento;
-        this.listaAgenciaMaquinaGhost = mantenimiento;
-        // console.warn('listaMaquinaMantenimiento');
-        // console.warn(this.listaMaquinaMantenimiento);
-      }
-    })
+    // this.mantenimineto.obtenerMantenimientos( this.codcrono).subscribe({
+    //   next: (mantenimiento) => {
+    //     this.listaMaquinaMantenimiento = mantenimiento;
+    //     this.listaMaquinariaAsignada = mantenimiento;
+    //     this.listaAgenciaMaquinaGhost = mantenimiento;
+    //     // console.warn('listaMaquinaMantenimiento');
+    //     // console.warn(this.listaMaquinaMantenimiento);
+    //   }
+    // })
   }
 
   eliminarMantenimiento( id:number ) {

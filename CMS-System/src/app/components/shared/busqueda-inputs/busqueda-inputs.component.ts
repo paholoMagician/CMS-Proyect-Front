@@ -256,13 +256,13 @@ export class BusquedaInputsComponent implements OnInit {
     listaMaquinaMantenimiento: any = [];
     listaMantenimientoMaquinaGhost:  any = [];
     obtenerMantenimiento() {    
-      this.mantenimineto.obtenerMantenimientos(this.codCrono).subscribe({
-        next: (mantenimiento) => {
-          this.listaMantenimientoMaquinaGhost = mantenimiento;
-          console.warn('--------MANTENIMIENTO--------');
-          console.warn(this.listaMantenimientoMaquinaGhost);
-        }
-      });
+      // this.mantenimineto.obtenerMantenimientos(this.codCrono).subscribe({
+      //   next: (mantenimiento) => {
+      //     this.listaMantenimientoMaquinaGhost = mantenimiento;
+      //     console.warn('--------MANTENIMIENTO--------');
+      //     console.warn(this.listaMantenimientoMaquinaGhost);
+      //   }
+      // });
     }
 
   listadetalleCronoUnit: any = [];

@@ -278,7 +278,7 @@ cronograma(anio: number, mes: string) {
   this.listacrono = [];
   this.listacronoGhost = [];
 
-  this.crono.obtenerCronograma(this.ccia, anio, xmes, 0, 1).subscribe({
+  this.crono.obtenerCronograma(this.ccia, anio, xmes, 0, 1, 'void').subscribe({
     next: (listaCronograma:any) => {
       this.listacronoGhost = listaCronograma;
       const nombresDias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];

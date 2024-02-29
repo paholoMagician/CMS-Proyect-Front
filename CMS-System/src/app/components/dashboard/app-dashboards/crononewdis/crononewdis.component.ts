@@ -9,19 +9,9 @@ import { es } from 'date-fns/locale';
 import Swal from 'sweetalert2'
 
 
-import {
-  CdkDragDrop,
-  CdkDrag,
-  CdkDropList,
-  CdkDropListGroup,
-  moveItemInArray,
-  transferArrayItem,
-} from '@angular/cdk/drag-drop';
-
 import { CronogramaService } from '../cronograma/services/cronograma.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { error } from 'console';
+
 import { MantenimientoCronogramaService } from '../crono-grid/services/mantenimiento-cronograma.service';
 import { ModalDetalleCronoComponent } from '../crono-grid/modal-detalle-crono/modal-detalle-crono.component';
 import { environment } from 'src/environments/environment.prod';
@@ -46,7 +36,7 @@ const Toast = Swal.mixin({
 export class CrononewdisComponent implements OnInit {
 
   _color_letras:string = '';
-
+  filterMant:any;
   _show_filters:boolean = true;
   _width_filter: string = 'auto';
   _show_historymaquine: boolean = false;
@@ -59,7 +49,8 @@ export class CrononewdisComponent implements OnInit {
   calssMenuFilter: string = 'filter-section rounded-2 animate__animated animate__backInDown';
 
   _filtros:any;
-
+  mesSeleccionado:any;
+  codMachine:any;
   _dis_btn_setts:boolean = false;
   clientesel: string = 'Escoge un cliente a visualizar'
   listaAgenciasRes: any = [];
@@ -72,6 +63,13 @@ export class CrononewdisComponent implements OnInit {
   resultadosFiltradosSur:any = [];
   resultadosFiltradosGeneral:any = [];
   anioactual: any;
+
+  maqsel:boolean = false;
+  listaManetnimientoMaquinas: any = [];
+  selectAll: boolean = false;
+  tecnicoObtenido:any=[];
+  manteniminetocount:number = 0;
+
   zlist1:any = [];
   zlist2:any = [];
   zlist3:any = [];
@@ -116,7 +114,7 @@ export class CrononewdisComponent implements OnInit {
                private us: UserService,
                private mantenimineto: MantenimientoCronogramaService ) { }
 
-               mesSeleccionado:any;
+
   ngOnInit(): void {
 
     let xlocalidad:any = localStorage.getItem('localidad-cronograma-2');
@@ -132,8 +130,6 @@ export class CrononewdisComponent implements OnInit {
       this.mesSeleccionado = Number(meselegido);
       this.diasdelMes(this.mesSeleccionado);
     }
-
-    // this.configurationSpeedDial();
     this.asignarColores();  
     this.obtenerLocalidades();
   }
@@ -166,10 +162,6 @@ export class CrononewdisComponent implements OnInit {
     );
   }
 
-  maqsel:boolean = false;
-  listaManetnimientoMaquinas: any = [];
-  selectAll: boolean = false;
-  tecnicoObtenido:any=[];
   selectAllMachine() {    
     
     this.listaMaquinariaAsignadaGhost.forEach((maquina: any) => {
@@ -184,17 +176,15 @@ export class CrononewdisComponent implements OnInit {
       } else if (!this.selectAll) {
           this.listaManetnimientoMaquinas = this.listaManetnimientoMaquinas.filter((item: any) => item.codprod !== maquina.codmaquina);
           this.listaMaquinariaAsignadaGhost.filter((element:any) => {
-
             element.tecniconombre = '';
             element.fotoperfil = '';
             element.show = false;
-
         })
       }
     });
 
   }
-  manteniminetocount:number = 0;
+
   addMaquinaManetenimiento(event: any, codmachine: any) {
 
     const xuser: any = sessionStorage.getItem('UserCod');
@@ -235,12 +225,8 @@ export class CrononewdisComponent implements OnInit {
           }
         })
 
-        console.warn(this.listaManetnimientoMaquinas);
-
     }
 
-    // console.warn('Mantenimiento Agregado');
-    // console.warn(this.listaManetnimientoMaquinas);
     this.manteniminetocount = this.listaManetnimientoMaquinas.length;
 
   }
@@ -251,11 +237,10 @@ export class CrononewdisComponent implements OnInit {
     console.warn(this.tecnicoObtenido);    
     setTimeout(() => {
       this.encontrarMaquinasFaltantes();
-      // this.encontrarMaquinasRepetidas();
     }, 500);
   }
 
-  filterMant:any;
+
   guardarMantenimiento() {
 
     this.listaManetnimientoMaquinas.filter((element:any) => {
@@ -272,16 +257,19 @@ export class CrononewdisComponent implements OnInit {
           this.selectAll = false;
           setTimeout(() => {
             this.encontrarMaquinasFaltantes();
-            // this.encontrarMaquinasRepetidas();
           }, 500);
         }
       }
     )
     }
     )
+
+    setTimeout(() => {
+      this.listaManetnimientoMaquinas = [];
+    }, 1000);
+
   }
 
-  codMachine:any;
   obtenerCodMachine(codmachine:any):string {
     this.codMachine = codmachine;
     console.warn(this.codMachine);
@@ -370,6 +358,17 @@ export class CrononewdisComponent implements OnInit {
 
   }
 
+  actualizarEstadoAgencia( st:number, codagencia:string ) {
+    this.crone.ActualizaEstadoAgencia(st, codagencia).subscribe({
+      next:( x ) => {
+        console.warn('ESTADO DE LA AGENCIA ' + codagencia +  ' A CAMBIADO A: ' + st);
+      }, error: (e) => {
+        console.error(e);
+      }, complete: () => {
+        this.getDataMaster('ZNF');
+      }
+    })
+  }
 
   filterMantenimiento () {
     this.listaMantenimientoMaquinaGhost = this.listaMaquinaMantenimiento.filter((item:any) =>
@@ -405,7 +404,6 @@ export class CrononewdisComponent implements OnInit {
           console.warn('SUR');
           console.warn(this.resultadosFiltradosSur);
           this.resultadosFiltradosSur.filter( (cli:any) => {
-            // console.warn(this.env + cli.imagen)
             cli.imagen = this.env + cli.imagen;
           })
         } 
@@ -413,7 +411,6 @@ export class CrononewdisComponent implements OnInit {
           this.zlist3 = x;
           this.resultadosFiltradosCentro = x;
           this.resultadosFiltradosCentro.filter( (cli:any) => {
-            // console.warn(this.env + cli.imagen)
             cli.imagen = this.env + cli.imagen;
           })
         }
@@ -421,7 +418,6 @@ export class CrononewdisComponent implements OnInit {
           this.zlist4 = x;
           this.resultadosFiltradosGeneral = x;
           this.resultadosFiltradosGeneral.filter( (cli:any) => {
-            // console.warn(this.env + cli.imagen)
             cli.imagen = this.env + cli.imagen;
           })
         }
@@ -530,12 +526,7 @@ export class CrononewdisComponent implements OnInit {
         this.getDataMaster('ZNF');
       }
 
-      console.warn('>>>>>>>>>>>>>>>>>>>');
-      console.warn(this.idLocalidad);
-      console.warn('>>>>>>>>>>>>>>>>>>>');
-
       localStorage.setItem('localidad-cronograma-2', this.idLocalidad);
-
 
   }
 
@@ -552,7 +543,7 @@ export class CrononewdisComponent implements OnInit {
 
   }
 
-  eliminarCrono( codcrono:string ) {
+  eliminarCrono( crono:any, tecnico: any ) {
 
     Swal.fire({
       title: 'Estás seguro?',
@@ -565,7 +556,7 @@ export class CrononewdisComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this._show_spinner = true;
-        this.crono.deleteCrono(codcrono).subscribe({
+        this.crono.deleteCrono(crono.codcrono).subscribe({
           next: (x) => {
             this._show_spinner = false;
             Swal.fire(
@@ -582,7 +573,8 @@ export class CrononewdisComponent implements OnInit {
               'error'
             )
           }, complete: () => {
-            this.obtenerCrono(this.mes);
+            this.obtenerCrono(this.mes, 'void', 3);
+            // this.actualizarEstadoAgencia(1, crono.codagencia);
           } 
         })
       }
@@ -616,16 +608,11 @@ export class CrononewdisComponent implements OnInit {
 
     for (let i = 1; i <= diasEnMes; i++) {
       const fechaDia = new Date(this.anioactual, mes - 1, i);
-      // eeee representa el nombre completo del día de la semana
       const diaDeSemana = format(fechaDia, 'eeee', { locale: es }); 
-      // dd representa el día del mes con dos dígitos
       if (diaDeSemana !== 'domingo') {
-        // dd representa el día del mes con dos dígitos
         const numeroDia = format(fechaDia, 'dd', { locale: es }); 
         this.resultado.push({ dia: diaDeSemana, numero: numeroDia });
       }
-      // const numeroDia = format(fechaDia, 'dd', { locale: es }); 
-      // this.resultado.push({ dia: diaDeSemana, numero: numeroDia });
     }
 
     this.obtenerUsuario();
@@ -638,18 +625,27 @@ export class CrononewdisComponent implements OnInit {
   selectedDay: string = '';
   filteredData: any[] = [];
   unirDatos() {
+
     this.dismes = this.resultado.map((diaMes: any) => ({
       dia: diaMes.dia,
       numero: diaMes.numero,
       tecnicos: [],
+      totalPorDiaMaquinasIngresadasManual: 0, // Inicializa a cero
+      totalPorDiaMaquinasManual: 0, // Inicializa a cero
     }));
   
     for (const tecnico of this.lisTecnicos) {
       for (const diaMes of this.dismes) {
-        diaMes.tecnicos.push({ ...tecnico, cronograma: [] });
+        diaMes.tecnicos.push({
+          ...tecnico,
+          cronograma: [],
+          TotalMaquinasIngresadasManual: 0, // Inicializa a cero
+          TotalMaquinasManuales: 0, // Inicializa a cero
+          colorestadomaquinaria: '', // Inicializa con cadena vacía o un valor por defecto
+        });
       }
     }
-  
+
     for (const tecnico of this.lisTecnicos) {
       const cronogramasTecnico = this.filteredCronos.filter(
         (crono: any) => crono.codusertecnic === tecnico.codusertecnic
@@ -666,30 +662,73 @@ export class CrononewdisComponent implements OnInit {
       }
     }
   
-    this.dismes.forEach((diaMes: any) => {
+  
+    this.dismes.forEach((diaMes: any) => {   
+
+      //  Aqui agrupamos el cronograma
+      const cronogramasAgrupados: { [key: string]: any } = {};
+      diaMes.tecnicos.forEach((tecnico: any) => {
+        tecnico.cronograma.forEach((cronograma: any) => {
+          const codagencia = cronograma.codagencia;
+          if (!cronogramasAgrupados[codagencia]) {
+            cronogramasAgrupados[codagencia] = {
+              maquinasIngresadasManual: 0,
+              maquinasmanuales: 0,
+            };
+
+            console.warn('agencias agrupadas');
+            console.warn('♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠');
+            console.warn(cronogramasAgrupados[codagencia]);
+            console.warn('♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠');
+
+          }
+  
+          cronogramasAgrupados[codagencia].maquinasIngresadasManual += cronograma.cantidadMaquinasAsignadas;
+          cronogramasAgrupados[codagencia].maquinasmanuales         += cronograma.maquinasmanuales;
+  
+        });
+  
+      });
+
       diaMes.tecnicos.forEach((tecnico: any) => {
         let totalMaquinasIngresadasManual = tecnico.cronograma.reduce(
           (sum: number, cronograma: any) => sum + cronograma.cantidadMaquinasAsignadas, 0
         );
   
         let totalMaquinasManuales = tecnico.cronograma.reduce(
-          (sum: number, cronograma: any) => sum + cronograma.maquinasmanuales, 0
+          (sum: number, cronograma: any) => sum + cronograma.maquinasMantenimiento, 0
         );
   
         tecnico.TotalMaquinasManuales = totalMaquinasManuales;
         tecnico.TotalMaquinasIngresadasManual = totalMaquinasIngresadasManual;
 
-        if(tecnico.TotalMaquinasManuales == 0) tecnico.colorestadomaquinaria = 'gray';
-        else if(tecnico.TotalMaquinasManuales > 0 && tecnico.TotalMaquinasManuales < tecnico.TotalMaquinasIngresadasManual) tecnico.colorestadomaquinaria = '#51B5D9';
-        else if(tecnico.TotalMaquinasManuales == tecnico.TotalMaquinasIngresadasManual) tecnico.colorestadomaquinaria = '#5C8300';
-        else if(tecnico.TotalMaquinasManuales > tecnico.TotalMaquinasIngresadasManual) tecnico.colorestadomaquinaria = 'red';
+        if (tecnico.TotalMaquinasManuales == 0) tecnico.colorestadomaquinaria = 'gray';
+        else if (tecnico.TotalMaquinasManuales > 0 && tecnico.TotalMaquinasManuales < tecnico.TotalMaquinasIngresadasManual) tecnico.colorestadomaquinaria = '#51B5D9';
+        else if (tecnico.TotalMaquinasManuales == tecnico.TotalMaquinasIngresadasManual) tecnico.colorestadomaquinaria = '#5C8300';
+        else if (tecnico.TotalMaquinasManuales > tecnico.TotalMaquinasIngresadasManual) tecnico.colorestadomaquinaria = 'red';
 
       });
-    });
+
+      diaMes.totalPorDiaMaquinasIngresadasManual = diaMes.tecnicos.reduce(
+        (sum: number, tecnico: any) => sum + tecnico.TotalMaquinasIngresadasManual,
+        0
+      );
   
+      diaMes.totalPorDiaMaquinasManual = diaMes.tecnicos.reduce(
+        (sum: number, tecnico: any) => sum + tecnico.TotalMaquinasManuales,
+        0
+      );
+  
+      console.warn(diaMes);
+
+    }); 
+    
     this.filteredData = this.dismes;
 
+    console.warn('======================================');
+    console.warn('<<<<<<<<<<this.filteredData>>>>>>>>>>');
     console.warn(this.filteredData);
+    console.warn('======================================');
 
   }
   
@@ -768,33 +807,25 @@ export class CrononewdisComponent implements OnInit {
   
   listadetalleCronoUnit: any = [];
   modelUnitCronoDetalle: any = [];
+  agenciaChoiceManten:string = '';
   // resultadosFiltrados: any = [];
   codCrono:any;
   obtenerCronoUnit(codcrono:string, codagencia:string, mes:any, dia:any) {
     this.listaManetnimientoMaquinas = []
     this.codCrono = codcrono;
-
+    this.agenciaChoiceManten = codagencia;
     this.crono.obtenerDetalleCronoUnit(2, codagencia, mes, dia).subscribe({
       next: (x) => {
         this.listadetalleCronoUnit = x;
         this.resultadosFiltrados = x;
         console.warn(this.listadetalleCronoUnit);
         this.modelUnitCronoDetalle = this.listadetalleCronoUnit[0];
-        console.warn('============================');
-        // console.warn('modelUnitCronoDetalle');
-        console.warn(this.resultadosFiltrados);
-        console.warn('============================');
-      }, complete: () => {
-
-        
+      }, complete: () => {        
         this.obtenerMaquinaAsignada(codagencia)
         this.obtenerMantenimiento();
         setTimeout(() => {
           this.encontrarMaquinasFaltantes();
-          // this.encontrarMaquinasRepetidas();
         }, 1000);
-
-
       }
     })
   }
@@ -874,50 +905,50 @@ export class CrononewdisComponent implements OnInit {
     listaMaquinaMantenimiento: any = [];
     listaMantenimientoMaquinaGhost:  any = [];
     obtenerMantenimiento() {    
+      let year = new Date().getFullYear();
       this.manteniminetocount = 0;
-      this.mantenimineto.obtenerMantenimientos(this.codCrono).subscribe({
+      this.mantenimineto.obtenerMantenimientos(this.agenciaChoiceManten, this.mes,  year, this.idLocalidad).subscribe({
         next: (mantenimiento) => {
           this.listaMaquinaMantenimiento = mantenimiento; 
           this.listaMantenimientoMaquinaGhost = mantenimiento;
-          console.warn('--------MANTENIMIENTO--------');
-          console.warn(this.listaMaquinaMantenimiento);
+          // console.warn('--------MANTENIMIENTO--------');
+          // console.warn(this.listaMaquinaMantenimiento);
         }
       });
     }
   
   
-  obtenerCrono(mes:number) {
+    obtenerCrono(mes:number, userTecnic:string, tipo: number) {
 
-    this._show_spinner   = true;
-    this.sumatoriaFilter = 0;
-    this.filteredCronos  = [];
-    this.crono.obtenerCronograma( this.ccia,
-                                  this.anioactual,
-                                  mes,
-                                  this.idLocalidad,
-                                  3 )
-                                  .subscribe (
-      {
-        next: (x) => {
-          this.filteredCronos = x;
-          // console.warn('====CRONO====')
-          // console.warn(this.filteredCronos)
-          this.filteredCronos.filter( (cli:any) => {
-            // console.warn(this.env + cli.imagen)
-            cli.imagen = this.env + cli.imagen;
-          })
-        },
-        error: (e) => {
-          this._show_spinner = false;
-          console.error(e);
-        },
-        complete: () => {
-          this._show_spinner = false;
-          this.unirDatos();
+      this._show_spinner   = true;
+      this.sumatoriaFilter = 0;
+      this.filteredCronos  = [];
+      this.crono.obtenerCronograma( this.ccia,
+                                    this.anioactual,
+                                    mes,
+                                    this.idLocalidad,
+                                    tipo, userTecnic )
+                                    .subscribe (
+        {
+          next: (x) => {
+             this.filteredCronos =  x;
+            this.filteredCronos.filter( (cli:any) => {
+              cli.imagen = this.env + cli.imagen;
+            })
+          },
+          error: (e) => {
+            this._show_spinner = false;
+            console.error(e);
+          },
+          complete: () => {
+            this._show_spinner = false;
+            this.unirDatos();
+          }
         }
-      }
-    )
-  }
+      )
+    }
+    
+
 
   obtenerUsuario() {
     this._show_spinner = true;
@@ -973,7 +1004,7 @@ export class CrononewdisComponent implements OnInit {
   
           })
           
-          this.obtenerCrono(this.mes);
+          this.obtenerCrono(this.mes, 'void',3);
 
         }
 
@@ -1029,7 +1060,7 @@ export class CrononewdisComponent implements OnInit {
             this._show_spinner = false;
   
           })
-          this.obtenerCrono(this.mes);
+          this.obtenerCrono(this.mes, 'void', 3);
         }
       })
     } 
@@ -1056,7 +1087,7 @@ export class CrononewdisComponent implements OnInit {
         "codcrono":           codigoCrono,
         "codusertecnic":      tecnico.codusertecnic,
         "codagencia":         this.draggedItem.codagencia,
-        "observacion":        null,
+        "observacion":        '',
         "feccrea":            new Date(),
         "codusercreacrono":   xuser,
         "semanainicio":       0,
@@ -1077,11 +1108,80 @@ export class CrononewdisComponent implements OnInit {
           tecnicoEnDia.cronograma.push(this.draggedItem);
         }
       }
+
       this.guardarCrono( this.modelCrono, tecnico.nombre + ' ' + tecnico.apellido );
     }
   }  
 
-  guardarCrono( modelCrono:any [], tecnico:string ) {
+  _background_crono: string = 'rgb(255, 252, 238)';
+  copyCodCrono: any;
+  copyCodAgencia: any;
+  copyCantMaqIngre: any;
+  copy: boolean = false;
+  copyNombreAgencia: string = '';
+  copyImagenAgencia: string = '';
+  idcopy: string = '';
+  copiarCrono(data:any, id:any) {
+    this.copy = true;
+    this.copyNombreAgencia = data.nombreAgencia;
+    this.copyImagenAgencia = data.imagen;
+    this.idcopy = id;
+    let x = <HTMLDivElement>  document.getElementById(this.idcopy);
+    x.style.transition = 'ease-in all 1s';
+    x.style.border = 'groove 2px whitesmoke !important';
+    x.style.backgroundColor = '#B4FAE5';
+    x.style.boxShadow = '0px 0px 10px rgba(0,0,0,0.5)';
+    this._background_crono = '#F5E6B9 !important';
+    this.copyCodCrono   = data.codcrono;
+    this.copyCodAgencia = data.codagencia;
+    this.copyCantMaqIngre = data.cantidadMaqIngre;
+  }
+
+  cancelCopy() {
+    this._background_crono = 'rgb(255, 252, 238)';
+    let x = <HTMLDivElement>  document.getElementById(this.idcopy);
+    x.style.backgroundColor = 'transparent';
+    x.style.boxShadow = '0px 0px 0px rgba(0,0,0,0.0)';
+    setTimeout(() => {
+      this.copy = false;
+    }, 1000);
+
+  }
+
+
+  countCrono:number = 1;
+  pegarCrono(dataDate:any, dataTecnic: any) {
+    if( this.copy ) {
+      let xuser: any = sessionStorage.getItem('UserCod');
+      let codusertecnic = dataTecnic.codusertecnic;
+      let diaPaste = dataDate.numero;
+      let nombreTecnic = dataTecnic.nombre + ' ' + dataTecnic.apellido;
+      let mes = this.mes;
+
+      this.countCrono ++
+      this.modelCrono = {
+          "codcrono":           'co'+this.countCrono+this.copyCodCrono,
+          "codusertecnic":      codusertecnic,
+          "codagencia":         this.copyCodAgencia,
+          "observacion":        '',
+          "feccrea":            new Date(),
+          "codusercreacrono":   xuser,
+          "semanainicio":       0,
+          "dia":                diaPaste,
+          "mes":                mes,
+          "anio":               new Date().getFullYear(),
+          "fechamantenimiento": (this.mes)+'-'+1+'-'+new Date().getFullYear(),
+          "maquinasmanuales":   this.copyCantMaqIngre,
+          "Codlocalidad":       this.idLocalidad,
+          "Estado":             0
+      }
+
+      // console.warn(this.modelCrono);
+      this.guardarCrono( this.modelCrono, nombreTecnic );
+    }
+  }
+
+  guardarCrono( modelCrono:any, tecnico:string ) {
     this._show_spinner = true;
     this.crono.guardarCronos(modelCrono).subscribe (
       {
@@ -1096,6 +1196,8 @@ export class CrononewdisComponent implements OnInit {
           Toast.fire({ icon: 'error',
                        title: 'No se ha podido agregar este trabajo al ' + tecnico+'.' });
         }, complete: () => { 
+          this.obtenerCrono(modelCrono.mes, 'void', 3)
+          this.actualizarEstadoAgencia(2, this.modelCrono.codagencia);
           this._show_spinner = false;
         }
       }
@@ -1109,9 +1211,6 @@ export class CrononewdisComponent implements OnInit {
   }
   
 }
-
-
-
 
 @Pipe({
   name: 'filter'

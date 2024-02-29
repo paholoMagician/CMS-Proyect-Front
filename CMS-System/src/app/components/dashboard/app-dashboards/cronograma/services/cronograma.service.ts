@@ -14,8 +14,9 @@ export class CronogramaService {
   constructor(private http: HttpClient) { }
 
   
-  obtenerCronograma(ccia:string,anio:number,mes:number,loc:any, tipo:number): Observable<any> {
-    return this.http.get( this.url + 'Cronograma/ObtenerCronograma/'+ccia+ '/'+anio+'/'+mes+'/'+loc+'/'+tipo );
+  obtenerCronograma(ccia:string,anio:number,mes:number,loc:any, tipo:number, userTecnic: string): Observable<any> {
+
+    return this.http.get( this.url + 'Cronograma/ObtenerCronograma/'+ccia+ '/'+anio+'/'+mes+'/'+loc+'/'+tipo + '/' +userTecnic );
   }
   
   guardarCronos(model:any []) {

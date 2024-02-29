@@ -13,8 +13,12 @@ export class MantenimientoCronogramaService {
     return this.http.post( this.url + 'Mantenimiento/guardarMantenimiento', model );
   }
 
-  obtenerMantenimientos( codcrono:string ) {
-    return this.http.get( this.url + 'Mantenimiento/ObtenerMantenimientoCrono/' + codcrono );
+  obtenerMantenimientos( codagencia:string, m:number, a:number, l:number ) {
+
+    console.warn( 'codagencia, m, a, l Desde el servicio' );
+    console.warn( codagencia, m, a, l );
+
+    return this.http.get( this.url + 'Mantenimiento/ObtenerMantenimientoCrono/' + codagencia + '/' + m + '/' + a + '/' + l );
   }
 
   eliminarMantenimiento( id:number ) {

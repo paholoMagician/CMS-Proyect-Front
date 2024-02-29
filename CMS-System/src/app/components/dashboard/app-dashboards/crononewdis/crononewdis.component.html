@@ -86,7 +86,7 @@
 </div>
 
 <div class="d-flex align-items-end justify-content-between">
-<div>
+<div class="d-flex align-items-end" >
 <form [formGroup]="localidadform">
     <div class="d-flex flex-column">
         <label for="localidad">
@@ -117,20 +117,9 @@
 </div>
 <div >
 
-    <!-- <div *ngIf="_show_spinner">
-        <progress
-          [value]="progreso"
-          [max]="100"
-          class="progress-bar"
-        ></progress>
-        <span>Progreso: {{ progreso }}%</span>
-        <span>Estimación de tiempo: {{ (estimacionTiempo / 60000) | number:'1.2-2' }} minutos</span>
-        <span *ngIf="estimatedDataSize !== null">Tamaño estimado de datos: {{ estimatedDataSize | number }} bytes</span>
-      </div> -->
-
     <form [formGroup]="viewtecnicosform">
         <div class="form-check form-switch">
-            <input class="form-check-input" 
+            <input class="form-check-input"
                    formControlName="tecnicoLocal"
                    #tecnicoLocal
                    id="tecnicoLocal"
@@ -138,8 +127,9 @@
                    id="flexSwitchCheckChecked"
                    (change)="diasdelMes(mes)"
                    checked>
-                   <label class="form-check-label" for="flexSwitchCheckChecked">
-                        Técnicos por localidad
+                   <label class="form-check-label"
+                          for="flexSwitchCheckChecked">
+                          Técnicos por localidad
                    </label>
           </div>
     </form>
@@ -149,8 +139,7 @@
 <hr>
 <p-splitter [style]="{ height: '78vh' }"
             [panelSizes]="[20, 80]"
-            [minSizes]="[10, 0]"
-            styleClass="mb-5">
+            [minSizes]="[10, 0]" styleClass="mb-5">
             <ng-template pTemplate>
                      <p-splitter layout="vertical"
                                  [panelSizes]="[33, 33, 33]">
@@ -161,21 +150,25 @@
                                  </ng-template>
                                  <ng-template pTemplate>
                                     <div class="flex align-items-center p-2 justify-content-center" style="height: 50vh; overflow-y: auto;">
-                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2" style="border: dashed 1px gray;" >
+                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2" style="border: dashed 1px gray;">                                            
                                             <div class="title-data p-2 rounded-pill shadow-sm text-light d-flex justify-content-between" [ngStyle]="{'background-color': N}">
                                                 <div>Norte </div>
                                                 <div> <strong> ({{resultadosFiltradosNorte.length}}) </strong> </div>
                                             </div>
+
                                             <div class="m-1 p-2">
                                                 <input type="text" class="form-control form-control-sm shadow rounded-pill"
                                                        [(ngModel)]="filtroTextoNorte"
                                                        placeholder="Buscar agencias Norte por nombre"
                                                        (ngModelChange)="filtrarElementosNorte()">
                                             </div>
+
                                             <div class="d-flex data-box-h flex-wrap justify-content-between">
                                                 <div class="block-data p-2 d-flex flex-column"
                                                      *ngFor="let xnorte of resultadosFiltradosNorte"
-                                                     pDraggable (onDragStart)="dragStart(xnorte)" (onDragEnd)="dragEnd()">
+                                                     pDraggable
+                                                     (onDragStart)="dragStart(xnorte)"
+                                                     (onDragEnd)="dragEnd()">
                                                      <div style="font-size: 9pt;"  class="d-flex justify-content-between align-items-center">
                                                             <div class="icono"
                                                                  [ngStyle]="{'background-image': 'url('+xnorte.imagen+')', 'background-size': '100% 100%'}">
@@ -185,11 +178,21 @@
                                                                 <span class="badge bg-warning text-dark fs-6">
                                                                     {{xnorte.cantidadMaqIngre}}
                                                                 </span>
+                                                                <span class="badge text-light fs-6" [title]="xnorte.nombreFrecuencia" [style]="'background-color:' + xnorte.colorfrecuencia + ';'" >
+                                                                    {{xnorte.inifrecuencia}}
+                                                                </span>
                                                             </span>
                                                         </div>
                                                 </div>
-                                                <p-scrollTop target="parent" styleClass="custom-scrolltop" [threshold]="100" icon="pi pi-arrow-up"></p-scrollTop>
+
+                                                <p-scrollTop target="parent"
+                                                             styleClass="custom-scrolltop"
+                                                             [threshold]="100"
+                                                             icon="pi pi-arrow-up">
+                                                             </p-scrollTop>
+                                            
                                             </div>
+
                                         </div>
                                         <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2 " style="border: dashed 1px gray;">
                                             <div class="title-data p-2 rounded-pill shadow-sm text-light d-flex justify-content-between" [ngStyle]="{'background-color': C}">
@@ -214,13 +217,17 @@
                                                             <span class="badge bg-warning text-dark fs-6">
                                                                 {{xcentro.cantidadMaqIngre}}
                                                             </span>
+                                                            <span class="badge text-light fs-6" [title]="xcentro.nombreFrecuencia" [style]="'background-color:' + xcentro.colorfrecuencia + ';'" >
+                                                                {{xcentro.inifrecuencia}}
+                                                            </span>
                                                         </span>                                                        
                                                     </div>                                                    
                                                 </div>
                                                 <p-scrollTop target="parent" styleClass="custom-scrolltop" [threshold]="100" icon="pi pi-arrow-up"></p-scrollTop>
                                             </div>
                                         </div>
-                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2 " style="border: dashed 1px gray;">
+                                        <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2"
+                                             style="border: dashed 1px gray;">
                                             <div class="title-data p-2 rounded-pill shadow-sm text-light d-flex justify-content-between"
                                                  [ngStyle]="{'background-color': S}">
                                                 <div>Sur</div> 
@@ -245,6 +252,9 @@
                                                         <span class="p-1">{{xsur.nombreAgencia}}
                                                             <span class="badge bg-warning text-dark fs-6">
                                                                 {{xsur.cantidadMaqIngre}}
+                                                            </span>
+                                                            <span class="badge text-light fs-6" [title]="xsur.nombreFrecuencia" [style]="'background-color:' + xsur.colorfrecuencia + ';'" >
+                                                                {{xsur.inifrecuencia}}
                                                             </span>
                                                         </span>
                                                     </div>                                                    
@@ -283,6 +293,9 @@
                                                              <span class="badge bg-warning text-dark fs-6">
                                                                 {{xgeneral.cantidadMaqIngre}}
                                                             </span>
+                                                            <span class="badge text-light fs-6" [title]="xgeneral.nombreFrecuencia" [style]="'background-color:' + xgeneral.colorfrecuencia + ';'" >
+                                                                {{xgeneral.inifrecuencia}}
+                                                            </span>
                                                          </span>
                                                     </div>
                                                 </div>
@@ -299,9 +312,9 @@
                      </p-splitter>
             </ng-template>
             <ng-template pTemplate>
-                <section class="agenda w-100 p-3 m-2 rounded-2">
+                <section class="agenda w-100 p-3 m-2 rounded-2" [style]="'background:' + _background_crono" >
                     <div id="listaDiv">
-                        <div *ngFor="let diaMes of filteredData"
+                        <div *ngFor="let diaMes of filteredData; let di = index;"
                              style="border-bottom: dashed 1px gray;"
                              class="p-2">
                             <div class="title-header d-flex align-items-center">
@@ -317,9 +330,10 @@
                               </div>
                               <div class="agenda-content mb-2">
                                 <div class="m-1 w-100 d-flex justify-content-start align-items-start"
-                                     *ngFor="let tecnico of diaMes.tecnicos"
+                                     *ngFor="let tecnico of diaMes.tecnicos; let xi = index"
                                      pDroppable
-                                     (onDrop)="drop(diaMes, tecnico)">
+                                     (onDrop)="drop(diaMes, tecnico)"
+                                     (dblclick)="pegarCrono(diaMes, tecnico)">
                                      <div class="tecnicos-agenda p-2 w-25 m-1 rounded-2 d-flex justify-content-between align-items-center ">
                                          <!-- <div class="icono"
                                               [ngStyle]="{'background-image': 'url('+tecnico.imagenPerfil+')', 'background-size': '100% 100%'}">
@@ -333,11 +347,10 @@
                                          <div class="d-flex justify-content-between flex-wrap">
                                              <div *ngIf="tecnico.cronograma.length > 0"
                                                   class="d-flex justify-content-between flex-wrap">
-                                               <div *ngFor="let cronograma of tecnico.cronograma" id="tecnico-cronograma"
+                                               <div *ngFor="let cronograma of tecnico.cronograma; let i = index;" [id]="'crono-'+ di + '-' + xi + '-' +i"                                                
                                                      class="worker m-1 rounded-2 p-2 d-flex
                                                             align-items-center 
-                                                            justify-content-between align-items-center 
-                                                            animate__animated animate__bounceIn">
+                                                            justify-content-between align-items-center">
                                                      <div class="d-flex flex-column ">
                                                          <div class="d-flex justify-content-start align-items-center " >
                                                             <div class="icono"
@@ -351,29 +364,42 @@
                                                          <div class="maqinariasign rounded-pill p-1 mt-1 mb-1 text-light shadow-sm d-flex align-items-center justify-content-between"
                                                               [ngStyle]=" {'background-color': '#444', 'width': '75px'} " >
                                                             <mat-icon style="width: 19px; height: 19px; font-size: 12pt;" >point_of_sale</mat-icon> 
-                                                            &nbsp;   {{cronograma.maquinasmanuales}} / {{cronograma.cantidadMaquinasAsignadas}}
+                                                            &nbsp; {{cronograma.maquinasMantenimiento}} / {{cronograma.cantidadMaqIngre}}
                                                          </div>
                                                          <div class="d-flex align-items-center ">
-                                                             <small>
-                                                                 Mantenimiento: {{ cronograma.fechamantenimiento | date: 'dd-MMM-yyyy' }}
-                                                             </small>
+                                                            <div>
+                                                                <small>
+                                                                    Mantenimiento: {{ cronograma.fechamantenimiento | date: 'dd-MMM-yyyy' }}
+                                                                </small>
+                                                            </div>
                                                          </div>
                                                      </div>
                                                      <div class="btn-settings">
                                                          <div class="action"
-                                                              (click)="eliminarCrono( cronograma.codcrono )">
+                                                              (click)="copiarCrono(cronograma, 'crono-'+ di + '-' + xi + '-' +i)"
+                                                              title="Copiar esta asignación">
+                                                              <mat-icon>content_copy</mat-icon>
+                                                         </div>
+                                                         <div class="action"
+                                                              (click)="eliminarCrono( cronograma, tecnico )" title="Eliminar del cronograma" >
                                                               <mat-icon>delete</mat-icon>
                                                          </div>
                                                          <div class="action"
                                                               (click)="obtenerCronoUnit(cronograma.codcrono,  cronograma.codagencia, cronograma.mes, cronograma.dia); manteniminetocount = 0; selectAll= false;"
+                                                              title="Visualizar detalles y asignar mantenimiento"
                                                               data-bs-toggle="offcanvas"
                                                               data-bs-target="#offcanvasRight"
                                                               aria-controls="offcanvasRight">
-                                                             <mat-icon>visibility</mat-icon>
+                                                              <mat-icon>visibility</mat-icon>
                                                          </div>
-                                                         <div class="action" (click)="openDialog(cronograma)">
+                                                         <div class="action" (click)="openDialog(cronograma)" title="Opciones de asignación del cronograma">
                                                             <mat-icon>chat</mat-icon>
                                                          </div>
+
+                                                         <div class="action" [title]="'Frecuencia de mantenimiento: ' + cronograma.frecuencia" [style]="'color: whitesmoke; background-color:' + cronograma.colorfrecuencia+'; border-radius: 10px;'" >
+                                                             <strong>{{ cronograma.inifrecuencia }}</strong>
+                                                         </div>
+                                                         
                                                      </div>                                                  
 
                                                  </div>                                                
@@ -616,8 +642,8 @@
                                                 </span>
                                                 /<span> <small class="text-secondary">Tipo Máquina: </small>
                                                     {{maquina.tipomaquina}}
-                                                 </span>
-                                                 /<span> <small class="text-secondary">Marca: </small>  
+                                                </span>
+                                                /<span> <small class="text-secondary">Marca: </small>
                                                     {{maquina.nombremarca}}
                                                 </span> 
                                                 /<span> <small class="text-secondary">Modelo: </small>       
@@ -732,4 +758,19 @@
         </div>
       </section>
     </div>
+</div>
+<div class=" msjcopy fs-6 d-flex align-items-center animate__animated animate__bounceIn " *ngIf="copy" >
+     <div>
+        Estas copiando una asignación de la agencia &nbsp;&nbsp;
+     </div>
+
+     <div class="d-flex align-items-center">
+        <div class="icono"
+           [ngStyle]="{'background-image': 'url('+copyImagenAgencia +')', 'background-size': '100% 100%'}">
+        </div>
+        <strong>&nbsp; {{copyNombreAgencia}} &nbsp;&nbsp; </strong>
+     </div>
+     <div class="ml-2">
+        <button class="btn btn-danger d-flex align-items-center" (click)="cancelCopy()" > <mat-icon>cancel</mat-icon> Cancelar </button>
+     </div>
 </div>

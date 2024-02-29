@@ -17,6 +17,7 @@
     height: 75vh;
     overflow-y: auto;
     background-color: rgb(255, 252, 238);
+    transition: ease all 0.5s;
 }
 
 .filtersetts {
@@ -47,8 +48,19 @@
     box-shadow: 5px 5px 10px rgba($color: #000000, $alpha: 0.6);
 }
 
+.msjcopy {
+    position: absolute;
+    bottom: 20px;
+    background-color: #0000009a;
+    color: whitesmoke;
+    border-radius: 20px;
+    padding: 10px;
+    right: 10%;
+    z-index: 1000;
+}
+
 .tecnicos-agenda {
-    background-color: rgba(201, 198, 161, 0.333);
+    background-color: rgba(201, 198, 161, 0.163);
 }
 
 .texttecnic {
@@ -57,7 +69,7 @@
 }
 
 .tecnic-work {
-    background-color: rgba(201, 198, 161, 0.386);
+    background-color: rgba(201, 198, 161, 0.167);
     transition: ease all 0.5s;
     font-size: 9pt;
 }
@@ -67,10 +79,11 @@
     border: dashed 1px gray;
 }
 
-// .tecnic-work:hover {
-//     transition: ease all 0.5s;
-//     transform: scale(1.1);
-// }
+.tecnic-work:hover {
+    transition: ease all 0.5s;
+    cursor: pointer;
+    background-color: rgba(147, 236, 150, 0.167)
+}
 
 .filter-section {
     width: 300px;

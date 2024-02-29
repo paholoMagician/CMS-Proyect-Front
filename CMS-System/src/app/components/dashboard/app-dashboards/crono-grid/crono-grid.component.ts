@@ -484,7 +484,7 @@ export class CronoGridComponent implements OnInit {
     this.sumatoriaFilter = 0;
     this.filteredCronos = [];
     // this.agencia = [];
-    this.crono.obtenerCronograma(this.ccia, anio, mes, x, 1).subscribe({
+    this.crono.obtenerCronograma(this.ccia, anio, mes, x, 1, 'void').subscribe({
         next: (x) => {        
           this.modelCronoBack = x;
           this.filteredCronos = x;
@@ -1118,14 +1118,14 @@ export class CronoGridComponent implements OnInit {
     listaMaquinaMantenimiento: any = [];
     listaMantenimientoMaquinaGhost:  any = [];
     obtenerMantenimiento() {    
-      this.mantenimineto.obtenerMantenimientos(this.codCrono).subscribe({
-        next: (mantenimiento) => {
-          this.listaMaquinaMantenimiento = mantenimiento; 
-          this.listaMantenimientoMaquinaGhost = mantenimiento;
-          console.warn('--------MANTENIMIENTO--------');
-          console.warn(this.listaMaquinaMantenimiento);
-        }
-      });
+      // this.mantenimineto.obtenerMantenimientos(this.codCrono).subscribe({
+      //   next: (mantenimiento) => {
+      //     this.listaMaquinaMantenimiento = mantenimiento; 
+      //     this.listaMantenimientoMaquinaGhost = mantenimiento;
+      //     console.warn('--------MANTENIMIENTO--------');
+      //     console.warn(this.listaMaquinaMantenimiento);
+      //   }
+      // });
     }
 
   listadetalleCronoUnit: any = [];
