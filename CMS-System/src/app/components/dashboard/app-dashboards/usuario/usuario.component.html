@@ -3,14 +3,16 @@
       <mat-spinner></mat-spinner>
     </div>
 </div>
-<div class="module-workarea p-4 ">
+<div class="module-workarea p-4 " *ngIf="_form_create" >
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
-         <mat-icon>{{modulo.icono}}</mat-icon><span class="fs-5" > {{modulo.nombre}} </span>
+        <mat-icon>{{modulo.icono}}</mat-icon>
+        <span class="fs-5">
+            {{modulo.nombre}}
+        </span>
     </div>
     <hr>
     <div class="form-section">
-
         <form [formGroup]="userForm" class="mb-2" (ngSubmit)="onSubmit()">
             <div class=" d-flex flex-wrap justify-content-between " >
             <div class="mb-3 col-4 ">
@@ -25,8 +27,8 @@
                 </label>
                 <input type="text" class="form-control" formControlName="Apellido" #Apellido id="Apellido" placeholder="Mora Cedeño">
             </div>
-            <div class="mb-3 col-1 ">
-                <label for="Cedula" class="form-label text-secondary ">
+            <div class="mb-3 col-1">
+                <label for="Cedula" class="form-label text-secondary">
                     Edad:
                 </label>
                 <input type="number" class="form-control" formControlName="Edad" #Edad id="Edad" placeholder="21">
@@ -66,10 +68,11 @@
                 </select>
             </div>
             <div class="mb-3 col-4 ">
-                <label for="Estado" class="form-label text-secondary">
-                    Estado del trabajador:
+                <label for="Estado"
+                       class="form-label text-secondary">
+                       Estado del trabajador:
                 </label>
-                <select class="inpForms form-select   w-100"
+                <select class="inpForms form-select w-100"
                         formControlName="Estado" #Estado id="Estado" aria-label="">
                         <option *ngFor="let estadoTrabajador of estadoTrabajadorLista" [value]="estadoTrabajador.codigo" >
                             {{estadoTrabajador.nombre | titlecase }}                                
@@ -187,19 +190,40 @@
                     </label>
                     <input type="text" class="form-control" formControlName="Telf" #Telf id="Telf" placeholder="098212252">
                 </div>
+                <div class="mb-3 col-2 ">
+                    <label for="Cedula" class="form-label text-secondary">
+                        Fecha de Ingreso:
+                    </label>
+                    <input type="date" class="form-control" 
+                           formControlName="fecingreso"
+                           #fecingreso 
+                           id="fecingreso"
+                           >
+                </div>
+                <div class="mb-3 col-2 ">
+                    <label for="Cedula" class="form-label text-secondary">
+                        Fecha de Salida:
+                    </label>
+                    <input type="date" class="form-control" 
+                           formControlName="fecsalida"
+                           #fecsalida 
+                           id="fecsalida"
+                           >
+                </div>
                 <div class="floating-button">
                     <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
                         <mat-icon>cancel</mat-icon>
                     </button>
-                    <button type="submit" mat-raised-button color="primary">
+                    <button type="submit" mat-raised-button color="primary" *ngIf="_create_show" >
                         <mat-icon>{{_icon_button}}</mat-icon> {{_action_butto}} {{modulo.nombre}}
+                    </button>
+                    <button type="submit" mat-raised-button color="primary" *ngIf="_edit_btn" >
+                        <mat-icon>sync_alt</mat-icon> Actualizar {{modulo.nombre}}
                     </button>
 
                 </div>
             </div>
         </form>
-
-
     </div>
 </div>
 
@@ -222,7 +246,7 @@
           <input class=" w-100 form-control rounded-pill"
                  fxFlex="auto" type="text"
                  (keyup)="applyFilter($event)" 
-                 #input placeholder="Busqueda de usuarios registrados....">
+                 #input placeholder="Búsqueda de usuarios registrados....">
         </div>        
 
     </section>
@@ -232,7 +256,7 @@
             
             <th mat-header-cell *matHeaderCellDef mat-sort-header>
               <span>
-                <mat-icon>
+                <mat-icon *ngIf="_edit_show" >
                   edit
                 </mat-icon>
               </span>
@@ -244,7 +268,7 @@
             </th>
             
             <td mat-cell *matCellDef="let row">
-              <span class="edit" (click)="catchData(row)">
+              <span class="edit" (click)="catchData(row)" *ngIf="_edit_show">
                 <mat-icon>
                   edit
                 </mat-icon>

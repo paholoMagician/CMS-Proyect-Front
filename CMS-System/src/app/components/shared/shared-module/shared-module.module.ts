@@ -49,10 +49,16 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ImageControlComponent } from '../image-control/image-control.component';
+import { BusquedaInputsComponent } from '../busqueda-inputs/busqueda-inputs.component';
+import { MachineDetailsAllComponent } from '../machine-details-all/machine-details-all.component';
 
 @NgModule({
   declarations: [
-    NavsideComponent
+    NavsideComponent,
+    ImageControlComponent,
+    BusquedaInputsComponent,
+    MachineDetailsAllComponent
   ],
   imports: [
     CommonModule,
@@ -107,7 +113,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         BrowserAnimationsModule,
   ],
   exports: [
-    NavsideComponent
+    NavsideComponent,
+    ImageControlComponent,
+    BusquedaInputsComponent,
+    MachineDetailsAllComponent
   ]
 })
 

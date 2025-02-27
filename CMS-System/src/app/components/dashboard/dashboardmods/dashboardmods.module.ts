@@ -50,7 +50,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from '../dashboard.component';
 import { AppdashModule } from '../app-dashboards/appdash/appdash.module';
 import { SharedModuleModule } from '../../shared/shared-module/shared-module.module';
-
+import { ScrollTopModule } from 'primeng/scrolltop';
 
 @NgModule({
     declarations: [
@@ -60,9 +60,10 @@ import { SharedModuleModule } from '../../shared/shared-module/shared-module.mod
         DashboardComponent
     ],
     imports: [
-      SharedModuleModule,
+        SharedModuleModule,
         CommonModule,
         CdkStepperModule,
+        ScrollTopModule,
         CdkTableModule,
         CdkTreeModule,
         DragDropModule,

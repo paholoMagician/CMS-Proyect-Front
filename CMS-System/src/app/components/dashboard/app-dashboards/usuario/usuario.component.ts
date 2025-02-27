@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SharedService } from 'src/app/components/shared/services/shared.service';
 import { UserService } from './services/user.service';
@@ -23,8 +23,11 @@ const Toast = Swal.mixin({
   templateUrl: './usuario.component.html',
   styleUrls: ['./usuario.component.scss']
 })
-export class UsuarioComponent implements OnInit {
-  _delete_show:             boolean = true;
+export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
+  _delete_show:                 boolean = true;
+  _edit_show:                   boolean = true;
+  _create_show:                 boolean = true;
+  _form_create:                 boolean = true;
   public sexoLista:             any = [];
   public provinciaLista:        any = [];
   public estadoCivilLista:      any = [];
@@ -72,6 +75,8 @@ export class UsuarioComponent implements OnInit {
     CodLicencia:        new FormControl(''),
     Telf:               new FormControl(''),
     Direccion:          new FormControl(''),
+    fecingreso:         new FormControl(),
+    fecsalida:          new FormControl()
   });
 
   constructor( private DataMaster: SharedService, private us: UserService ) { }
@@ -79,7 +84,7 @@ export class UsuarioComponent implements OnInit {
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
     this.obtenerUsuario();
-    this.validatePersonal();
+    // this.validatePersonal();
         // Provincia  
         this.getDataMaster('PRV00');
         // Estado Civil
@@ -104,15 +109,52 @@ export class UsuarioComponent implements OnInit {
         this.getDataMaster('LIC');
   }
 
-  validatePersonal() {
-
-    let xtipo: any = sessionStorage.getItem('tipo');
-    if(xtipo.trim() == '001') {
-      this._delete_show = true;
-    } else {
-      this._delete_show = false;
+  ngAfterViewInit(): void {
+    this.permisos();
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {    
+    if(changes) {
+      this.permisos();
     }
-
+  }
+  _edit_btn: boolean = false;
+  permisos() {
+    
+    switch(this.modulo.permiso) {
+      case 1:
+        // alert('Nivel de acceso ' + this.modulo.permiso)
+        this._delete_show = true;
+        this._edit_show   = true;
+        this._edit_btn   = false;
+        this._create_show = true;
+        this._form_create = true;
+        break;
+      case 2:
+          // alert('Nivel de acceso ' + this.modulo.permiso)
+          this._delete_show = false;
+          this._edit_show   = true;
+          this._create_show = true;
+          this._form_create = true;
+          this._edit_btn = true;
+          break;
+      case 3:
+        // alert('Nivel de acceso ' + this.modulo.permiso)
+        this._delete_show = false;
+        this._edit_show   = true;
+        this._create_show = false;
+        this._form_create = true;
+        this._edit_btn = true;
+        break;      
+      case 4:
+        // alert('Nivel de acceso ' + this.modulo.permiso)
+        this._delete_show = false;
+        this._edit_show   = false;
+        this._create_show = false;
+        this._form_create = false;
+        this._edit_btn = false;
+        break;
+    }
   }
 
   onSubmit() {
@@ -198,7 +240,7 @@ export class UsuarioComponent implements OnInit {
 
   public modeluser: any = []
   guardarUsuario() {
-
+    if( this.modulo.permiso == 1 || this.modulo.permiso == 2 ) {
     if( this.userForm.controls['Nombre'].value == '' || this.userForm.controls['Nombre'].value == undefined || this.userForm.controls['Nombre'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
     else if( this.userForm.controls['Apellido'].value == '' || this.userForm.controls['Apellido'].value == undefined || this.userForm.controls['Apellido'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Apellido no puede ir vacío' })
     else if( this.userForm.controls['Contrasenia'].value == '' || this.userForm.controls['Contrasenia'].value == undefined || this.userForm.controls['Contrasenia'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Contrasenia no puede ir vacío' })
@@ -232,7 +274,9 @@ export class UsuarioComponent implements OnInit {
       "CodLicencia":        this.userForm.controls['CodLicencia'].value, 
       "Telf":               this.userForm.controls['Telf'].value, 
       "Direccion":          this.userForm.controls['Direccion'].value,
-      "CodCia": this.ccia
+      "CodCia": this.ccia,
+      "fecingreso": this.userForm.controls['fecingreso'].value,
+      "fecsalida": this.userForm.controls['fecsalida'].value
       
     }
 
@@ -261,7 +305,7 @@ export class UsuarioComponent implements OnInit {
         this.limpiar();
       }
     })
-
+  }
   }
   }
 
@@ -288,22 +332,42 @@ export class UsuarioComponent implements OnInit {
 
   listUsuarios:any = [];
   obtenerUsuario() {
+    this._show_spinner = true;
     this.us.obtenerUsuarios(this.ccia).subscribe({
       next: (usuarios) => {
         this.listUsuarios = usuarios;
         console.warn(this.listUsuarios);
       }, error: (e) => {
         console.error(e);
+        this._show_spinner = false;
       },complete: () => {
         this.dataSource = new MatTableDataSource(this.listUsuarios);
         this.dataSource.paginator = this.paginator;
+        this._show_spinner = false;
       }
     })
   }
+  
   codUserCatch: string = '';
   catchData(data: any) {
 
     console.warn(data);
+
+    let xing:any; 
+    let xsal:any; 
+
+    let fecing = null;
+    let fecsal = null;
+
+    if ( data.fecingreso != null) {
+      xing = data.fecingreso.toString().split('T');
+      fecing = xing[0];
+    }
+
+    if ( data.fecsalida != null) {
+      xsal = data.fecsalida.toString().split('T');
+      fecsal = xsal[0];
+    }
 
     this.userForm.controls['Email'].setValue(data.email.trim());
     this.userForm.controls['Nombre'].setValue(data.nombre.trim());
@@ -329,10 +393,13 @@ export class UsuarioComponent implements OnInit {
     this._icon_button = 'sync_alt';
     this._cancel_button = true; 
     this.codUserCatch = data.coduser;
+    this.userForm.controls['fecingreso'].setValue(fecing);
+    this.userForm.controls['fecsalida'].setValue(fecsal);
+
   }
 
   editarUsuario() {
-
+    if( this.modulo.permiso == 1 || this.modulo.permiso == 2 || this.modulo.permiso == 3 ) {
     if( this.userForm.controls['Nombre'].value == '' || this.userForm.controls['Nombre'].value == undefined || this.userForm.controls['Nombre'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo nombre no puede ir vacío' })
     else if( this.userForm.controls['Apellido'].value == '' || this.userForm.controls['Apellido'].value == undefined || this.userForm.controls['Apellido'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Apellido no puede ir vacío' })
     else if( this.userForm.controls['Contrasenia'].value == '' || this.userForm.controls['Contrasenia'].value == undefined || this.userForm.controls['Contrasenia'].value == null ) Toast.fire({ icon: 'warning', title: 'El campo Contrasenia no puede ir vacío' })
@@ -364,7 +431,9 @@ export class UsuarioComponent implements OnInit {
       "CodLicencia":        this.userForm.controls['CodLicencia'].value, 
       "Telf":               this.userForm.controls['Telf'].value, 
       "Direccion":          this.userForm.controls['Direccion'].value,
-      "CodCia": this.ccia
+      "CodCia": this.ccia,
+      "fecingreso": this.userForm.controls['fecingreso'].value,
+      "fecsalida": this.userForm.controls['fecsalida'].value
       
     }
     
@@ -394,7 +463,7 @@ export class UsuarioComponent implements OnInit {
         // this.crearCuenta();
       }
     })
-
+  }
   }
 
   }
@@ -402,7 +471,7 @@ export class UsuarioComponent implements OnInit {
   eliminarUsuario(data:any) {
     Swal.fire({
       title: 'Estás seguro?',
-      text: "Esta acción es irreversible u podría provocar perdida de datos en otros procesos!",
+      text: "Esta acción es irreversible y podría provocar perdida de datos en otros procesos!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',

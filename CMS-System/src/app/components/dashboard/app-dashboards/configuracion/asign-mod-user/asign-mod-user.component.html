@@ -1,0 +1,102 @@
+
+<div class="p-2 d-flex justify-content-between align-items-start">
+
+    <section class="listusuarios">
+        <div class="p-2 bg-primary rounded-2 text-light mb-2 " >
+             Usuarios registrados a esta empresa ({{listausuarios.length}}) 
+        </div>
+        <div class="mt-4" >
+            <div class="usuarios p-2"
+                 *ngFor="let usuario of listausuarios"
+                 (click)="obtenerModulosUsuarios( usuario.coduser )" >
+                <div>
+                    <small class="text-secondary" > Nombre: </small>
+                    <span class="text-primary" > {{usuario.nombre}} {{usuario.apellido}} </span>
+                </div>
+                <div class="text-secondary">
+                    <small>Cargo:</small>
+                    <span> {{usuario.nombreCargo | uppercase}} </span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="w-100 m-2">   
+        <div  class="d-flex justify-content-between" >
+            <span class="p-2 bg-primary rounded-pill text-light mb-2 " >
+                Módulos registrados a esta cuenta ({{listaModulosUsuario.length}}) 
+            </span>
+            <button class="p-2 btn btn-outline-secondary  rounded-pill  mb-2 d-flex align-items-center " [disabled]="_show_modules_account" >
+                Agregar módulos a esta cuenta <mat-icon  >add</mat-icon>
+            </button>
+        </div>
+        <span class="d-flex align-items-center bg-secondary text-light rounded-top-2 p-1">
+            <mat-icon class="text-warning" >info</mat-icon>
+            <span class="d-flex align-items-center" >
+                Iniciales del nivel de permisos: L = Leer, C = Crear, A = Actualizar, E = Eliminar, y 
+                <mat-icon> visibility_off </mat-icon> = Habilitar o inhabilitar módulo
+            </span>
+        </span>
+        <div class="table-responsive" style="height: 68vh; overflow-y: auto;" >
+            
+            <table class="table table-primary table-sm table-hover align-middle   ">
+                <thead class="bg-primary text-light shadow " style="position: sticky; top: 0; z-index: 1;" >
+                    <th class="p-2" >
+                        Módulo
+                    </th>
+                    <th class="p-2" >
+                        Descripción
+                    </th>
+                    <th class="p-2" >
+                        Permisos
+                    </th>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let modulo of listaModulosUsuario">
+                        <td>
+                            <div class="d-flex justify-content-start align-items-center " >
+                                <mat-icon>
+                                    {{modulo.icon}}
+                                </mat-icon>
+                                <span>
+                                    {{modulo.moduleName}}
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                          {{modulo.moduleDescription}}
+                        </td>
+                        <td>
+                          <div class="d-flex">
+                            <mat-radio-group aria-label="Select an option" (change)="actualiarPermisos(modulo, $event.value)" >
+                                <mat-radio-button [value]="1" 
+                                                  [checked]="modulo.permisos === 1">
+                                                  L., C., A., E. 
+                                </mat-radio-button>
+                                <mat-radio-button [value]="2" 
+                                                  [checked]="modulo.permisos === 2">
+                                                  L., C., A. 
+                                </mat-radio-button>
+                                <mat-radio-button [value]="3" 
+                                                  [checked]="modulo.permisos === 3">
+                                                  L., A. 
+                                </mat-radio-button>
+                                <mat-radio-button [value]="4" 
+                                                  [checked]="modulo.permisos === 4">
+                                                  L. 
+                                </mat-radio-button>
+                                <mat-radio-button [value]="0" 
+                                                  [checked]="modulo.permisos === 0">
+                                  <mat-icon>visibility_off</mat-icon>
+                                </mat-radio-button>
+                            </mat-radio-group>
+                          </div>
+                        </td>
+                      </tr>
+                      
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+

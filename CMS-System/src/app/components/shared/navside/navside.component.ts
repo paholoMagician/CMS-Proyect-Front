@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import Swal from 'sweetalert2'
 import { LoginService } from '../../login/services/login.service';
 import { NavsideService } from './services/navside.service';
+import { ImagecontrolService } from '../image-control/services/imagecontrol.service';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -19,6 +20,7 @@ const Toast = Swal.mixin({
 export interface Modulo {
   nombre: string;
   icono: string;
+  permiso: string;
 }
 
 @Component({
@@ -26,67 +28,55 @@ export interface Modulo {
   templateUrl: './navside.component.html',
   styleUrls: ['./navside.component.scss']
 })
+
 export class NavsideComponent implements OnInit {
 
+  _show_spinner:      boolean = false;
+  imgList:             any        = [];
   public modulosLista: any        = [];
   public _username:    any        = '';
-  public _IMGE:        string     = '';
+  public _IMGE:        any;
   public codUser:      any        = '';
   _tipo_persona:       string     = '';
   moduleName: boolean = true;
   _fontSize: string = '15pt';
-  _width: string = '290px';
-  _width_navside: string = '300px';
+  _width: string = '40px';
+  _width_navside: string = '230px';
   _user: boolean = true;
   _icon: string = 'chevron_left';
 
   @Output() modulo: EventEmitter<Modulo> = new EventEmitter<Modulo>();
 
-  constructor( private validate: LoginService, public Shared: NavsideService ) { }
+  constructor( private validate: LoginService,
+               public  Shared:   NavsideService,
+               private fileserv: ImagecontrolService ) { }
   
   ngOnInit(): void {
     this.getModulos();
   }
 
-  getModulos() {    
+  getModulos() {
+    this._show_spinner = true;
     this._username = sessionStorage.getItem('UserName')?.toUpperCase();
     this.codUser = sessionStorage.getItem('UserCod');
     this.Shared.getModulos( this.codUser ).subscribe(
       {
         next: (modulos) => {
           this.modulosLista = modulos;
+          console.table(this.modulosLista);
         },
-        error: () => {
-
+        error: (e) => {
+          console.error(e);
+          this._show_spinner = false;
         },
         complete: () => {
-          console.log(this.modulosLista);
-          this.getUser(this.codUser);
-          this.obtenerImagen(this.codUser); 
+          let x: any = localStorage.getItem('imgperfil');
+          if( x == undefined || x == null || x == '' ) this.obtenerImagen(this.codUser, 'Perfil'); 
+          else this._IMGE = localStorage.getItem('imgperfil');
+          this._show_spinner = false;
         }
       }
     )
-  }
-
-  public imagenLista: any = [];
-  obtenerImagen(codUser: string) {
-    this.Shared.obtenerImagen(codUser, 'PERFIL').subscribe(
-    {
-      next: (imagen) => {
-        this.imagenLista = imagen;
-        // console.warn(this.imagenLista);
-        this._IMGE = this.imagenLista[0].imagenContent;   
-        // console.warn(this._IMGE);
-      }
-    }
-    )
-  }
-
-  
-  getUser(user: string) {
-    this.Shared.getUser(user).subscribe( x => {
-      console.log(x)
-    })
   }
 
   data: boolean = true;
@@ -95,7 +85,7 @@ export class NavsideComponent implements OnInit {
     switch( this.data ) {
       case true:
         this.data = false;
-        this.moduleName = false;
+        this.moduleName = false; 
         this._fontSize = '20pt';
         this._width = '40px';
         this._width_navside = '100px';
@@ -109,7 +99,7 @@ export class NavsideComponent implements OnInit {
         this.moduleName = true;
         this._fontSize = '14pt';
         this._width = '';
-        this._width_navside = '300px';
+        this._width_navside = '230px';
         this._user = true; 
         this._icon = 'chevron_left';
         x.style.animationName = 'btnMoveRight';
@@ -118,6 +108,7 @@ export class NavsideComponent implements OnInit {
     }
 
   }
+  
   closeSession() {
     this.validate.closeSession();
   }
@@ -126,11 +117,35 @@ export class NavsideComponent implements OnInit {
 
     let modulo: Modulo = {
       nombre: data.moduleName,
-      icono: data.icon
+      icono: data.icon,
+      permiso: data.permisos
     }
 
-    // console.log('Desde navside: ' + nameModule)
+    localStorage.setItem('modulo',modulo.nombre);
+
     this.modulo.emit(modulo)
+
+  }
+
+  obtenerImagen(codBinding:string, tipo:string) {
+    this._show_spinner = true;
+    let codm : any = codBinding;
+    this.fileserv.obtenerImagenCodBinding('IMG-'+codm, tipo).subscribe({
+      next: (img) => {
+        this.imgList = img;
+      }, error: (e) => {
+        this._show_spinner = false;
+        console.error(e);
+      }, complete: () => {        
+        this.imgList.filter( (element:any) => {
+          if(element.codentidad == 'IMG-'+codm) {
+            this._IMGE = element.imagen;
+            localStorage.setItem('imgperfil', this._IMGE);
+          }
+        })
+        this._show_spinner = false; 
+      }
+    })
   }
 
 }

@@ -12,11 +12,11 @@
     </div>
 
     <div class="box animate__animated animate__fadeInRight">
-        <div class="w-100 d-flex justify-content-center ">
+        <!-- <div class="w-100 d-flex justify-content-center ">
             <figure>
                 <img id="img" src="../../../assets/logo_CMS-w.png" width="250px" alt="">
             </figure>
-        </div>
+        </div> -->
         <h1 class="text-light" >Login</h1>
         <small class="text-warning" >Ingresa con tu correo y contraseña</small>
         <hr>
@@ -31,12 +31,17 @@
                 <label for="contrasenia" class="form-label text-light">
                     Contraseña:
                 </label>
-                <input type="contrasenia" class="form-control" formControlName="contrasenia" #contrasenia id="contrasenia"  placeholder="******">
+                <input type="password" class="form-control" formControlName="contrasenia" #contrasenia id="contrasenia"  placeholder="******">
             </div>
             <button type="submit" class="btn btn-outline-warning w-100 d-flex align-items-center justify-content-center"  >
                 <mat-icon>key</mat-icon> Ingresar
             </button>
         </form>
+        <div class="w-100 bg-success
+                    text-light rounded-2 d-flex
+                    justify-content-center mt-2 p-2">
+                    Versión V.1.0.8 - BETA
+        </div>
     </div>
 
 </div>

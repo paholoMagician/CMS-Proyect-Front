@@ -49,13 +49,90 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacion-provincias/asignacion-provincias.component';
+import { ModalProvicComponent } from '../asignacionprovincias/modal/modal-provic/modal-provic.component';
+import { ClientesComponent } from '../clientes/clientes.component';
+import { AgenciasComponent } from '../agencias/agencias.component';
+import { MaquinariaComponent } from '../maquinaria/maquinaria.component';
+import { SharedModuleModule } from 'src/app/components/shared/shared-module/shared-module.module';
+import { PerfilUsuarioComponent } from '../perfil-usuario/perfil-usuario.component';
+import { BodegasComponent } from '../bodegas/bodegas.component';
+import { CrearBodegasComponent } from '../bodegas/crear-bodegas/crear-bodegas.component';
+import { ProductosBodegaComponent } from '../bodegas/productos-bodega/productos-bodega.component';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ButtonModule } from 'primeng/button';
+import { KardexTransferenciaComponent } from '../bodegas/kardex-transferencia/kardex-transferencia.component';
+import { EmpresaComponent } from '../empresa/empresa.component';
+import { ConfiguracionComponent } from '../configuracion/configuracion.component';
+import { AsignModUserComponent } from '../configuracion/asign-mod-user/asign-mod-user.component';
+import { ImagenesProductosComponent } from '../imagenes-productos/imagenes-productos.component';
+import { GarantiasComponent } from '../garantias/garantias.component';
+import { ModalAsignacionProductosComponent } from '../agencias/modal-asignacion-productos/modal-asignacion-productos.component';
+import { ModalClientesComponent } from '../bodegas/crear-bodegas/modal-clientes/modal-clientes.component';
+import { ContratosComponent } from '../garantias/contratos/contratos.component';
+import { MaquinariaContratoComponent } from '../garantias/maquinaria-contrato/maquinaria-contrato.component';
+import { CronogramaComponent } from '../cronograma/cronograma.component';
+import { ModalCronogramaComponent } from '../cronograma/modal-cronograma/modal-cronograma.component';
+import { CronoGridComponent } from '../crono-grid/crono-grid.component';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ListboxModule } from 'primeng/listbox';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InplaceModule } from 'primeng/inplace';
+import { KnobModule } from 'primeng/knob';
+import { ModalDetalleCronoComponent } from '../crono-grid/modal-detalle-crono/modal-detalle-crono.component';
+import { CrononewdisComponent, FilterPipe } from '../crononewdis/crononewdis.component';
+import { DragDropModule as dmod } from 'primeng/dragdrop';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { SplitterModule } from 'primeng/splitter';
+import { ScrollTopModule } from 'primeng/scrolltop';
+import { SpeedDialModule } from 'primeng/speeddial';
+import { ChipModule } from 'primeng/chip';
+import { ChipsModule } from 'primeng/chips';
+import { ChartModule } from 'primeng/chart';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ModalAsignMaqtecnicoComponent } from '../crono-grid/modal-asign-maqtecnico/modal-asign-maqtecnico.component';
+import { RepuestosComponent } from '../repuestos/repuestos.component';
+import { CreadorMarcaRepuestoComponent } from '../repuestos/creador-marca-repuesto/creador-marca-repuesto.component';
 
 @NgModule({
   declarations: [
     UsuarioComponent,
-    AsignacionProvinciasComponent
+    AsignacionProvinciasComponent,
+    ModalProvicComponent,
+    ClientesComponent,
+    AgenciasComponent,
+    MaquinariaComponent,
+    PerfilUsuarioComponent,
+    BodegasComponent,
+    CrearBodegasComponent,
+    ProductosBodegaComponent,
+    KardexTransferenciaComponent,
+    EmpresaComponent,
+    ConfiguracionComponent,
+    AsignModUserComponent,
+    ImagenesProductosComponent,
+    GarantiasComponent,
+    ModalAsignacionProductosComponent,
+    ModalClientesComponent,
+    ContratosComponent,
+    MaquinariaContratoComponent,
+    CronogramaComponent,
+    ModalCronogramaComponent,
+    CronoGridComponent,
+    ModalDetalleCronoComponent,
+    CrononewdisComponent,
+    FilterPipe,
+    ModalAsignMaqtecnicoComponent,
+    RepuestosComponent,
+    CreadorMarcaRepuestoComponent
   ],
   imports: [
+    OverlayPanelModule,
+    ChipModule,
+    ChipsModule,
+    dmod,
+    ScrollTopModule,
+    SpeedDialModule,
+    KnobModule,
     CommonModule,
     CdkStepperModule,
     CdkTableModule,
@@ -73,6 +150,7 @@ import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacio
     MatDatepickerModule,
     MatDialogModule,
     MatDividerModule,
+    ChartModule,
     MatExpansionModule,
     MatGridListModule,
     MatIconModule,
@@ -99,16 +177,43 @@ import { AsignacionProvinciasComponent } from '../asignacionprovincias/asignacio
     OverlayModule,
     PortalModule,
     ScrollingModule,
+    SharedModuleModule,
     //#endregion
     FormsModule,
+    AutoCompleteModule,
     HttpClientModule,
     ReactiveFormsModule,
     BrowserModule,
     BrowserAnimationsModule,
+    InputNumberModule,
+    ButtonModule ,
+    MultiSelectModule,
+    ListboxModule,
+    InplaceModule,
+    SplitButtonModule,
+    SplitterModule
   ],
   exports: [
     UsuarioComponent,
-    AsignacionProvinciasComponent
+    AsignacionProvinciasComponent,
+    ClientesComponent,
+    AgenciasComponent,
+    MaquinariaComponent,
+    PerfilUsuarioComponent,
+    BodegasComponent,
+    ProductosBodegaComponent,
+    KardexTransferenciaComponent,
+    EmpresaComponent,
+    ConfiguracionComponent,
+    AsignModUserComponent,
+    ImagenesProductosComponent,
+    GarantiasComponent,
+    ContratosComponent,
+    CronogramaComponent,
+    CronoGridComponent,
+    CrononewdisComponent,
+    RepuestosComponent,
+    CreadorMarcaRepuestoComponent
   ]
 })
 export class AppdashModule { }

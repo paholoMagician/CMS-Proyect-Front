@@ -53,6 +53,8 @@ import {MatTreeModule} from '@angular/material/tree';
 import {OverlayModule} from '@angular/cdk/overlay';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashboardmods.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpInterceptorServices } from './components/shared/http-interceptor/http-interceptor-services';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,6 @@ import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashbo
     LoginComponent
   ],
   imports: [
-
     //#region 
     CdkStepperModule,
     CdkTableModule,
@@ -119,7 +120,13 @@ import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashbo
       registrationStrategy: 'registerWhenStable:30000'
     })
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorServices,
+      multi: true 
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

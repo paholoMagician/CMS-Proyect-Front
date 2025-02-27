@@ -5,10 +5,10 @@ import { environment } from 'src/environments/environment.prod';
 @Injectable({
   providedIn: 'root'
 })
+
 export class UserService {
 
   public url: string = environment.deploy_url;
-
   constructor( private http: HttpClient) { }
 
   guardarUsuarios(model: any []) {
@@ -16,11 +16,15 @@ export class UserService {
   }
 
   obtenerUsuarios( ccia:string ) {
-    return this.http.get( this.url + 'User/ObtenerUsuariosExec/'+ccia )
+    return this.http.get( this.url + 'User/ObtenerUsuariosExec/'+ccia );
+  }
+
+  obtenerUsuariosCronos( idlocalidad:number ) {
+    return this.http.get( this.url + 'User/ObtenerTecniCrono/'+idlocalidad );
   }
 
   crearCuentas( userCod: string, ccia: string, tcuenta: string ) {
-    return this.http.get( this.url + 'User/CrearCuentas/'+ userCod + '/' + ccia + '/' + tcuenta )
+    return this.http.get( this.url + 'User/CrearCuentas/'+ userCod + '/' + ccia + '/' + tcuenta );
   }
 
   eliminarUsuario( coduser: string, ccia: string ) {
@@ -29,6 +33,10 @@ export class UserService {
 
   editarUsuario( coduser: string, model: any [] ) {
     return this.http.put( this.url + 'User/EditarUsuario/' + coduser, model );
+  }
+
+  obtenerCuentaUsuario(coduser:string) {
+    return this.http.get( this.url + 'User/ObtenerCuentaUsuario/' + coduser );
   }
 
 }
