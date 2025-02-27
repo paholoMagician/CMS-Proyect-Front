@@ -21,12 +21,12 @@ const Toast = Swal.mixin({
   }
 })
 
-
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.scss']
 })
+
 export class ClientesComponent implements OnInit {
 
   env = environment.image_url;
@@ -46,10 +46,10 @@ export class ClientesComponent implements OnInit {
 
   @Input() modulo: any = [];
 
-  @ViewChild(MatPaginator)
-  paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   public clienteForm = new FormGroup({
+
     ruc:                  new FormControl('', [Validators.pattern('[0-9]+')]),
     replegal:             new FormControl(''),
     fechacontinicio:      new FormControl(),
@@ -65,7 +65,8 @@ export class ClientesComponent implements OnInit {
     nombreMantenimiento:  new FormControl(''),
     nombrePago:           new FormControl(''),
     extension1:           new FormControl(''),
-    extension2:           new FormControl(''),
+    extension2:           new FormControl('')
+
   })
 
   constructor( private client: ClienteService,private DataMaster: SharedService, private fileserv: ImagecontrolService, private bodega: CrearBodegasService ) { }
@@ -223,6 +224,20 @@ export class ClientesComponent implements OnInit {
   })
 }
 
+crearCuentaHelpDesk(codCliente: string, codCia:string, R:string, Nombre:string, Apellido: string) {
+  this.client.crearCuentaHelpDesk(codCliente, codCia, R, Nombre, Apellido).subscribe({
+    next: (x) => {
+      console.log(x);
+      Swal.fire(
+        'Cuenta Help Desk generada',
+        'info'
+      )
+    }, error: (e) => {
+      console.error(e);
+    }
+  })
+}
+
   modelCliente: any = [];
   automatic_bod:boolean = true;
   guardarClientes() {
@@ -269,6 +284,7 @@ export class ClientesComponent implements OnInit {
     this.client.guardarClientes(this.modelCliente).subscribe(
       {
         next: (x) => {
+          this.crearCuentaHelpDesk(token, this.ccia, 'C', this.clienteForm.controls['replegal'].value,this.clienteForm.controls['replegal'].value)
           this._show_spinner = false;
             Swal.fire(
               'Cliente: ' +this.clienteForm.controls['nombre'].value + ' generado',
@@ -286,7 +302,6 @@ export class ClientesComponent implements OnInit {
         },
         complete: () => {
           this.guardarImagen(token);
-          
           this.obtenerCliente();
           if( this.automatic_bod ) {
             let bodegacliente:any = '(BODEGA VIRTUAL) '+ this.clienteForm.controls['nombre'].value.toString();

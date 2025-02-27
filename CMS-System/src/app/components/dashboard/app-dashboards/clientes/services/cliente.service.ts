@@ -35,6 +35,10 @@ export class ClienteService {
   guardarClientes( model: any [] ) {
     return this.http.post( this.url + 'ClienteAgencia/guardarCliente', model );
   }
+
+  crearCuentaHelpDesk(codCliente: string, codCia:string, R:string, Nombre:string, Apellido: string) {
+    return this.http.get( this.url + 'User/CrearCuentasHelpDesk/' + codCliente + '/' + codCia + '/' + R + '/' + Nombre + '/' +Apellido );
+  }
   
   guardarMagencia( model: any [] ) {
     return this.http.post( this.url + 'MaquinaAgencia/GuardarMaquinaAgencia', model );

@@ -143,13 +143,13 @@
             <ng-template pTemplate>
                      <p-splitter layout="vertical"
                                  [panelSizes]="[33, 33, 33]">
-                                 <ng-template pTemplate>
+                                 <!-- <ng-template pTemplate>
                                     <div class="flex align-items-center justify-content-center">
                                         Requerimientos
                                     </div>
-                                 </ng-template>
+                                 </ng-template> -->
                                  <ng-template pTemplate>
-                                    <div class="flex align-items-center p-2 justify-content-center" style="height: 50vh; overflow-y: auto;">
+                                    <div class="flex align-items-center p-2 justify-content-center" style="height: 75vh; overflow-y: auto;">
                                         <div class="data-box-g d-flex shadow-lg flex-column p-2 m-2 rounded-2" style="border: dashed 1px gray;">                                            
                                             <div class="title-data p-2 rounded-pill shadow-sm text-light d-flex justify-content-between" [ngStyle]="{'background-color': N}">
                                                 <div>Norte </div>
@@ -178,7 +178,8 @@
                                                                 <span class="badge bg-warning text-dark fs-6">
                                                                     {{xnorte.cantidadMaqIngre}}
                                                                 </span>
-                                                                <span class="badge text-light fs-6" [title]="xnorte.nombreFrecuencia" [style]="'background-color:' + xnorte.colorfrecuencia + ';'" >
+                                                                <span class="badge text-light fs-6" 
+                                                                     [title]="xnorte.nombreFrecuencia" [style]="'background-color:' + xnorte.colorfrecuencia + ';'" >
                                                                     {{xnorte.inifrecuencia}}
                                                                 </span>
                                                             </span>
@@ -332,7 +333,7 @@
                                 <div class="m-1 w-100 d-flex justify-content-start align-items-start"
                                      *ngFor="let tecnico of diaMes.tecnicos; let xi = index"
                                      pDroppable
-                                     (onDrop)="drop(diaMes, tecnico)"
+                                     (onDrop)="drop(diaMes, tecnico, tecnico)"
                                      (dblclick)="pegarCrono(diaMes, tecnico)">
                                      <div class="tecnicos-agenda p-2 w-25 m-1 rounded-2 d-flex justify-content-between align-items-center ">
                                          <!-- <div class="icono"
@@ -347,7 +348,8 @@
                                          <div class="d-flex justify-content-between flex-wrap">
                                              <div *ngIf="tecnico.cronograma.length > 0"
                                                   class="d-flex justify-content-between flex-wrap">
-                                               <div *ngFor="let cronograma of tecnico.cronograma; let i = index;" [id]="'crono-'+ di + '-' + xi + '-' +i"                                                
+                                               <div *ngFor="let cronograma of tecnico.cronograma;
+                                                            let i = index;" [id]="'crono-'+ di + '-' + xi + '-' +i"
                                                      class="worker m-1 rounded-2 p-2 d-flex
                                                             align-items-center 
                                                             justify-content-between align-items-center">
@@ -375,34 +377,36 @@
                                                          </div>
                                                      </div>
                                                      <div class="btn-settings">
-                                                         <div class="action"
-                                                              (click)="copiarCrono(cronograma, 'crono-'+ di + '-' + xi + '-' +i)"
-                                                              title="Copiar esta asignación">
-                                                              <mat-icon>content_copy</mat-icon>
-                                                         </div>
-                                                         <div class="action"
-                                                              (click)="eliminarCrono( cronograma, tecnico )" title="Eliminar del cronograma" >
-                                                              <mat-icon>delete</mat-icon>
-                                                         </div>
-                                                         <div class="action"
-                                                              (click)="obtenerCronoUnit(cronograma.codcrono,  cronograma.codagencia, cronograma.mes, cronograma.dia); manteniminetocount = 0; selectAll= false;"
-                                                              title="Visualizar detalles y asignar mantenimiento"
-                                                              data-bs-toggle="offcanvas"
-                                                              data-bs-target="#offcanvasRight"
-                                                              aria-controls="offcanvasRight">
-                                                              <mat-icon>visibility</mat-icon>
-                                                         </div>
-                                                         <div class="action" (click)="openDialog(cronograma)" title="Opciones de asignación del cronograma">
-                                                            <mat-icon>chat</mat-icon>
-                                                         </div>
 
-                                                         <div class="action" [title]="'Frecuencia de mantenimiento: ' + cronograma.frecuencia" [style]="'color: whitesmoke; background-color:' + cronograma.colorfrecuencia+'; border-radius: 10px;'" >
-                                                             <strong>{{ cronograma.inifrecuencia }}</strong>
-                                                         </div>
+                                                        <div class="action"
+                                                             (click)="copiarCrono(cronograma, 'crono-'+ di + '-' + xi + '-' +i)"
+                                                             title="Copiar esta asignación">
+                                                             <mat-icon>content_copy</mat-icon>
+                                                        </div>
+                                                        <div class="action"
+                                                             (click)="eliminarCrono( cronograma, tecnico )" title="Eliminar del cronograma" >
+                                                             <mat-icon>delete</mat-icon>
+                                                        </div>
+                                                        <div class="action"
+                                                             (click)="obtenerCronoUnit(cronograma.codcrono,  cronograma.codagencia, cronograma.mes, cronograma.dia); manteniminetocount = 0; selectAll= false;"
+                                                             title="Visualizar detalles y asignar mantenimiento"
+                                                             data-bs-toggle="offcanvas"
+                                                             data-bs-target="#offcanvasRight"
+                                                             aria-controls="offcanvasRight">
+                                                             <mat-icon>
+                                                                visibility
+                                                             </mat-icon>
+                                                        </div>
+                                                        <div class="action" (click)="openDialog(cronograma)" title="Opciones de asignación del cronograma">
+                                                           <mat-icon>chat</mat-icon>
+                                                        </div>
+                                                        <div class="action" [title]="'Frecuencia de mantenimiento: ' + cronograma.frecuencia" [style]="'color: whitesmoke; background-color:' + cronograma.colorfrecuencia+'; border-radius: 10px;'" >
+                                                            <strong>{{ cronograma.inifrecuencia }}</strong>
+                                                        </div>
                                                          
-                                                     </div>                                                  
+                                                     </div>
 
-                                                 </div>                                                
+                                                 </div>
 
                                              </div>
                                              
@@ -655,13 +659,13 @@
                                     </div>
                                 </div>
                 <div class="w-100 d-flex justify-content-end">
-                    <button mat-raised-button color="primary" (click)="guardarMantenimiento()" >
+                    <button mat-raised-button color="primary" (click)="guardarMantenimiento()">
                         <mat-icon>done</mat-icon> Crear mantenimiento <strong> ({{manteniminetocount}}) </strong>
                     </button>
                 </div>
             </div>
             <hr>
-            <div class="d-flex justify-content-between align-items-center"  >
+            <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center " >
                     <mat-icon>point_of_sale</mat-icon> Máquinas asignadas a esta agencia. ({{listaMantenimientoMaquinaGhost.length}})
                 </div>
@@ -670,7 +674,7 @@
                       <input class=" w-100 shadow-sm form-control rounded-pill"
                              fxFlex="auto" type="text"
                              [(ngModel)]="filterMant"
-                             (keyup)="filterMantenimiento()" 
+                             (keyup)="filterMantenimiento()"
                              #input placeholder="Búsqueda de maquinaria para mantenimiento...">
                     </div>
                 </section>

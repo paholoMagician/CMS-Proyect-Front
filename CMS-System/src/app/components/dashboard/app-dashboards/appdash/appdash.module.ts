@@ -90,6 +90,8 @@ import { ChipsModule } from 'primeng/chips';
 import { ChartModule } from 'primeng/chart';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ModalAsignMaqtecnicoComponent } from '../crono-grid/modal-asign-maqtecnico/modal-asign-maqtecnico.component';
+import { RepuestosComponent } from '../repuestos/repuestos.component';
+import { CreadorMarcaRepuestoComponent } from '../repuestos/creador-marca-repuesto/creador-marca-repuesto.component';
 
 @NgModule({
   declarations: [
@@ -119,7 +121,9 @@ import { ModalAsignMaqtecnicoComponent } from '../crono-grid/modal-asign-maqtecn
     ModalDetalleCronoComponent,
     CrononewdisComponent,
     FilterPipe,
-    ModalAsignMaqtecnicoComponent
+    ModalAsignMaqtecnicoComponent,
+    RepuestosComponent,
+    CreadorMarcaRepuestoComponent
   ],
   imports: [
     OverlayPanelModule,
@@ -207,7 +211,9 @@ import { ModalAsignMaqtecnicoComponent } from '../crono-grid/modal-asign-maqtecn
     ContratosComponent,
     CronogramaComponent,
     CronoGridComponent,
-    CrononewdisComponent
+    CrononewdisComponent,
+    RepuestosComponent,
+    CreadorMarcaRepuestoComponent
   ]
 })
 export class AppdashModule { }

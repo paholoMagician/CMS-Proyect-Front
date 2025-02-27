@@ -37,11 +37,16 @@ interface AutoCompleteCompleteEvent {
 })
 export class MaquinariaComponent implements OnInit {
 
+  listaClientes: any = [];
+  filteredAgencias: any = [];
+  filteredcliente: any = [];
+  clientes: any[] = [];
+  agencia: any[] = [];
+
   public agenciaForm = new FormGroup({
     codagencia:        new FormControl(''),
     codcliente:        new FormControl(''),
   })
-
 
   _maquinaAgencia:any;
   _IMGE:any;
@@ -51,8 +56,8 @@ export class MaquinariaComponent implements OnInit {
 
   _cancel_button:     boolean = false;
   _icon_button:       string = 'add';
-  _delete_show:       boolean = true;
   _action_butto:      string = 'Crear';
+  _delete_show:       boolean = true;
   ccia:               any;
   _show_spinner:      boolean = false; 
 
@@ -82,7 +87,7 @@ export class MaquinariaComponent implements OnInit {
     contadorfinal:               new FormControl(), 
     codmarca:                    new FormControl(),
     codmodelo:                   new FormControl(),
-    estado:                   new FormControl(),
+    estado:                      new FormControl(),
   })
 
   constructor(  private maqbodega: ProductosBodegaService, private client: ClienteService, private DataMaster: SharedService, private fileserv: ImagecontrolService, private maquinaria: MaquinariaService ) { }
@@ -112,12 +117,6 @@ export class MaquinariaComponent implements OnInit {
     }
   }
 
-
-  listaClientes: any = [];
-  filteredAgencias: any = [];
-  filteredcliente: any = [];
-  clientes: any[] = [];
-  agencia: any[] = [];
   obtenerCliente() {
     this._show_spinner = true;
     this.client.obtenerClientes(this.ccia,1).subscribe({
@@ -161,10 +160,11 @@ export class MaquinariaComponent implements OnInit {
         filtered.push(cliente);
       }
     }
-  
+
     this.filteredcliente = filtered;
     console.warn(this.filteredcliente)
     // console.log(this.filteredcliente);
+  
   }
 
 
@@ -250,6 +250,7 @@ export class MaquinariaComponent implements OnInit {
   } 
 
   onSubmit() {
+    
     switch(this._action_butto) {
       case 'Crear':
         this.guardarMaquinaria();
@@ -258,19 +259,17 @@ export class MaquinariaComponent implements OnInit {
         this.editarMaquinaria();
         break;
     }
+
   }
 
   validatePersonal() {
-
     let xtipo: any = sessionStorage.getItem('tipo');
     if(xtipo.trim() == '001') {
       this._delete_show = true;
     } else {
       this._delete_show = false;
     }
-
   }
-
 
   /** OBTENER TIPO DE MAQUINAS */
   getDataMaster(cod:string) {
@@ -284,6 +283,8 @@ export class MaquinariaComponent implements OnInit {
       }
     }) 
   }
+
+
 
   /** OBTENER MARCA */
   codtipomaquinaValue:any;
@@ -371,7 +372,11 @@ export class MaquinariaComponent implements OnInit {
         "codcia":           this.ccia,
         "contadorinicial":  this.maquinariaForm.controls['contadorinicial'].value || 0,
         "contadorfinal":    this.maquinariaForm.controls[ 'contadorfinal' ].value || 0,
-        "estado":           estado
+        "estado":           estado,
+        "valorCompra":      0.0,
+        "porcentajeVenta":  0.0,
+        "desccuentoAplicable": 0.0,
+        "vidautil":         0.0
       }
 
       this.maquinaria.guardarMaquinaria( this.modelMaquinaria ).subscribe(
@@ -491,6 +496,7 @@ export class MaquinariaComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+  
   maquinariaListaGhost:any = [];
   obtenerMaquinaria() {
 
@@ -616,11 +622,12 @@ export class MaquinariaComponent implements OnInit {
   }
 
   validacionMenorContador() {
-      if(this.maquinariaForm.controls['contadorfinal'].value.toString().length > 1 ) {
-        if(this.maquinariaForm.controls['contadorinicial'].value > this.maquinariaForm.controls['contadorfinal'].value) {
-          this.maquinariaForm.controls['contadorfinal'].setValue('')
-        }
+    
+    setTimeout(() => {
+      if(this.maquinariaForm.controls['contadorfinal'].value < this.maquinariaForm.controls['contadorinicial'].value) {
+        this.maquinariaForm.controls['contadorfinal'].setValue(0);
       }
+    }, 2000);
 
   }
 
@@ -652,7 +659,11 @@ export class MaquinariaComponent implements OnInit {
         "codcia":           this.ccia,
         "contadorinicial":  this.maquinariaForm.controls['contadorinicial'].value || 0,
         "contadorfinal":    this.maquinariaForm.controls['contadorfinal']  .value || 0,
-        "estado":           this.estadoMaquina
+        "estado":           this.estadoMaquina,
+        "valorCompra":      0.0,
+        "porcentajeVenta":  0.0,
+        "desccuentoAplicable": 0.0,
+        "vidautil":         0.0
       }
 
       console.warn('MAQUINARIA');

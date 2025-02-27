@@ -26,6 +26,10 @@ export class CrononewdisService {
   obtenerAgenciaLocalizacion(codlocalidad:number, codzone:string) {
     return this.http.get( this.url + 'Zonificacion/ObtenerAgenciasLocalidad/' + codlocalidad + '/' + codzone   );
   }
+
+  guardarCronoInteligente(codlocalidad:number, codcrono:string) {
+    return this.http.get( this.url + 'Cronograma/CalculoAsignacionCronograma/' + codlocalidad + '/' + codcrono   );
+  }
   
   eliminarZonificacion(id:number) {
     return this.http.get( this.url + 'Zonificacion/eliminarDataCardinal/' + id );
@@ -33,7 +37,6 @@ export class CrononewdisService {
   
   ActualizaEstadoAgencia(st:number, codagencia:string) {
     return this.http.get( this.url + 'Zonificacion/ActualizarAgenciaEstado/' + st + '/' + codagencia   );
-
   }
 
 }

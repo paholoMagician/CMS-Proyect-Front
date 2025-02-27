@@ -11,9 +11,8 @@
          <span class="fs-5 m-0">{{modulo.nombre}}</span>
     </div>
     <div class=" extraconfmaq d-flex align-content-center justify-content-end flex-column " style="z-index: 1000;" >
-        <div >
+        <div>
             <div>
-
                 <input id="maquinagencia" type="checkbox" (change)="validateEstadoasignMaquina()" [(ngModel)]="_maquinaAgencia" class="form-check-input"> &nbsp;
                 <label for="maquinagencia">Asignar máquina a un cliente al crear</label>
             </div>
@@ -21,7 +20,6 @@
                 <span class="text-primary"><small class="text-secondary">Cliente:</small>&nbsp; {{this.clientesAsignado}}</span> &nbsp;&nbsp;
                 <span class="text-primary"><small class="text-secondary">Agencia:</small>&nbsp; {{this.agenciaAsignada}}</span>
             </div>
-
         </div>
         <form [formGroup]="agenciaForm" class="mb-2 mt-2 d-flex aligbn-items-center " *ngIf="_showcliente">
         <div  class="d-flex m-1 flex-column animate__animated animate__fadeIn  " style="z-index: auto;" >
@@ -38,7 +36,9 @@
             </p-autoComplete>
         </div>
         <div *ngIf="_show_form_agency" class="d-flex m-1 flex-column animate__animated animate__fadeIn" style="z-index: auto;">
-            <label for="codcliente"> Seleccionar la agencia a asignar </label>
+            <label for="codcliente">
+                Seleccionar la agencia a asignar
+            </label>
             <p-autoComplete [dropdown]="true"
                             (click)="validacionBtnAsign()"
                             formControlName="codagencia"
@@ -49,7 +49,6 @@
                             field="name">
             </p-autoComplete>
         </div>
-
     </form>
         <div class="btnsetts mt-2 w-100 d-flex justify-content-end " *ngIf="_show_form_agency">
             <button class="btn btn-warning d-flex align-items-center" 
@@ -72,6 +71,7 @@
                                 formControlName="codtipomaquina"
                                 #codtipomaquina
                                 id="codtipomaquina"
+                                (change)="getGrupos()"
                                 aria-label="">
                                 <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo">
                                     {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
@@ -119,7 +119,7 @@
             </div>
             <div class="d-flex justify-content-between align-item-start ">
                 <div class="mb-3 col-2 ">
-                    <label for="nombre" class="form-label   ">
+                    <label for="nserie" class="form-label   ">
                         Número de Serie <span class="text-danger">*</span>
                     </label>
                     <input type="text" class="form-control"  
@@ -173,10 +173,9 @@
                 
 
             </div>
-            <div class="d-flex justify-content-between align-item-end mb-3">
-                
+            <div class="d-flex justify-content-between align-item-end mb-3">                
                 <div class="w-75">
-                    <label for="nombre" class="form-label   ">
+                    <label for="nombre" class="form-label">
                         Observación técnica de la máquina. 
                     </label>
                     <input type="text" class="form-control" 
@@ -186,7 +185,7 @@
                 </div>
                 <div class="d-flex align-items-center p-2 bg-warning shadow-sm rounded-2" style="cursor: pointer;">
                     <div class="form-check">
-                        <input class="form-check-input" 
+                        <input class="form-check-input"
                                 type="checkbox" value="" 
                                 formControlName="estado"
                                 #estado 
