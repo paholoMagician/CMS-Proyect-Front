@@ -229,6 +229,7 @@ export class RepuestosComponent implements OnInit, OnChanges {
       height: '400px',
       width: '80%',
       data: data, 
+      
     });
 
     dialogRef.afterClosed().subscribe( result => {
@@ -260,6 +261,11 @@ export class RepuestosComponent implements OnInit, OnChanges {
   }
 
   guardarRepuestos() {
+    if (!this.repuestosForm.controls['codBode'].value && this.bodegasLista.length > 0) {
+      this.repuestosForm.controls['codBode'].setValue(this.bodegasLista[0].id);
+    }
+
+    
     if ( this.repuestosForm.controls['nombreRep'].value == undefined ||
       this.repuestosForm.controls['nombreRep'].value == null ||
       this.repuestosForm.controls['nombreRep'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El nombre de repuesto no debe estar vacío' })
@@ -337,6 +343,10 @@ export class RepuestosComponent implements OnInit, OnChanges {
   }
 
   actualizarRepuestos() {
+
+    if (!this.repuestosForm.controls['codBode'].value && this.bodegasLista.length > 0) {
+      this.repuestosForm.controls['codBode'].setValue(this.bodegasLista[0].id);
+    }
 
     if ( this.repuestosForm.controls['nombreRep'].value == undefined ||
       this.repuestosForm.controls['nombreRep'].value == null ||
@@ -521,45 +531,134 @@ export class RepuestosComponent implements OnInit, OnChanges {
 
  /** OBTENER MARCA */
  getGrupos() {
-   this.grupolista  = [];
-   this.sgrupolista = [];
-   this.repuestosForm.controls['marca']    .setValue('');
-   this.repuestosForm.controls['codmarca'] .setValue('');
-   this.repuestosForm.controls['modelo']   .setValue('');
-   this.repuestosForm.controls['codmodelo'].setValue('');
-   this.codtipomaquinaValue = this.repuestosForm.controls['codtipomaquina'].value.trim();
-   this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
-       next:( grupo ) => {
-         this.grupolista = grupo;
-         console.warn(this.grupolista);
-       },
-       complete: () => { }
-     }
-   )
- }
+  console.log("📌 Se ejecutó getGrupos()");
+
+  this.grupolista = [];
+  this.sgrupolista = [];
+  this.repuestosForm.controls['marca'].setValue('');
+  this.repuestosForm.controls['codmarca'].setValue('');
+  this.repuestosForm.controls['modelo'].setValue('');
+  this.repuestosForm.controls['codmodelo'].setValue('');
+
+  this.codtipomaquinaValue = this.repuestosForm.controls['codtipomaquina'].value?.trim();
+
+  console.log("📌 Código de maquinaria seleccionado:", this.codtipomaquinaValue);
+
+  this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
+      next: (grupo) => {
+          console.log("📌 Respuesta del servidor:", grupo);
+          this.grupolista = grupo;
+
+          // 🔹 Si hay elementos en grupolista, selecciona el primero automáticamente
+          if (this.grupolista.length > 0) {
+              this.repuestosForm.controls['marca'].setValue(this.grupolista[0].codmarca);
+          }
+
+          console.log("📌 Marcas en grupolista:", this.grupolista);
+      },
+      error: (err) => console.error("❌ Error en getDataMasterGrupo:", err),
+      complete: () => { console.log("✅ getGrupos() completado"); }
+  });
+}
+
+onBodegaChange(event: any) {
+  const selectedBodega = event.target.value; // Captura el valor seleccionado
+  this.repuestosForm.controls['codBode'].setValue(selectedBodega); // Lo asigna al FormControl
+  console.log("Bodega seleccionada:", selectedBodega); // Verifica en consola
+}
 
 
  /** OBTENER MODELOS */
  getSubgrupos() {
-   this.repuestosForm.controls['codmarca'].setValue(this.repuestosForm.controls['marca'].value);
-   let grupo:    any = this.codtipomaquinaValue;
-   let subgrupo: any = this.repuestosForm.controls['marca'].value;
+  this.repuestosForm.controls['codmarca'].setValue(this.repuestosForm.controls['marca'].value);
+  let grupo: any = this.codtipomaquinaValue;
+  let subgrupo: any = this.repuestosForm.controls['marca'].value;
 
-  console.warn('grupo, subgrupo');
-  console.warn(grupo);
-  console.warn(subgrupo);
+  console.log("📌 getSubgrupos() ejecutado");
+  console.log("📌 Grupo:", grupo, "Subgrupo:", subgrupo);
 
-   this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
-     next:( sgrupo ) => {
-       this.sgrupolista = sgrupo;
-       console.warn(this.sgrupolista);
-     }
-   });
- }
+  this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
+      next: (sgrupo) => {
+          console.log("📌 Modelos recibidos:", sgrupo);
+          this.sgrupolista = sgrupo;
+
+          // 🔹 Si hay modelos en la lista, seleccionar el primero automáticamente
+          if (this.sgrupolista.length > 0) {
+              this.repuestosForm.controls['codmodelo'].setValue(this.sgrupolista[0].codmodelo);
+          }
+      },
+      error: (err) => console.error("❌ Error en getDataMasterSubGrupo:", err),
+      complete: () => console.log("✅ getSubgrupos() completado"),
+  });
+}
+
 
  obtenerCodigoModelo(data:any) {
   console.log(this.modeloActivo);
   this.repuestosForm.controls['codmodelo'].setValue(data);
 }
+
+onTipoMaquinariaChange(event: any) {
+  this.getGrupos(); // Actualiza la lista de marcas de maquinaria
+  setTimeout(() => {
+    this.getSubgrupos(); // Luego actualiza la lista de modelos de maquinaria
+  }, 100);
+  
+  this.obtenerBodegas(); // 🔹 Llama a la función que actualiza la lista de bodegas
+}
+
+
+
+ngAfterViewInit() {
+  this.setDefaultSelection("marcaRep");
+  this.setDefaultSelection("codtipomaquina");
+  this.setDefaultSelection("marca");
+
+  // Mapeo de IDs y su siguiente campo al presionar "Tab"
+  const tabOrder: Record<string, string> = { // 🔥 Agregamos 'Record<string, string>' para que TypeScript lo acepte
+      "marcaRep": "codtipomaquina",
+      "codtipomaquina": "marca"
+  };
+
+  // Agregar eventos de teclado a los selectores
+  Object.keys(tabOrder).forEach(id => {
+      const selectElement = document.getElementById(id) as HTMLSelectElement;
+      if (selectElement) {
+          selectElement.addEventListener("keydown", (event) => {
+              if (event.key === "Tab") {
+                  event.preventDefault();
+                  setTimeout(() => {
+                      const nextField = tabOrder[id]; // ✅ TypeScript ya no mostrará errores aquí
+                      this.setDefaultSelection(nextField);
+                      const nextSelect = document.getElementById(nextField) as HTMLSelectElement;
+                      if (nextSelect) {
+                          nextSelect.focus();
+                      }
+                  }, 300);
+              }
+          });
+      }
+  });
+}
+
+// Método para seleccionar automáticamente el índice 0 y actualizar FormControl
+setDefaultSelection(selectId: string) {
+  setTimeout(() => {
+      const selectElement = document.getElementById(selectId) as HTMLSelectElement;
+      if (selectElement && selectElement.options.length > 0) {
+          selectElement.selectedIndex = 0; // Selecciona el primer valor automáticamente
+
+          // Si el select está vinculado a un FormControl, actualizamos su valor
+          const selectedValue = selectElement.options[0].value;
+          this.repuestosForm.controls[selectId]?.setValue(selectedValue);
+      } else {
+          // Si aún no tiene opciones, intenta nuevamente después de un breve retraso
+          setTimeout(() => this.setDefaultSelection(selectId), 100);
+      }
+  }, 100);
+}
+
+
+
 
 }

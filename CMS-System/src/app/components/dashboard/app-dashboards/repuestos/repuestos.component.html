@@ -44,7 +44,7 @@
                        placeholder="...">
             </div>
             &nbsp;
-            <div class="mb-3 col-3 d-flex flex-column">
+            <div class="mb-3 col+4 d-flex flex-column">
                 <label for="marcaRep" class="form-label  d-flex ">
                     Marca de Repuesto <span class="text-danger"></span>
                 </label>
@@ -63,7 +63,7 @@
                         &nbsp;&nbsp;
                         <button class="btn btn-warning" type="button" 
                                 style="height: 38.21px !important"
-                                (click)="openDialog(marca)">
+                                (click)="openDialog(repuestosForm.controls['marca'].value)">  <!-- 🔹 Pasa el valor de marca -->
                                <mat-icon>add</mat-icon>
                         </button>
                     </div>
@@ -74,60 +74,60 @@
                 <label for="codtipomaquina" class="form-label">
                     Repuesto para tipo de Maquinaria:<span class="text-danger">*</span>
                 </label>
-                <div class="d-flex">
-                    <select class="inpForms form-select w-100"
-                            style="height: 38.21px !important"
-                            formControlName="codtipomaquina"
-                            #codtipomaquina
-                            id="codtipomaquina"
-                            aria-label="">
-                            <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo">
-                                {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
-                            </option>
+                <select class="inpForms form-select w-100"
+                        style="height: 38.21px !important"
+                        formControlName="codtipomaquina"
+                        #codtipomaquina
+                        id="codtipomaquina"
+                        (click)="onTipoMaquinariaChange($event)"
+                        (change)="onTipoMaquinariaChange($event)"
+                        (click)="getGrupos()"
+                        (change)="getGrupos()">  <!-- 🔹 Llama a getGrupos() automáticamente -->
+                    <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo">
+                        {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
+                    </option>
+                </select>
+            </div>
+            
+            &nbsp;&nbsp;
+           <div class="mb-3 col-4">
+            <label for="marca" class="form-label">
+                Marca de maquinaria:<span class="text-danger">*</span>
+            </label>
+            <select class="inpForms form-select w-100"
+            formControlName="marca"
+            id="marca"
+            (change)="onTipoMaquinariaChange($event)"
+            (click)="getSubgrupos()"
+            (change)="getSubgrupos()">
+              <!-- 🔹 Se ejecutará en click y change -->
+        <option *ngFor="let marca of grupolista; let i = index"
+                [value]="marca.codmarca"
+                [selected]="i === 0">
+            {{ marca.codmarca }} - {{ marca.nombremarca | titlecase }}
+        </option>
+    </select>
+    
+            
+            
+</div>
+                        &nbsp;&nbsp;
+                        <div class="mb-3 col-2">
+                            <label for="modelo" class="form-label">
+                                Modelo de maquinaria:<span class="text-danger">*</span>
+                            </label>
+                            <select class="inpForms form-select w-100"
+                            formControlName="codmodelo"
+                            id="modelo"
+                            (change)="onTipoMaquinariaChange($event)"
+                            (change)="obtenerCodigoModelo($event)">
+                        <option *ngFor="let modelo of sgrupolista" [value]="modelo.codmodelo">
+                            {{ modelo.nombremodelo | uppercase }} - {{ modelo.codmodelo }}
+                        </option>
                     </select>
-                    <button class="btn btn-warning" type="button" 
-                    style="height: 38.21px !important" (click)="getGrupos()" >
-                        <mat-icon>search</mat-icon>
-                    </button>
-                </div>
-            </div>
-            &nbsp;&nbsp;
-            <div class="mb-3 col-4 ">
-                <label for="marca" class="form-label ">
-                    Marca de maquinaria:<span class="text-danger">*</span>
-                </label>
-                <div class="d-flex" >
-                    <select class="inpForms form-select w-100"
-                            formControlName="marca" #marca id="marca" aria-label="">
-                            <option *ngFor="let marca of grupolista" [value]="marca.codmarca">
-                                {{ marca.codmarca }} - {{ marca.nombremarca | titlecase }} 
-                            </option>
-                    </select>                           
-                    <button type="button" class="btn btn-warning d-flex align-item-center " (click)="getSubgrupos()" >
-                        <mat-icon>search</mat-icon>
-                    </button>
-                    &nbsp;&nbsp;
-                    <input type="text" readonly  formControlName="codmarca" #codmarca id="codmarca" class="form-control" style="width: 80px; background-color: rgb(216, 216, 216);"  >
-                </div>
-            </div>
-            &nbsp;&nbsp;
-            <div class="mb-3 col-2 ">
-                <label for="modelo" class="form-label ">
-                    Modelo de maquinaria:<span class="text-danger">*</span>
-                </label>
-                <div class="d-flex flex-column" >
-                        <input type="text" readonly formControlName="codmodelo" #codmodelo id="codmodelo" 
-                               class="form-control">
-                    <ul class="p-0" >
-                        <li class="modelomaquina d-flex justify-content-between animate__animated animate__fadeInLeft" 
-                            *ngFor="let modelo of sgrupolista"
-                            [ngClass]="{ 'active1': modeloActivo === modelo }"
-                            (click)="obtenerCodigoModelo(modelo.codmodelo);  modeloActivo = modelo;">
-                                    {{modelo.nombremodelo | uppercase}} - {{modelo.codmodelo}}
-                        </li>
-                    </ul>
-                </div>
-            </div>
+                        </div>
+                        
+                        
             &nbsp;&nbsp;
             <div class="mb-3 col-2 d-flex flex-column">
                 <label for="cantRep" class="form-label  d-flex ">
@@ -216,19 +216,23 @@
                        #codigo id="activo">
             </div>
             &nbsp;&nbsp;
-            <div class="mb-3 col-2 ">
-                <label for="codBode" class="form-label ">
-                    Envio a bodega:<span class="text-danger">*</span>
+            <div class="mb-2 col-2">
+                <label for="codBode" class="form-label">
+                    Envío a bodega:<span class="text-danger">*</span>
                 </label>
-                <div class="d-flex" >
-                    <select class="inpForms form-select w-100"
-                            formControlName="codBode" #codBode id="codBode" aria-label="">
-                            <option *ngFor="let bodega of bodegasLista" [value]="bodega.id">
-                                {{ bodega.nombrebodega }}
-                            </option>
-                    </select> 
-                </div>
+                <select class="inpForms form-select w-100"
+                        formControlName="codBode"
+                        id="codBode"
+                        (change)="onTipoMaquinariaChange($event)">
+                    <option *ngFor="let bodega of bodegasLista; let i = index"
+                            [value]="bodega.id"
+                            [selected]="i === 0">
+                        {{ bodega.nombrebodega }}
+                    </option>
+                </select>
             </div>
+            
+              
             &nbsp;&nbsp;
             <div class="mini-floating-button">
                 <button mat-raised-button type="button" color="warn" *ngIf="_cancel_button" (click)="limpiar()" >
