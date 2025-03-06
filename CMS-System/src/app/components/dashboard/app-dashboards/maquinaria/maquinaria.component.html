@@ -71,7 +71,8 @@
                                 formControlName="codtipomaquina"
                                 #codtipomaquina
                                 id="codtipomaquina"
-                                (change)="getGrupos()"
+                                (click)="onMaquinariaChange($event)"
+                                (change)="onMaquinariaChange($event)"
                                 aria-label="">
                                 <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo">
                                     {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
@@ -93,29 +94,23 @@
                                     {{ marca.codmarca }} - {{ marca.nombremarca | titlecase }} 
                                 </option>
                         </select>                           
-                        <button type="button" class="btn btn-warning d-flex align-item-center " (click)="getSubgrupos()" >
-                            <mat-icon>search</mat-icon>
-                        </button>
-                        <input type="text" readonly formControlName="codmarca" #codmarca id="codmarca" class="form-control" style="width: 80px;"  >
                     </div>
                 </div>
-                <div class="mb-3 col-2 ">
-                    <label for="modelo" class="form-label ">
+                <div class="mb-3 col-2">
+                    <label for="modelo" class="form-label">
                         Modelo:<span class="text-danger">*</span>
                     </label>
-                    <div class="d-flex flex-column" >
-                            <input type="text" readonly formControlName="codmodelo" #codmodelo id="codmodelo" 
-                                   class="form-control">
-                        <ul class="p-0">
-                            <li class="modelomaquina d-flex justify-content-between animate__animated animate__fadeInLeft" 
-                                *ngFor="let modelo of sgrupolista"
-                                [ngClass]="{ 'active1': modeloActivo === modelo }"
-                                (click)="obtenerCodigoModelo(modelo.codmodelo); obtenerImagen(); modeloActivo = modelo;">
-                                        {{modelo.nombremodelo | uppercase}} - {{modelo.codmodelo}}
-                            </li>
-                        </ul>
-                    </div>
+                    <select class="inpForms form-select w-100"
+                            formControlName="codmodelo"
+                            id="modelo"
+                            
+                            (click)="obtenerCodigoModelo($event); obtenerImagen()">
+                        <option *ngFor="let modelo of sgrupolista" [value]="modelo.codmodelo">
+                            {{ modelo.nombremodelo | uppercase }} - {{ modelo.codmodelo }}
+                        </option>
+                    </select>
                 </div>
+                
             </div>
             <div class="d-flex justify-content-between align-item-start ">
                 <div class="mb-3 col-2 ">
@@ -213,7 +208,7 @@
 <div id="foto-area" class="mini-module-workarea w-25 p-4 m-1 d-flex justify-content-center flex-column align-items-center ">
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
-        <mat-icon>add_a_photo</mat-icon><span class="fs-7 p-1" > Añade una foto a {{modulo.nombre}} </span>
+        <mat-icon>add_a_photo</mat-icon><span class="fs-7 p-1" > Foto+ {{modulo.nombre}} </span>
     </div>
 
     <hr>

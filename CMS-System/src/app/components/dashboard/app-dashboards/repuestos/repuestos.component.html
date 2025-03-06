@@ -80,9 +80,7 @@
                         #codtipomaquina
                         id="codtipomaquina"
                         (click)="onTipoMaquinariaChange($event)"
-                        (change)="onTipoMaquinariaChange($event)"
-                        (click)="getGrupos()"
-                        (change)="getGrupos()">  <!-- 🔹 Llama a getGrupos() automáticamente -->
+                        (change)="onTipoMaquinariaChange($event)">  <!-- 🔹 Llama a getGrupos() automáticamente -->
                     <option *ngFor="let tipomaquina of tipoMaquinaLista" [value]="tipomaquina.codigo">
                         {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
                     </option>
@@ -97,7 +95,6 @@
             <select class="inpForms form-select w-100"
             formControlName="marca"
             id="marca"
-            (change)="onTipoMaquinariaChange($event)"
             (click)="getSubgrupos()"
             (change)="getSubgrupos()">
               <!-- 🔹 Se ejecutará en click y change -->
@@ -119,27 +116,30 @@
                             <select class="inpForms form-select w-100"
                             formControlName="codmodelo"
                             id="modelo"
-                            (change)="onTipoMaquinariaChange($event)"
                             (change)="obtenerCodigoModelo($event)">
                         <option *ngFor="let modelo of sgrupolista" [value]="modelo.codmodelo">
                             {{ modelo.nombremodelo | uppercase }} - {{ modelo.codmodelo }}
                         </option>
                     </select>
+                    
                         </div>
                         
                         
             &nbsp;&nbsp;
             <div class="mb-3 col-2 d-flex flex-column">
-                <label for="cantRep" class="form-label  d-flex ">
+                <label for="cantRep" class="form-label d-flex">
                     Cantidad en bodega <span class="text-danger">*</span>
                 </label>
-                <input type="text" 
+                <input type="text"
                        style="width: 90px;"
-                       class="form-control"  
-                       formControlName="cantRep" 
+                       class="form-control"
+                       formControlName="cantRep"
                        #cantRep id="cantRep"
-                       placeholder="...">
+                       placeholder="..."
+                       (blur)="validacionNumeroPositivo('cantRep')"
+                       (keypress)="validarEntradaNumerica($event)">
             </div>
+            
             &nbsp;
             <div class="d-flex">
                 <div class="mb-3 d-flex flex-column">
@@ -151,11 +151,12 @@
                     <input type="number"
                            (change)="calculoPVP()"
                            (keyup)="calculoPVP()"
+                           (blur)="validacionNumeroPositivo('valorCompra')"
+                           (keypress)="validarEntradaNumerica($event)"
                            style="width: 90px;"
                            class="form-control"
                            formControlName="valorCompra"
-                           #valorCompra id="valorCompra"
-                           >
+                           #valorCompra id="valorCompra">
                 </div>
                 &nbsp;
                 <div class="mb-3 d-flex flex-column">
@@ -167,11 +168,12 @@
                     <input type="number" 
                            (change)="calculoPVP()"
                            (keyup)="calculoPVP()"
+                           (blur)="validacionNumeroPositivo('porcentajeVenta')"
+                           (keypress)="validarEntradaNumerica($event)"
                            style="width: 90px;"
                            class="form-control"
                            formControlName="porcentajeVenta"
-                           #porcentajeVenta id="porcentajeVenta"
-                           >
+                           #porcentajeVenta id="porcentajeVenta">
                 </div>
                 &nbsp;
                 <div class="mb-3 d-flex flex-column">
@@ -181,13 +183,14 @@
                            % Descuento
                     </label>
                     <input type="number" 
-                           style="width: 90px;"
                            (change)="calculoPVP()"
                            (keyup)="calculoPVP()"
+                           (blur)="validacionNumeroPositivo('desccuentoAplicable')"
+                           (keypress)="validarEntradaNumerica($event)"
+                           style="width: 90px;"
                            class="form-control"
                            formControlName="desccuentoAplicable"
-                           #desccuentoAplicable id="desccuentoAplicable"
-                           >
+                           #desccuentoAplicable id="desccuentoAplicable">
                 </div>
                 &nbsp;
                 <div class="mb-3 d-flex flex-column">
@@ -197,13 +200,15 @@
                            P.V.P
                     </label>
                     <input type="number" 
+                           (blur)="validacionNumeroPositivo('pvp')"
+                           (keypress)="validarEntradaNumerica($event)"
                            style="width: 90px;"
                            class="form-control"
                            formControlName="pvp"
-                           #pvp id="pvp"
-                           >
+                           #pvp id="pvp">
                 </div>
             </div>
+            
             &nbsp;
             &nbsp;
             <div class="mb-3 col-2 d-flex">
@@ -223,14 +228,13 @@
                 <select class="inpForms form-select w-100"
                         formControlName="codBode"
                         id="codBode"
-                        (change)="onTipoMaquinariaChange($event)">
-                    <option *ngFor="let bodega of bodegasLista; let i = index"
-                            [value]="bodega.id"
-                            [selected]="i === 0">
+                        (change)="onBodegaChange($event)">
+                    <option *ngFor="let bodega of bodegasLista" [value]="bodega.id">
                         {{ bodega.nombrebodega }}
                     </option>
                 </select>
             </div>
+            
             
               
             &nbsp;&nbsp;

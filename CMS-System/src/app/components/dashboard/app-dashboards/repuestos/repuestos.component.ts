@@ -561,11 +561,16 @@ export class RepuestosComponent implements OnInit, OnChanges {
   });
 }
 
-onBodegaChange(event: any) {
-  const selectedBodega = event.target.value; // Captura el valor seleccionado
-  this.repuestosForm.controls['codBode'].setValue(selectedBodega); // Lo asigna al FormControl
-  console.log("Bodega seleccionada:", selectedBodega); // Verifica en consola
+onBodegaChange(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const selectedValue = selectElement?.value;
+
+  if (!selectedValue) return; // Si es null, no hace nada
+
+  console.log("Bodega seleccionada:", selectedValue);
+  this.repuestosForm.controls['codBode'].setValue(selectedValue);
 }
+
 
 
  /** OBTENER MODELOS */
@@ -593,18 +598,40 @@ onBodegaChange(event: any) {
 }
 
 
- obtenerCodigoModelo(data:any) {
-  console.log(this.modeloActivo);
-  this.repuestosForm.controls['codmodelo'].setValue(data);
+obtenerCodigoModelo(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const selectedValue = selectElement?.value;
+
+  if (!selectedValue) return; // Evita errores si es null
+
+  console.log("Modelo seleccionado:", selectedValue);
+  this.repuestosForm.controls['codmodelo'].setValue(selectedValue);
 }
 
+
 onTipoMaquinariaChange(event: any) {
-  this.getGrupos(); // Actualiza la lista de marcas de maquinaria
+  this.getGrupos();
   setTimeout(() => {
-    this.getSubgrupos(); // Luego actualiza la lista de modelos de maquinaria
+    this.getSubgrupos();
+    this.obtenerBodegas(); // 🔹 Ahora también actualiza bodegas
   }, 100);
+}
+
+validacionNumeroPositivo(controlName: string) {
+  const valor = this.repuestosForm.controls[controlName].value * 1; // Convierte en número
+  if (valor < 0 || isNaN(valor)) {
+    this.repuestosForm.controls[controlName].setValue(0); // Evita negativos
+  }
+}
+
+// Función para bloquear la entrada de caracteres no permitidos
+validarEntradaNumerica(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
   
-  this.obtenerBodegas(); // 🔹 Llama a la función que actualiza la lista de bodegas
+  // Bloquear "-" y otros caracteres no numéricos
+  if (charCode === 45 || (charCode < 48 || charCode > 57)) {
+    event.preventDefault();
+  }
 }
 
 

@@ -319,9 +319,14 @@ export class MaquinariaComponent implements OnInit {
     });
   }
 
-  obtenerCodigoModelo(data:any) {
-    console.log(this.modeloActivo);
-    this.maquinariaForm.controls['codmodelo'].setValue(data);    
+  obtenerCodigoModelo(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedValue = selectElement?.value;
+  
+    if (!selectedValue) return; // Evita errores si es null
+  
+    console.log("Modelo seleccionado:", selectedValue);
+    this.maquinariaForm.controls['codmodelo'].setValue(selectedValue);
   }
 
   codec:any;
@@ -775,6 +780,15 @@ export class MaquinariaComponent implements OnInit {
       }
     })
   }
+
+  onMaquinariaChange(event: any) {
+    this.getGrupos(); // 🔹 Actualiza la lista de marcas
+  
+    setTimeout(() => {
+      this.getSubgrupos(); // 🔹 Luego, actualiza la lista de modelos
+    }, 100);
+  }
+  
 
 
  
