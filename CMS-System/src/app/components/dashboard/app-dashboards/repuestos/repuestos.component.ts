@@ -511,6 +511,12 @@ export class RepuestosComponent implements OnInit, OnChanges {
     this.repuestosForm.controls['cantRep'].setValue(data.cantRep);
     this._action_butto = 'Actualizar';
     this._cancel_button = true;
+
+        // ✅ Llamamos a calculoPVP() para actualizar los valores calculados
+        this.calculoPVP();
+
+        this._action_butto = 'Actualizar';
+        this._cancel_button = true;
   }
 
   limpiar() {
