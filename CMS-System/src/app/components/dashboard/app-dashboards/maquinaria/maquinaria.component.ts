@@ -289,56 +289,120 @@ export class MaquinariaComponent implements OnInit {
   /** OBTENER MARCA */
   codtipomaquinaValue:any;
   getGrupos() {
-    this.grupolista  = [];
+    console.log("📌 Se ejecutó getGrupos()");
+  
+    this.grupolista = [];
     this.sgrupolista = [];
-    this.maquinariaForm.controls['marca']    .setValue('');
-    this.maquinariaForm.controls['codmarca'] .setValue('');
-    this.maquinariaForm.controls['modelo']   .setValue('');
+    this.maquinariaForm.controls['marca'].setValue('');
+    this.maquinariaForm.controls['codmarca'].setValue('');
+    this.maquinariaForm.controls['modelo'].setValue('');
     this.maquinariaForm.controls['codmodelo'].setValue('');
-    this.codtipomaquinaValue = this.maquinariaForm.controls['codtipomaquina'].value.trim();
+  
+    this.codtipomaquinaValue = this.maquinariaForm.controls['codtipomaquina'].value?.trim();
+  
+    console.log("📌 Código de maquinaria seleccionado:", this.codtipomaquinaValue);
+  
     this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
-        next:( grupo ) => {
-          this.grupolista = grupo;
+        next: (grupo) => {
+            console.log("📌 Respuesta del servidor:", grupo);
+            this.grupolista = grupo;
+  
+            // 🔹 Si hay elementos en grupolista, selecciona el primero automáticamente
+            if (this.grupolista.length > 0) {
+                this.maquinariaForm.controls['marca'].setValue(this.grupolista[0].codmarca);
+            }
+  
+            console.log("📌 Marcas en grupolista:", this.grupolista);
         },
-        complete: () => { }
-      }
-    )
+        error: (err) => console.error("❌ Error en getDataMasterGrupo:", err),
+        complete: () => { console.log("✅ getGrupos() completado"); }
+    });
   }
 
 
   /** OBTENER MODELOS */
   getSubgrupos() {
     this.maquinariaForm.controls['codmarca'].setValue(this.maquinariaForm.controls['marca'].value);
-    let grupo:    any = this.codtipomaquinaValue;
+    let grupo: any = this.codtipomaquinaValue;
     let subgrupo: any = this.maquinariaForm.controls['marca'].value;
+  
+    console.log("📌 getSubgrupos() ejecutado");
+    console.log("📌 Grupo:", grupo, "Subgrupo:", subgrupo);
+  
     this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
-      next:( sgrupo ) => {
-        this.sgrupolista = sgrupo;
-        console.warn(this.sgrupolista);
-      }
+        next: (sgrupo) => {
+            console.log("📌 Modelos recibidos:", sgrupo);
+            this.sgrupolista = sgrupo;
+  
+            // 🔹 Si hay modelos en la lista, seleccionar el primero automáticamente
+            if (this.sgrupolista.length > 0) {
+                this.maquinariaForm.controls['codmodelo'].setValue(this.sgrupolista[0].codmodelo);
+            }
+        },
+        error: (err) => console.error("❌ Error en getDataMasterSubGrupo:", err),
+        complete: () => {
+          console.log("✅ getSubgrupos() completado")
+          // this.obtenerCodigoModelo(  )
+          this.obtenerImagen()
+        }
     });
   }
 
-  obtenerCodigoModelo(event: Event) {
+  obtenerCodigoModelo(event: any) {
+// alert('Obteniendo modelo: ' + event)
+
+
     const selectElement = event.target as HTMLSelectElement;
-    const selectedValue = selectElement?.value;
-  
-    if (!selectedValue) return; // Evita errores si es null
+    const selectedValue = selectElement.value; // Obtiene el valor del modelo seleccionado
   
     console.log("Modelo seleccionado:", selectedValue);
-    this.maquinariaForm.controls['codmodelo'].setValue(selectedValue);
+  
+    if (!selectedValue) {
+      console.warn("⚠ Modelo vacío, no se puede asignar.");
+      return;
+    }
+  
+    this.maquinariaForm.controls['codmodelo'].setValue(selectedValue); // Asigna el valor al FormControl
+    this.obtenerImagen(); // Llama obtenerImagen() después de actualizar el modelo
   }
+  
+  
 
   codec:any;
   obtenerImagen() {
-    this.codec = this.maquinariaForm.controls['codtipomaquina'].value.trim() +'-'+ this.maquinariaForm.controls['codmarca'].value.trim() +'-'+ this.maquinariaForm.controls['codmodelo'].value.trim();
-    console.log(this.codec);
+    // Obtener los valores del formulario de manera segura
+    const tipoMaquina = this.maquinariaForm.controls['codtipomaquina'].value || '';
+    const marca = this.maquinariaForm.controls['codmarca'].value || '';
+    const modelo = this.maquinariaForm.controls['codmodelo'].value || '';
+  
+    // Concatenar el código
+    this.codec = `${tipoMaquina.toString().trim()}-${marca.toString().trim()}-${modelo.toString().trim()}`;
+  
+    console.log("Código generado para la imagen:", this.codec);
+  
+    // Verifica que el modelo no sea vacío antes de llamar a la API
+    if (!modelo) {
+      console.warn("⚠ No se puede obtener imagen: Modelo vacío");
+      return;
+    }
+  
     this.fileserv.obtenerImagenCodBinding(this.codec, 'Maquinaria').subscribe({
-      next: (imagen:any) => {
-        this._IMGE = imagen[0].imagen;
+      next: (imagen: any) => {
+        if (imagen && imagen.length > 0 && imagen[0].imagen) {
+          this._IMGE = imagen[0].imagen;
+        } else {
+          console.warn("⚠ No se encontró imagen para:", this.codec);
+          this._IMGE = ''; // ❌ No asignamos ninguna imagen si no se encuentra
+        }
+      },
+      error: (err) => {
+        console.error("❌ Error al obtener la imagen:", err);
+        this._IMGE = ''; // ❌ No mostramos nada si hay un error
       }
-    })  
-  }  
+    });
+  }
+  
+  
 
   /**GUARDAR MAQUINARIA */
   modelItemBodega:any = [];
@@ -780,16 +844,55 @@ export class MaquinariaComponent implements OnInit {
       }
     })
   }
-
   onMaquinariaChange(event: any) {
-    this.getGrupos(); // 🔹 Actualiza la lista de marcas
-  
+    this.getGrupos();
     setTimeout(() => {
-      this.getSubgrupos(); // 🔹 Luego, actualiza la lista de modelos
+      this.getSubgrupos(); // 🔹 Ahora también actualiza bodegas
     }, 100);
   }
   
+  // 🔹 Nueva función para asignar el primer modelo
+  asignarPrimerModelo() {
+    if (this.sgrupolista && this.sgrupolista.length > 0) {
+      console.log("Asignando modelo:", this.sgrupolista[0].codmodelo); // ✅ Para depuración
+      this.maquinariaForm.controls['codmodelo'].setValue(this.sgrupolista[0].codmodelo);
+    } else {
+      console.warn("⚠ No hay modelos disponibles para asignar.");
+    }
+  }
+  
+  validarEntradaNumerica(event: KeyboardEvent) {
+    const allowedKeys = ['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight']; // Permitir teclas básicas
+    const key = event.key;
+  
+    // Permitir solo números y teclas de control
+    if (!/^\d$/.test(key) && !allowedKeys.includes(key)) {
+      event.preventDefault(); // Bloquear cualquier otro carácter
+    }
+  }
+  
+  // Evita caracteres especiales en número de serie, inventario y código BP
+  validarTextoSinCaracteresEspeciales(event: KeyboardEvent) {
+    const regex = /^[a-zA-Z0-9-]+$/; // Permite letras, números y el signo menos (-)
+    const key = event.key;
+  
+    // ✅ Permitir letras, números, el signo menos (-) y teclas de control (Backspace, Tab, Flechas)
+    if (!regex.test(key) && !['Backspace', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(key)) {
+      event.preventDefault();
+    }
+  }
+  
+  validarContador(event: any) {
+    let input = event.target;
+    let valor = input.value;
 
+    // 🔹 Permitir solo números (elimina signos negativos y caracteres especiales)
+    valor = valor.replace(/[^0-9]/g, '');
 
- 
+    // 🔹 Si el valor es vacío, lo deja en 0
+    input.value = valor !== '' ? Math.max(0, parseInt(valor, 10)).toString() : '0';
+}
+
+  
+  
 }

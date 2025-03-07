@@ -78,24 +78,26 @@
                                     {{tipomaquina.nombre | titlecase }} - {{tipomaquina.codigo}}
                                 </option>
                         </select>
-                        <button class="btn btn-warning" type="button" (click)="getGrupos()" >
-                            <mat-icon>search</mat-icon>
-                        </button>
                     </div>
                 </div>
                 <div class="mb-3 col-4 ">
                     <label for="marca" class="form-label ">
                         Marca:<span class="text-danger">*</span>
                     </label>
-                    <div class="d-flex" >
+                    <div class="d-flex">
                         <select class="inpForms form-select w-100"
-                                formControlName="marca" #marca id="marca" aria-label="">
-                                <option *ngFor="let marca of grupolista" [value]="marca.codmarca">
-                                    {{ marca.codmarca }} - {{ marca.nombremarca | titlecase }} 
-                                </option>
+                                formControlName="marca" #marca id="marca" aria-label=""
+                                (change)="getSubgrupos()"
+                                (click)="getSubgrupos()">
+                                <option *ngFor="let marca of grupolista; let i = index"
+                                [value]="marca.codmarca"
+                                [selected]="i === 0">
+                            {{ marca.codmarca }} - {{ marca.nombremarca | titlecase }}
+                        </option>
                         </select>                           
                     </div>
                 </div>
+                
                 <div class="mb-3 col-2">
                     <label for="modelo" class="form-label">
                         Modelo:<span class="text-danger">*</span>
@@ -103,71 +105,80 @@
                     <select class="inpForms form-select w-100"
                             formControlName="codmodelo"
                             id="modelo"
-                            
-                            (click)="obtenerCodigoModelo($event); obtenerImagen()">
-                        <option *ngFor="let modelo of sgrupolista" [value]="modelo.codmodelo">
+                            (change)="obtenerCodigoModelo($event)">
+                        <option *ngFor="let modelo of sgrupolista" 
+                                [value]="modelo.codmodelo">
                             {{ modelo.nombremodelo | uppercase }} - {{ modelo.codmodelo }}
                         </option>
                     </select>
-                </div>
-                
+                </div>        
             </div>
-            <div class="d-flex justify-content-between align-item-start ">
-                <div class="mb-3 col-2 ">
-                    <label for="nserie" class="form-label   ">
+            <div class="d-flex justify-content-between align-item-start">
+                <!-- Número de Serie -->
+                <div class="mb-3 col-2">
+                    <label for="nserie" class="form-label">
                         Número de Serie <span class="text-danger">*</span>
                     </label>
-                    <input type="text" class="form-control"  
-                           formControlName="nserie" 
-                           #nserie id="nserie"
+                    <input type="text" class="form-control"
+                           (keypress)="validarTextoSinCaracteresEspeciales($event)"
+                           formControlName="nserie"
+                           id="nserie"
                            placeholder="A-000111223221...">
                 </div>
             
+                <!-- Número de Inventario -->
                 <div class="mb-3 col-2">
-                    <label for="nombre" class="form-label"
-                           title="Número de Inventario">
-                           Número de Inv.
+                    <label for="ninventario" class="form-label" title="Número de Inventario">
+                        Número de Inv.
                     </label>
-                    <input type="text" class="form-control"  
-                           formControlName="ninventario" 
-                           #ninventario id="ninventario"
+                    <input type="text" class="form-control"
+                           (keypress)="validarTextoSinCaracteresEspeciales($event)"
+                           formControlName="ninventario"
+                           id="ninventario"
                            placeholder="55881">
                 </div>
-
-                <div class="mb-3 col-2 ">
-                    <label for="nombre" class="form-label   ">
-                        Código BP. 
+            
+                <!-- Código BP -->
+                <div class="mb-3 col-2">
+                    <label for="codigobp" class="form-label">
+                        Código BP.
                     </label>
-                    <input type="text" class="form-control"  
-                           formControlName="codigobp" 
-                           #codigobp id="codigobp"
+                    <input type="text" class="form-control"
+                           (keypress)="validarTextoSinCaracteresEspeciales($event)"
+                           formControlName="codigobp"
+                           id="codigobp"
                            placeholder="00012-B">
                 </div>
+            
+                <!-- Contador Inicial -->
+              <!-- Contador Inicial -->
+<div class="mb-3 col-2">
+    <label for="contadorinicial" class="form-label">
+        Contador Inicial: 
+    </label>
+    <input type="number" class="form-control"
+           (keyup)="validacionMenorContador()" 
+           (input)="validarContador($event)" 
+           formControlName="contadorinicial"
+           #contadorinicial id="contadorinicial"
+           placeholder="0">
+</div>
 
-                <div class="mb-3 col-2 ">
-                    <label for="contadorinicial" class="form-label   ">
-                        Contador Inicial: 
-                    </label>
-                    <input type="number" class="form-control"
-                    (keyup)="validacionMenorContador()" 
-                           formControlName="contadorinicial"  
-                           #contadorinicial id="contadorinicial"
-                           placeholder="0">
-                </div>
-
-                <div class="mb-3 col-2 ">
-                    <label for="contadorfinal" class="form-label   "  >
-                        Contador Final: 
-                    </label>
-                    <input type="number" class="form-control" 
-                           formControlName="contadorfinal" (keyup)="validacionMenorContador()"
-                           #contadorfinal id="contadorfinal"  
-                           placeholder="0">
-                </div>
-
-                
+<!-- Contador Final -->
+<div class="mb-3 col-2">
+    <label for="contadorfinal" class="form-label">
+        Contador Final: 
+    </label>
+    <input type="number" class="form-control"
+           (keyup)="validacionMenorContador()"
+           (input)="validarContador($event)"
+           formControlName="contadorfinal"
+           #contadorfinal id="contadorfinal"
+           placeholder="0">
+</div>
 
             </div>
+            
             <div class="d-flex justify-content-between align-item-end mb-3">                
                 <div class="w-75">
                     <label for="nombre" class="form-label">
@@ -208,8 +219,11 @@
 <div id="foto-area" class="mini-module-workarea w-25 p-4 m-1 d-flex justify-content-center flex-column align-items-center ">
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
-        <mat-icon>add_a_photo</mat-icon><span class="fs-7 p-1" > Foto+ {{modulo.nombre}} </span>
+        <mat-icon>add_a_photo</mat-icon>
+        <span class="fs-7 p-1"> Foto+ <span style="display: none;">{{ modulo.nombre }}</span> </span>
     </div>
+    
+    
 
     <hr>
 
