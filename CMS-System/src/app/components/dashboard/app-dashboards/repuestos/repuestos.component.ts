@@ -229,6 +229,7 @@ export class RepuestosComponent implements OnInit, OnChanges {
       height: '400px',
       width: '80%',
       data: data, 
+      
     });
 
     dialogRef.afterClosed().subscribe( result => {
@@ -260,6 +261,11 @@ export class RepuestosComponent implements OnInit, OnChanges {
   }
 
   guardarRepuestos() {
+    if (!this.repuestosForm.controls['codBode'].value && this.bodegasLista.length > 0) {
+      this.repuestosForm.controls['codBode'].setValue(this.bodegasLista[0].id);
+    }
+
+    
     if ( this.repuestosForm.controls['nombreRep'].value == undefined ||
       this.repuestosForm.controls['nombreRep'].value == null ||
       this.repuestosForm.controls['nombreRep'].value == ''  )  Toast.fire({ icon: 'warning', title: 'El nombre de repuesto no debe estar vacío' })
@@ -337,6 +343,10 @@ export class RepuestosComponent implements OnInit, OnChanges {
   }
 
   actualizarRepuestos() {
+
+    if (!this.repuestosForm.controls['codBode'].value && this.bodegasLista.length > 0) {
+      this.repuestosForm.controls['codBode'].setValue(this.bodegasLista[0].id);
+    }
 
     if ( this.repuestosForm.controls['nombreRep'].value == undefined ||
       this.repuestosForm.controls['nombreRep'].value == null ||
@@ -483,30 +493,39 @@ export class RepuestosComponent implements OnInit, OnChanges {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  catchData( data:any ) {
+  catchData(data: any) {
+
+    this.repuestosForm.controls['marcaRep'].setValue(data.idMarcaRepuesto);
     this.repuestosForm.controls['codBode'].setValue(data.idBodega);
     this.repuestosForm.controls['codBode'].disable();
     this.codrep = data.codrep;
     this.repuestosForm.controls['nombreRep'].setValue(data.nombreRep);
     this.repuestosForm.controls['codigo'].setValue(data.codigo);
     this.repuestosForm.controls['descripcion'].setValue(data.descripcion);
-    this.repuestosForm.controls['marcaRep'].setValue(data.marcaRepuesto);
     this.repuestosForm.controls['codtipomaquina'].setValue(data.codTipoMaquina.toString().trim());
     this.getGrupos();
     this.repuestosForm.controls['marca'].setValue(data.marca.toString().trim());
     this.repuestosForm.controls['codmarca'].setValue(data.marca.toString().trim());
     this.repuestosForm.controls['codmodelo'].setValue(data.modelo.toString().trim());
-    this.getSubgrupos()
+    this.getSubgrupos();
     this.repuestosForm.controls['activo'].setValue(data.activo);
     this.repuestosForm.controls['cantRep'].setValue(data.cantRep);
+    
     this._action_butto = 'Actualizar';
     this._cancel_button = true;
-  }
+
+    this.calculoPVP();
+    this.repuestosForm.controls['valorCompra'].setValue(data.valorCompra);
+    this.repuestosForm.controls['porcentajeVenta'].setValue(data.porcentajeVenta);
+    this.repuestosForm.controls['desccuentoAplicable'].setValue(data.desccuentoAplicable);
+}
+
 
   limpiar() {
     this.repuestosForm.controls['nombreRep'].setValue('');
     this.repuestosForm.controls['codigo'].setValue('');
     this.repuestosForm.controls['descripcion'].setValue('');
+    this.repuestosForm.controls['marca'].setValue('');
     this.repuestosForm.controls['codmarca'].setValue(null);
     this.repuestosForm.controls['codmodelo'].setValue(null);
     this.repuestosForm.controls['codtipomaquina'].setValue(null);
@@ -515,51 +534,164 @@ export class RepuestosComponent implements OnInit, OnChanges {
     this.repuestosForm.controls['cantRep'].setValue(0);
     this._action_butto = 'Crear';
     this.repuestosForm.controls['codBode'].enable();
+    this.repuestosForm.controls['codBode'].setValue('');
     this.sgrupolista = [];
     this._cancel_button = false;
+    this.calculoPVP();
+    this.repuestosForm.controls['valorCompra'].setValue(0);
+    this.repuestosForm.controls['porcentajeVenta'].setValue(0);
+    this.repuestosForm.controls['desccuentoAplicable'].setValue(0);
+    this.repuestosForm.controls['pvp'].setValue(0);
   }
 
  /** OBTENER MARCA */
  getGrupos() {
-   this.grupolista  = [];
-   this.sgrupolista = [];
-   this.repuestosForm.controls['marca']    .setValue('');
-   this.repuestosForm.controls['codmarca'] .setValue('');
-   this.repuestosForm.controls['modelo']   .setValue('');
-   this.repuestosForm.controls['codmodelo'].setValue('');
-   this.codtipomaquinaValue = this.repuestosForm.controls['codtipomaquina'].value.trim();
-   this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
-       next:( grupo ) => {
-         this.grupolista = grupo;
-         console.warn(this.grupolista);
-       },
-       complete: () => { }
-     }
-   )
- }
+  this.grupolista = [];
+  this.sgrupolista = [];
+  this.repuestosForm.controls['marca'].setValue('');
+  this.repuestosForm.controls['codmarca'].setValue('');
+  this.repuestosForm.controls['modelo'].setValue('');
+  this.repuestosForm.controls['codmodelo'].setValue('');
+
+  this.codtipomaquinaValue = this.repuestosForm.controls['codtipomaquina'].value?.trim();
+
+  this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
+      next: (grupo) => {
+          this.grupolista = grupo;
+
+          // 🔹 Si hay elementos en grupolista, selecciona el primero automáticamente
+          if (this.grupolista.length > 0) {
+              this.repuestosForm.controls['marca'].setValue(this.grupolista[0].codmarca);
+          }
+      },
+      error: (err) => console.error("❌ Error en getDataMasterGrupo:", err),
+      complete: () => {}
+  });
+}
+
+
+onBodegaChange(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const selectedValue = selectElement?.value;
+
+  if (!selectedValue) return; // Si es null, no hace nada
+
+  console.log("Bodega seleccionada:", selectedValue);
+  this.repuestosForm.controls['codBode'].setValue(selectedValue);
+}
+
 
 
  /** OBTENER MODELOS */
  getSubgrupos() {
-   this.repuestosForm.controls['codmarca'].setValue(this.repuestosForm.controls['marca'].value);
-   let grupo:    any = this.codtipomaquinaValue;
-   let subgrupo: any = this.repuestosForm.controls['marca'].value;
+  this.repuestosForm.controls['codmarca'].setValue(this.repuestosForm.controls['marca'].value);
+  let grupo: any = this.codtipomaquinaValue;
+  let subgrupo: any = this.repuestosForm.controls['marca'].value;
 
-  console.warn('grupo, subgrupo');
-  console.warn(grupo);
-  console.warn(subgrupo);
+  this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
+      next: (sgrupo) => {
+          this.sgrupolista = sgrupo;
 
-   this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
-     next:( sgrupo ) => {
-       this.sgrupolista = sgrupo;
-       console.warn(this.sgrupolista);
-     }
-   });
- }
-
- obtenerCodigoModelo(data:any) {
-  console.log(this.modeloActivo);
-  this.repuestosForm.controls['codmodelo'].setValue(data);
+          // 🔹 Si hay modelos en la lista, seleccionar el primero automáticamente
+          if (this.sgrupolista.length > 0) {
+              this.repuestosForm.controls['codmodelo'].setValue(this.sgrupolista[0].codmodelo);
+          }
+      },
+      error: (err) => console.error("❌ Error en getDataMasterSubGrupo:", err),
+      complete: () => {}
+  });
 }
+
+
+
+obtenerCodigoModelo(event: Event) {
+  const selectElement = event.target as HTMLSelectElement;
+  const selectedValue = selectElement?.value;
+
+  if (!selectedValue) return; // Evita errores si es null
+
+  console.log("Modelo seleccionado:", selectedValue);
+  this.repuestosForm.controls['codmodelo'].setValue(selectedValue);
+}
+
+
+onTipoMaquinariaChange(event: any) {
+  this.getGrupos();
+  setTimeout(() => {
+    this.getSubgrupos();
+    this.obtenerBodegas(); // 🔹 Ahora también actualiza bodegas
+  }, 100);
+}
+
+validacionNumeroPositivo(controlName: string) {
+  const valor = this.repuestosForm.controls[controlName].value * 1; // Convierte en número
+  if (valor < 0 || isNaN(valor)) {
+    this.repuestosForm.controls[controlName].setValue(0); // Evita negativos
+  }
+}
+
+// Función para bloquear la entrada de caracteres no permitidos
+validarEntradaNumerica(event: KeyboardEvent) {
+  const charCode = event.which ? event.which : event.keyCode;
+  
+  // Bloquear "-" y otros caracteres no numéricos
+  if (charCode === 45 || (charCode < 48 || charCode > 57)) {
+    event.preventDefault();
+  }
+}
+
+
+
+ngAfterViewInit() {
+  this.setDefaultSelection("marcaRep");
+  this.setDefaultSelection("codtipomaquina");
+  this.setDefaultSelection("marca");
+
+  // Mapeo de IDs y su siguiente campo al presionar "Tab"
+  const tabOrder: Record<string, string> = { // 🔥 Agregamos 'Record<string, string>' para que TypeScript lo acepte
+      "marcaRep": "codtipomaquina",
+      "codtipomaquina": "marca"
+  };
+
+  // Agregar eventos de teclado a los selectores
+  Object.keys(tabOrder).forEach(id => {
+      const selectElement = document.getElementById(id) as HTMLSelectElement;
+      if (selectElement) {
+          selectElement.addEventListener("keydown", (event) => {
+              if (event.key === "Tab") {
+                  event.preventDefault();
+                  setTimeout(() => {
+                      const nextField = tabOrder[id]; // ✅ TypeScript ya no mostrará errores aquí
+                      this.setDefaultSelection(nextField);
+                      const nextSelect = document.getElementById(nextField) as HTMLSelectElement;
+                      if (nextSelect) {
+                          nextSelect.focus();
+                      }
+                  }, 300);
+              }
+          });
+      }
+  });
+}
+
+// Método para seleccionar automáticamente el índice 0 y actualizar FormControl
+setDefaultSelection(selectId: string) {
+  setTimeout(() => {
+      const selectElement = document.getElementById(selectId) as HTMLSelectElement;
+      if (selectElement && selectElement.options.length > 0) {
+          selectElement.selectedIndex = 0; // Selecciona el primer valor automáticamente
+
+          // Si el select está vinculado a un FormControl, actualizamos su valor
+          const selectedValue = selectElement.options[0].value;
+          this.repuestosForm.controls[selectId]?.setValue(selectedValue);
+      } else {
+          // Si aún no tiene opciones, intenta nuevamente después de un breve retraso
+          setTimeout(() => this.setDefaultSelection(selectId), 100);
+      }
+  }, 100);
+}
+
+
+
 
 }
