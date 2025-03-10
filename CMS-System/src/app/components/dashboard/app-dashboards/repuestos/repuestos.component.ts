@@ -493,36 +493,39 @@ export class RepuestosComponent implements OnInit, OnChanges {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  catchData( data:any ) {
+  catchData(data: any) {
+
+    this.repuestosForm.controls['marcaRep'].setValue(data.idMarcaRepuesto);
     this.repuestosForm.controls['codBode'].setValue(data.idBodega);
     this.repuestosForm.controls['codBode'].disable();
     this.codrep = data.codrep;
     this.repuestosForm.controls['nombreRep'].setValue(data.nombreRep);
     this.repuestosForm.controls['codigo'].setValue(data.codigo);
     this.repuestosForm.controls['descripcion'].setValue(data.descripcion);
-    this.repuestosForm.controls['marcaRep'].setValue(data.marcaRepuesto);
     this.repuestosForm.controls['codtipomaquina'].setValue(data.codTipoMaquina.toString().trim());
     this.getGrupos();
     this.repuestosForm.controls['marca'].setValue(data.marca.toString().trim());
     this.repuestosForm.controls['codmarca'].setValue(data.marca.toString().trim());
     this.repuestosForm.controls['codmodelo'].setValue(data.modelo.toString().trim());
-    this.getSubgrupos()
+    this.getSubgrupos();
     this.repuestosForm.controls['activo'].setValue(data.activo);
     this.repuestosForm.controls['cantRep'].setValue(data.cantRep);
+    
     this._action_butto = 'Actualizar';
     this._cancel_button = true;
 
-        // ✅ Llamamos a calculoPVP() para actualizar los valores calculados
-        this.calculoPVP();
+    this.calculoPVP();
+    this.repuestosForm.controls['valorCompra'].setValue(data.valorCompra);
+    this.repuestosForm.controls['porcentajeVenta'].setValue(data.porcentajeVenta);
+    this.repuestosForm.controls['desccuentoAplicable'].setValue(data.desccuentoAplicable);
+}
 
-        this._action_butto = 'Actualizar';
-        this._cancel_button = true;
-  }
 
   limpiar() {
     this.repuestosForm.controls['nombreRep'].setValue('');
     this.repuestosForm.controls['codigo'].setValue('');
     this.repuestosForm.controls['descripcion'].setValue('');
+    this.repuestosForm.controls['marca'].setValue('');
     this.repuestosForm.controls['codmarca'].setValue(null);
     this.repuestosForm.controls['codmodelo'].setValue(null);
     this.repuestosForm.controls['codtipomaquina'].setValue(null);
@@ -531,14 +534,18 @@ export class RepuestosComponent implements OnInit, OnChanges {
     this.repuestosForm.controls['cantRep'].setValue(0);
     this._action_butto = 'Crear';
     this.repuestosForm.controls['codBode'].enable();
+    this.repuestosForm.controls['codBode'].setValue('');
     this.sgrupolista = [];
     this._cancel_button = false;
+    this.calculoPVP();
+    this.repuestosForm.controls['valorCompra'].setValue(0);
+    this.repuestosForm.controls['porcentajeVenta'].setValue(0);
+    this.repuestosForm.controls['desccuentoAplicable'].setValue(0);
+    this.repuestosForm.controls['pvp'].setValue(0);
   }
 
  /** OBTENER MARCA */
  getGrupos() {
-  console.log("📌 Se ejecutó getGrupos()");
-
   this.grupolista = [];
   this.sgrupolista = [];
   this.repuestosForm.controls['marca'].setValue('');
@@ -548,24 +555,20 @@ export class RepuestosComponent implements OnInit, OnChanges {
 
   this.codtipomaquinaValue = this.repuestosForm.controls['codtipomaquina'].value?.trim();
 
-  console.log("📌 Código de maquinaria seleccionado:", this.codtipomaquinaValue);
-
   this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
       next: (grupo) => {
-          console.log("📌 Respuesta del servidor:", grupo);
           this.grupolista = grupo;
 
           // 🔹 Si hay elementos en grupolista, selecciona el primero automáticamente
           if (this.grupolista.length > 0) {
               this.repuestosForm.controls['marca'].setValue(this.grupolista[0].codmarca);
           }
-
-          console.log("📌 Marcas en grupolista:", this.grupolista);
       },
       error: (err) => console.error("❌ Error en getDataMasterGrupo:", err),
-      complete: () => { console.log("✅ getGrupos() completado"); }
+      complete: () => {}
   });
 }
+
 
 onBodegaChange(event: Event) {
   const selectElement = event.target as HTMLSelectElement;
@@ -585,12 +588,8 @@ onBodegaChange(event: Event) {
   let grupo: any = this.codtipomaquinaValue;
   let subgrupo: any = this.repuestosForm.controls['marca'].value;
 
-  console.log("📌 getSubgrupos() ejecutado");
-  console.log("📌 Grupo:", grupo, "Subgrupo:", subgrupo);
-
   this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
       next: (sgrupo) => {
-          console.log("📌 Modelos recibidos:", sgrupo);
           this.sgrupolista = sgrupo;
 
           // 🔹 Si hay modelos en la lista, seleccionar el primero automáticamente
@@ -599,9 +598,10 @@ onBodegaChange(event: Event) {
           }
       },
       error: (err) => console.error("❌ Error en getDataMasterSubGrupo:", err),
-      complete: () => console.log("✅ getSubgrupos() completado"),
+      complete: () => {}
   });
 }
+
 
 
 obtenerCodigoModelo(event: Event) {
