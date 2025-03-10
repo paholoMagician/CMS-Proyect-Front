@@ -34,6 +34,7 @@ export class RepuestosComponent implements OnInit, OnChanges {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
   _show_spinner: boolean = false;
+  _show_form: boolean = false;
   @Input() modulo: any = [];
   bodegasLista: any = [];
 
@@ -542,6 +543,7 @@ export class RepuestosComponent implements OnInit, OnChanges {
     this.repuestosForm.controls['porcentajeVenta'].setValue(0);
     this.repuestosForm.controls['desccuentoAplicable'].setValue(0);
     this.repuestosForm.controls['pvp'].setValue(0);
+    this._show_form = false;
   }
 
  /** OBTENER MARCA */

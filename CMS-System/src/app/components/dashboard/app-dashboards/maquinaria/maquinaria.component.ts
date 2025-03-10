@@ -59,7 +59,9 @@ export class MaquinariaComponent implements OnInit {
   _action_butto:      string = 'Crear';
   _delete_show:       boolean = true;
   ccia:               any;
-  _show_spinner:      boolean = false; 
+  _show_spinner:      boolean = false;
+  _show_form:         boolean = false;
+ 
 
   sgrupolista: any = [];
   grupolista: any = [];
@@ -688,6 +690,7 @@ export class MaquinariaComponent implements OnInit {
     this.sgrupolista = [];
     this.grupolista = [];
     this.maquinariaForm.controls['estado'].setValue(false);
+    this._show_form= false;
   }
 
   validacionMenorContador() {

@@ -29,7 +29,8 @@ const Toast = Swal.mixin({
 })
 export class AgenciasComponent implements OnInit {
   ccia:               any;
-  _show_spinner:      boolean = false; 
+  _show_spinner:      boolean = false;
+  _show_form:         boolean = false; 
   obsoleto:boolean = false;
   _show_form_agency: boolean = false;
 
@@ -131,6 +132,7 @@ export class AgenciasComponent implements OnInit {
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;
+    this._show_form = false;
     this.validationCliente();
 
   }

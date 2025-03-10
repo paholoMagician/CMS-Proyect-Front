@@ -4,7 +4,7 @@
     </div>
 </div>
 
-<div class="mini-module-workarea w-100 p-4 m-1">
+<div class="mini-module-workarea w-100 p-4 m-1" *ngIf="_show_form">
     <div class="d-flex flex-column" >
     <div class="text-secondary d-flex align-item-center m-0 p-0">
          <mat-icon>{{modulo.icono}}</mat-icon>
@@ -267,11 +267,19 @@
                 </strong>
             </small>
             <div class="mb-2 d-flex">
-              <input class=" w-100 form-control rounded-pill"
-                     fxFlex="auto" type="text"
-                     (keyup)="applyFilter($event)" 
-                     #input placeholder="Búsqueda de equipos registradas....">
-            </div>        
+                <input class="w-100 form-control rounded-pill"
+                       fxFlex="auto" type="text"
+                       (keyup)="applyFilter($event)" 
+                       #input placeholder="Búsqueda de equipos registradas....">
+              
+                <button class="btn btn-warning rounded-circle ms-2 d-flex align-items-center justify-content-center"
+                        style="width: 40px; height: 40px;"
+                        (click)="_show_form = !_show_form; _cancel_button=true">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
+              
+                   
     
         </section>
         <table mat-table [dataSource]="dataSource" class="mtTable shadow " matSort class="w-100" >

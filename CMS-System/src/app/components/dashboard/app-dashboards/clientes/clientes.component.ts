@@ -41,6 +41,7 @@ export class ClientesComponent implements OnInit {
   _action_butto:      string = 'Crear';
   tipoEmpresaLista:   any = [];
   _show_spinner:      boolean = false;
+  _show_form:         boolean = false;
   columnHead:         any = [ 'edit', 'N.Agen.', 'imagen', 'nombre', 'R.U.C.', 'replegal', 'descripcion', 'fechas' ];
   public dataSource!: MatTableDataSource<any>;
 
@@ -110,6 +111,7 @@ export class ClientesComponent implements OnInit {
     this.clienteForm.controls['nombrePago'].setValue('');
     this.clienteForm.controls['extension1'].setValue('');
     this.clienteForm.controls['extension2'].setValue('');
+    this._show_form = false;
     this._action_butto      = 'Crear';
     this._icon_button       = 'add';
     this._cancel_button     = false;

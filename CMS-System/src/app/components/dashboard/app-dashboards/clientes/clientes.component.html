@@ -4,7 +4,7 @@
     </div>
 </div>
 
-<div class="module-workarea p-4 ">
+<div class="module-workarea p-4 " *ngIf="_show_form">
     <div class="d-flex justify-content-between">
         <div class="text-secondary d-flex align-item-center m-0 p-0">
              <mat-icon>{{modulo.icono}}</mat-icon>
@@ -197,6 +197,11 @@
                      fxFlex="auto" type="text"
                      (keyup)="applyFilter($event)" 
                      #input placeholder="Búsqueda de clientes registrados....">
+                     <button class="btn btn-warning rounded-circle ms-2 d-flex align-items-center justify-content-center"
+                     style="width: 40px; height: 40px;"
+                     (click)="_show_form = !_show_form; _cancel_button=true">
+               <mat-icon>add</mat-icon>
+             </button>
             </div>
     
         </section>

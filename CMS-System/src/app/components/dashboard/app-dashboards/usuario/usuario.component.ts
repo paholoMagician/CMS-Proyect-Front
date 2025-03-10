@@ -44,6 +44,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
   public cargoLista:            any = [];
   _action_butto = 'Crear';
   _show_spinner: boolean = false;
+  _show_form: boolean = false;
   _icon_button: string = 'add';
   _cancel_button: boolean = false;
 
@@ -526,6 +527,7 @@ export class UsuarioComponent implements OnInit, AfterViewInit, OnChanges {
     this.userForm.controls['CodLicencia'].setValue('');
     this.userForm.controls['Telf'].setValue('');
     this.userForm.controls['Direccion'].setValue('');
+    this._show_form = false;
     this._action_butto = 'Crear';
     this._icon_button = 'add';
     this._cancel_button = false;

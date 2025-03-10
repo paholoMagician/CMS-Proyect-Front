@@ -4,7 +4,7 @@
     </div>
 </div>
 <div class="d-flex" >
-<div class="mini-module-workarea w-75 p-4 m-1">
+<div class="mini-module-workarea w-75 p-4 m-1" *ngIf="_show_form">
     <div class="d-flex justify-content-between" >
     <div class="text-secondary d-flex align-item-center m-0 p-0">
          <mat-icon>{{modulo.icono}}</mat-icon>
@@ -21,7 +21,7 @@
                 <span class="text-primary"><small class="text-secondary">Agencia:</small>&nbsp; {{this.agenciaAsignada}}</span>
             </div>
         </div>
-        <form [formGroup]="agenciaForm" class="mb-2 mt-2 d-flex aligbn-items-center " *ngIf="_showcliente">
+        <form [formGroup]="agenciaForm" class="mb-2 mt-2 d-flex aligbn-items-center " *ngIf="_showcliente" >
         <div  class="d-flex m-1 flex-column animate__animated animate__fadeIn  " style="z-index: auto;" >
             <label for="codcliente"> Seleccionar el cliente </label>
             <p-autoComplete formControlName="codcliente"
@@ -216,7 +216,7 @@
         </form>
     </div>
 </div>
-<div id="foto-area" class="mini-module-workarea w-25 p-4 m-1 d-flex justify-content-center flex-column align-items-center ">
+<div id="foto-area" class="mini-module-workarea w-25 p-4 m-1 d-flex justify-content-center flex-column align-items-center " *ngIf="_show_form">
 
     <div class="text-secondary d-flex align-item-center m-0 p-0">
         <mat-icon>add_a_photo</mat-icon>
@@ -254,6 +254,11 @@
                      fxFlex="auto" type="text"
                      (keyup)="applyFilter($event)" 
                      #input placeholder="Búsqueda de máquinas registradas....">
+                     <button class="btn btn-warning rounded-circle ms-2 d-flex align-items-center justify-content-center"
+                     style="width: 40px; height: 40px;"
+                     (click)="_show_form = !_show_form; _cancel_button= true">
+               <mat-icon>add</mat-icon>
+             </button>
             </div>        
     
         </section>
