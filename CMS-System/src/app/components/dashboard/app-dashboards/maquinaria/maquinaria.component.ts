@@ -717,6 +717,7 @@ export class MaquinariaComponent implements OnInit {
       else if (!this.maquinariaForm.controls['estado'].value) this.estadoMaquina = 0
 
       this._show_spinner = true;
+      this._show_form= true;
       this.modelMaquinaria = {
         "codmaquina":       this.codmaquinaria,
         "codtipomaquina":   this.maquinariaForm.controls['codtipomaquina'].value.trim(),

@@ -483,14 +483,14 @@
                     <strong class="spantext">{{modelUnitCronoDetalle.nombreMantenimiento}}</strong>
                 </span>
                 <br>
-                <span class="d-flex justify-content-between">
+                <span class="d-flex flex-column">
                     <small class="text-secondary">
                         Email mantenimiento:
                     </small>
                     <strong class="spantext">
-                        {{modelUnitCronoDetalle.correomantenimiento}}
+                        {{ modelUnitCronoDetalle.correomantenimiento }}
                     </strong>
-                </span>
+                </span>                
                 <br>
                 <span class="d-flex justify-content-between">
                     <small class="text-secondary">Telf. Mantenimiento:</small>
@@ -502,9 +502,9 @@
                     <strong class="spantext">{{modelUnitCronoDetalle.nombrePago}} </strong>
                 </span>
                 <br>
-                <span class="d-flex justify-content-between">
+                <span class="d-flex flex-column">
                     <small class="text-secondary">Email pago:</small>
-                    <strong class="spantext">{{modelUnitCronoDetalle.correopago}} </strong>
+                    <strong class="spantext">{{ modelUnitCronoDetalle.correopago }}</strong>
                 </span>
                 <br>
                 <span class="d-flex justify-content-between">
@@ -680,6 +680,7 @@
                 </section>
             </div>
             <hr>
+            {{listaMantenimientoMaquinaGhost}}
             <div class="table-responsive-lg ">                    
                 <table class="table table-primary align-middle">
                     <thead class="table bg-warning text-dark">

@@ -273,7 +273,7 @@
             </th>
             
             <td mat-cell *matCellDef="let row">
-              <span class="edit" (click)="catchData(row)" *ngIf="_edit_show">
+              <span class="edit" (click)="catchData(row); _show_form=true" *ngIf="_edit_show;">
                 <mat-icon>
                   edit
                 </mat-icon>

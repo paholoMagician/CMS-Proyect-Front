@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import Swal from 'sweetalert2'
+import { ChangeDetectorRef } from '@angular/core';
 
 
 import { CronogramaService } from '../cronograma/services/cronograma.service';
@@ -129,7 +130,8 @@ export class CrononewdisComponent implements OnInit {
                private crono: CronogramaService,
                private DataMaster: SharedService,
                private us: UserService,
-               private mantenimineto: MantenimientoCronogramaService ) { }
+               private mantenimineto: MantenimientoCronogramaService,
+               private cdRef: ChangeDetectorRef ) { }
 
 
   ngOnInit(): void {
@@ -209,8 +211,8 @@ export class CrononewdisComponent implements OnInit {
 
   
   addMaquinaManetenimiento(event: any, codmachine: any) {
-
     const xuser: any = sessionStorage.getItem('UserCod');
+  
     if (event.target.checked) {
       
         const array = {
@@ -219,8 +221,8 @@ export class CrononewdisComponent implements OnInit {
             feciniciomante: null,
             feccrea:        new Date(),
             fecfinmant:     null,
-            horainit:       0,
-            horafin:        0,
+            horainit:       '00:00:00',
+            horafin:        '00:00:00',
             usercrea:       xuser,
             codprod:        codmachine,
             estado:         1,
@@ -235,12 +237,10 @@ export class CrononewdisComponent implements OnInit {
             element.fotoperfil = this.tecnicoObtenido.imagenTecnico;
             element.show = true;
           }
-        })
-
-        // console.warn(this.listaManetnimientoMaquinas);
-        
+        });
+  
     } else {
-
+  
         this.listaManetnimientoMaquinas = this.listaManetnimientoMaquinas.filter((item: any) => item.codprod !== codmachine);
         this.listaMaquinariaAsignadaGhost.filter((element:any) => {
           if( codmachine == element.codmaquina) {
@@ -248,49 +248,81 @@ export class CrononewdisComponent implements OnInit {
             element.fotoperfil = '';
             element.show = false;
           }
-        })
-
+        });
+  
     }
-
+  
     this.manteniminetocount = this.listaManetnimientoMaquinas.length;
-
   }
+  
+  
 
 
-  getTecnico(tecnico:any) {
+  getTecnico(tecnico: any) {
+    console.log('🔍 Este es el técnico recibido en getTecnico:', tecnico); // ✅ Muestra el técnico recibido
     this.tecnicoObtenido = tecnico;
+
     setTimeout(() => {
-      this.encontrarMaquinasFaltantes();
+        console.log('🛠 Técnico asignado en this.tecnicoObtenido:', this.tecnicoObtenido); // ✅ Verifica que se haya guardado correctamente
+        this.encontrarMaquinasFaltantes();
     }, 500);
-  }
+}
 
-  guardarMantenimiento() {
 
-    this.listaManetnimientoMaquinas.filter((element:any) => {
-    this.mantenimineto.guardarMantenimiento(element).subscribe ({
-          next:(x) => {
-            Toast.fire({ icon: 'success', title: 'Asignación ha sido completada' })
-            console.log(x);
-          }, error: (e) => {
-            Toast.fire({ icon: 'error', title: 'No se ha podido completar la asignación' })
-            console.log(e);
-          }, complete: () => {
-            this.obtenerMantenimiento();
-            this.manteniminetocount = 0;
-            this.selectAll = false;
-            setTimeout(() => {
-              this.encontrarMaquinasFaltantes();
-            }, 500);
+guardarMantenimiento() {
+  console.log("⚠️ Se está ejecutando guardarMantenimiento()");
+
+  console.log("🔄 Iniciando guardado de mantenimiento...");
+
+  // 1️⃣ Verificar si ya existe antes de guardarlo
+console.log("🔄 Lista antes de eliminar duplicados:", this.listaManetnimientoMaquinas);
+
+this.listaManetnimientoMaquinas = this.listaManetnimientoMaquinas.filter(
+    (maquina: any, index: number, self: any[]) =>
+        index === self.findIndex((m: any) => m.codprod === maquina.codprod)
+);
+
+console.log("✅ Lista después de eliminar duplicados:", this.listaManetnimientoMaquinas);
+
+
+
+if (this.listaManetnimientoMaquinas.length === 0) {
+  console.warn("⚠️ No hay nuevas máquinas para guardar.");
+  return;
+}
+
+  // 2️⃣ Guardar solo las máquinas nuevas
+  this.listaManetnimientoMaquinas.forEach((element: any) => {
+      this.mantenimineto.guardarMantenimiento(element).subscribe({
+          next: (x) => {
+              console.log("✅ Máquina guardada:", x);
+              Toast.fire({ icon: 'success', title: 'Asignación ha sido completada' });
+          },
+          error: (e) => {
+              console.error("❌ Error al guardar:", e);
+              Toast.fire({ icon: 'error', title: 'No se ha podido completar la asignación' });
+          },
+          complete: () => {
+              this.obtenerMantenimiento();
+              this.manteniminetocount = 0;
+              this.selectAll = false;
+              setTimeout(() => {
+                  this.encontrarMaquinasFaltantes();
+              }, 500);
           }
-        })
-      }
-    )
+      });
+  });
 
-    setTimeout(() => {
-      this.listaManetnimientoMaquinas = [];
-    }, 1000);
+  setTimeout(() => {
+    this.listaManetnimientoMaquinas = [];
+    console.log("🗑 Lista vaciada después de guardar:", this.listaManetnimientoMaquinas);
+}, 1000);
+}
 
-  }
+
+
+
+
 
   obtenerCodMachine(codmachine:any):string {
     this.codMachine = codmachine;
@@ -824,31 +856,100 @@ export class CrononewdisComponent implements OnInit {
   }
 
 
-  obtenerCronoUnit(codcrono:string, codagencia:string, mes:any, dia:any) {
-    this.listaManetnimientoMaquinas = []
+  obtenerCronoUnit(codcrono: string, codagencia: string, mes: any, dia: any) {
+    this.listaManetnimientoMaquinas = [];
     this.codCrono = codcrono;
     this.agenciaChoiceManten = codagencia;
+    console.log("🔄 Antes de abrir vista - Estado actual de listaManetnimientoMaquinas:", this.listaManetnimientoMaquinas);
+
+    console.log('listaaaaaaaaaaaaaaaaaaaaaaa',this.listaMantenimientoMaquinaGhost);
+    
     this.crono.obtenerDetalleCronoUnit(2, codagencia, mes, dia).subscribe({
-      next: (x) => {
-        this.listadetalleCronoUnit = x;
-        this.resultadosFiltrados = x;
-        console.warn('Crono Unit obtenido');
-        console.warn(this.listadetalleCronoUnit);
-        this.modelUnitCronoDetalle = this.listadetalleCronoUnit[0];
-      }, complete: () => {        
-        this.obtenerMaquinaAsignada(codagencia)
-        this.obtenerMantenimiento();
-        setTimeout(() => {
-          this.encontrarMaquinasFaltantes();
-        }, 1000);
-        if ( this.modelUnitCronoDetalle.length > 0 ) {
-          this.modelUnitCronoDetalle.filter( (x:any) => {
-            if (x.imagen == null || x.imagen == undefined ) x.imagen = '';
-          })
+        next: (x) => {
+            this.listadetalleCronoUnit = x;
+            this.resultadosFiltrados = x;
+            console.warn('✅ Crono Unit obtenido:', this.listadetalleCronoUnit);
+            this.modelUnitCronoDetalle = this.listadetalleCronoUnit[0];
+        },
+        complete: () => {
+            //this.obtenerMaquinaAsignada(codagencia);
+            //this.obtenerMantenimiento();
+            console.log("🔍 Después de obtenerMantenimiento - listaManetnimientoMaquinas:", this.listaManetnimientoMaquinas);
+
+
+            setTimeout(() => {
+                this.encontrarMaquinasFaltantes();
+
+                // ✅ Verificar si solo hay una máquina disponible
+                if (this.listaMaquinariaAsignada.length === 1) {
+                    console.log("✅ Solo hay una máquina, se asignará automáticamente.");
+
+                    // 🔹 Obtener la única máquina
+                    const maquinaUnica = this.listaMaquinariaAsignada[0];
+
+                    // 🔹 Verificar si la máquina ya está asignada en `listaManetnimientoMaquinas`
+                    const maquinaYaAsignada = this.listaManetnimientoMaquinas.find(
+                        (m: any) => m.codprod === maquinaUnica.codmaquina
+                    );
+
+                    if (maquinaYaAsignada) {
+                        console.warn("⚠️ La máquina ya está asignada, no se volverá a guardar.");
+                        return; // 🚫 Salimos de la función y no seguimos con la asignación
+                    }
+
+                    // 🔹 Buscar técnico ASOCIADO antes de asignar la máquina
+                    console.log("🔍 Buscando técnico asignado...");
+                    const tecnicoAsociado = this.resultadosFiltrados[0];
+
+                    if (tecnicoAsociado) {
+                        this.getTecnico(tecnicoAsociado);
+                    }
+
+                    // ⏳ Esperar 500ms para asegurarnos de que `this.tecnicoObtenido` tiene datos antes de asignar
+                    setTimeout(() => {
+                        console.log("🛠 Técnico obtenido antes de asignar máquina:", this.tecnicoObtenido);
+
+                        if (!this.tecnicoObtenido || Object.keys(this.tecnicoObtenido).length === 0) {
+                            console.warn("⚠️ No hay técnico asignado, pero se asignará la máquina de todas formas.");
+                        }
+
+                        // 🔹 Marcar la máquina en la lista para que la UI la seleccione
+                        maquinaUnica.selected = true;
+
+                        // 🔹 Asignar la máquina automáticamente
+                        this.addMaquinaManetenimiento({ target: { checked: true } }, maquinaUnica.codmaquina);
+
+                        // 🔹 Forzar actualización en la UI
+                        setTimeout(() => this.cdRef.detectChanges(), 0);
+
+                        // 🔹 ✅ Guardar mantenimiento automáticamente después de la asignación
+                        setTimeout(() => {
+                            console.log("💾 Guardando mantenimiento automáticamente...");
+                            this.guardarMantenimiento();
+                        }, 1000);
+                    }, 500);
+                }
+            }, 1000);
+
+            if (this.modelUnitCronoDetalle.length > 0) {
+                this.modelUnitCronoDetalle.forEach((x: any) => {
+                    if (x.imagen == null || x.imagen == undefined) x.imagen = '';
+                });
+            }
         }
-      }
-    })
-  }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+  
 
   listaMaquinariaAsignada:any = [];
   listaMaquinariaAsignadaGhost:any = [];
@@ -1145,7 +1246,7 @@ export class CrononewdisComponent implements OnInit {
             }, error: (e) => {
               console.error(e);
             },complete: () => {
-              this.obtenerCronoUnit(codigoCrono,  this.modelCrono.codagencia, this.mes, Number(diames.numero));
+              //this.obtenerCronoUnit(codigoCrono,  this.modelCrono.codagencia, this.mes, Number(diames.numero));
               this.selectAllMachine();
               // this.obtenerMaquinaAsignada(this.modelCrono.codagencia);
             }
