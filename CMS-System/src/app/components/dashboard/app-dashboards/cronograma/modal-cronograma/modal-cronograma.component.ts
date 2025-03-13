@@ -33,7 +33,7 @@ export class ModalCronogramaComponent implements OnInit {
   ngOnInit(): void {
     this.ccia = sessionStorage.getItem('codcia');
     this.obtenerAgencias();
-    console.log(this.data);
+    // console.log(this.data);
   }
 
   applyFilter(event: Event) {
@@ -50,7 +50,7 @@ export class ModalCronogramaComponent implements OnInit {
     this.client.obtenerAgencias(this.ccia, this.data.codcli, 'void', ).subscribe({
       next: (agencias) => {
         this.listAgencias = agencias;
-        console.log(this.listAgencias);
+        // console.log(this.listAgencias);
       },      
       error: (e) => {
         console.error(e);

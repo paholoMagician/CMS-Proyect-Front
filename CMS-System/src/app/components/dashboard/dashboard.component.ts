@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
       nombre: xmodulo
     }
 
-    console.log(arrmodulo);
+    // console.log(arrmodulo);
     this.recibirModulo(arrmodulo);
     
   }

@@ -578,7 +578,7 @@ onBodegaChange(event: Event) {
 
   if (!selectedValue) return; // Si es null, no hace nada
 
-  console.log("Bodega seleccionada:", selectedValue);
+  // console.log("Bodega seleccionada:", selectedValue);
   this.repuestosForm.controls['codBode'].setValue(selectedValue);
 }
 
@@ -612,7 +612,7 @@ obtenerCodigoModelo(event: Event) {
 
   if (!selectedValue) return; // Evita errores si es null
 
-  console.log("Modelo seleccionado:", selectedValue);
+  // console.log("Modelo seleccionado:", selectedValue);
   this.repuestosForm.controls['codmodelo'].setValue(selectedValue);
 }
 

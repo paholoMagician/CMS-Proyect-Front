@@ -44,7 +44,7 @@ export class HttpInterceptorServices implements HttpInterceptor {
           // if( url != 'https://localhost:7130/api/AuditApp/GuardarConsumo' ) {
           //     this.guardarConsumo(this.modelConsumo).subscribe({
           //     next: (x:any) => {
-          //       console.log('Consumo guardado');
+          //       // console.log('Consumo guardado');
           //     },
           //     error: (e:Error) => {
           //       console.error(e)
@@ -52,7 +52,7 @@ export class HttpInterceptorServices implements HttpInterceptor {
           //   })
           // }
 
-          // console.log(`Servicio ${method} ${url} consumió ${this.bytesToMB(responseSize)} MB en ${duration} ms del usuario (email): ${xemail} - coduser: ${coduser}  `);
+          // // console.log(`Servicio ${method} ${url} consumió ${this.bytesToMB(responseSize)} MB en ${duration} ms del usuario (email): ${xemail} - coduser: ${coduser}  `);
 
         }
       })

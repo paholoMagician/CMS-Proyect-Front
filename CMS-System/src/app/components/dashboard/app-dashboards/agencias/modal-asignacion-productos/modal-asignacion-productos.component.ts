@@ -128,15 +128,15 @@ export class ModalAsignacionProductosComponent implements OnInit {
         this.listaMaquinariaAsignada = maquinaAsignada;
         this.listaMaquinariaAsignadaGhost = maquinaAsignada;
         console.warn('NO ASIGNADOS');
-        console.log(this.listaMaquinariaAsignada)
+        // console.log(this.listaMaquinariaAsignada)
       }
     })
   }
 
   eliminarMaqAsign(codProd:string) {
 
-    console.log(codProd)
-    console.log(this.ccia)
+    // console.log(codProd)
+    // console.log(this.ccia)
 
     this.cli.eliminarMaquinaAgenciaAsignada( codProd, this.ccia ).subscribe({
       next:() => {

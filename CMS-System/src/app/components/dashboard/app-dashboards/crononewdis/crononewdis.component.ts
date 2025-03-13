@@ -161,7 +161,7 @@ export class CrononewdisComponent implements OnInit {
         switch(cod) {
           case 'ZNF':
             this.listaZonificacion = data;
-            console.log(this.listaZonificacion);
+            // console.log(this.listaZonificacion);
             break;
         }
       }, complete: () => {
@@ -217,7 +217,7 @@ export class CrononewdisComponent implements OnInit {
       
         const array = {
             codcrono:       this.codCrono,
-            codtecnico:     this.tecnicoObtenido.codusertecnic,
+            codtecnico:     this.tecnicoObtenido?.codusertecnic || 'SIN_TECNICO',
             feciniciomante: null,
             feccrea:        new Date(),
             fecfinmant:     null,
@@ -259,65 +259,74 @@ export class CrononewdisComponent implements OnInit {
 
 
   getTecnico(tecnico: any) {
-    console.log('🔍 Este es el técnico recibido en getTecnico:', tecnico); // ✅ Muestra el técnico recibido
+    // console.log('🔍 Este es el técnico recibido en getTecnico:', tecnico); // ✅ Muestra el técnico recibido
     this.tecnicoObtenido = tecnico;
 
     setTimeout(() => {
-        console.log('🛠 Técnico asignado en this.tecnicoObtenido:', this.tecnicoObtenido); // ✅ Verifica que se haya guardado correctamente
+        // console.log('🛠 Técnico asignado en this.tecnicoObtenido:', this.tecnicoObtenido); // ✅ Verifica que se haya guardado correctamente
         this.encontrarMaquinasFaltantes();
     }, 500);
 }
 
 
 guardarMantenimiento() {
-  console.log("⚠️ Se está ejecutando guardarMantenimiento()");
-
   console.log("🔄 Iniciando guardado de mantenimiento...");
 
-  // 1️⃣ Verificar si ya existe antes de guardarlo
-console.log("🔄 Lista antes de eliminar duplicados:", this.listaManetnimientoMaquinas);
-
-this.listaManetnimientoMaquinas = this.listaManetnimientoMaquinas.filter(
+  // 🔍 Filtrar máquinas duplicadas antes de guardar
+  this.listaManetnimientoMaquinas = this.listaManetnimientoMaquinas.filter(
     (maquina: any, index: number, self: any[]) =>
-        index === self.findIndex((m: any) => m.codprod === maquina.codprod)
-);
+      index === self.findIndex((m: any) => m.codprod === maquina.codprod)
+  );
 
-console.log("✅ Lista después de eliminar duplicados:", this.listaManetnimientoMaquinas);
+  console.log("✅ Lista después de eliminar duplicados:", this.listaManetnimientoMaquinas);
 
+  // ⚠️ Verificar si ya se han guardado antes
+  if (this.listaManetnimientoMaquinas.length === 0) {
+    console.warn("⚠️ No hay nuevas máquinas para guardar.");
+    return;
+  }
 
-
-if (this.listaManetnimientoMaquinas.length === 0) {
-  console.warn("⚠️ No hay nuevas máquinas para guardar.");
-  return;
-}
-
-  // 2️⃣ Guardar solo las máquinas nuevas
+  // Guardar solo las máquinas nuevas
   this.listaManetnimientoMaquinas.forEach((element: any) => {
-      this.mantenimineto.guardarMantenimiento(element).subscribe({
-          next: (x) => {
-              console.log("✅ Máquina guardada:", x);
-              Toast.fire({ icon: 'success', title: 'Asignación ha sido completada' });
-          },
-          error: (e) => {
-              console.error("❌ Error al guardar:", e);
-              Toast.fire({ icon: 'error', title: 'No se ha podido completar la asignación' });
-          },
-          complete: () => {
-              this.obtenerMantenimiento();
-              this.manteniminetocount = 0;
-              this.selectAll = false;
-              setTimeout(() => {
-                  this.encontrarMaquinasFaltantes();
-              }, 500);
-          }
-      });
+    const maquinaYaGuardada = this.listaMantenimientoMaquinaGhost.some(
+      (m: any) => m.codprod === element.codprod
+    );
+
+    if (maquinaYaGuardada) {
+      console.warn(`⚠️ La máquina ${element.codprod} ya ha sido guardada previamente. Se omite.`);
+      return;
+    }
+
+    this.mantenimineto.guardarMantenimiento(element).subscribe({
+      next: (x) => {
+        console.log("✅ Máquina guardada:", x);
+        Toast.fire({ icon: 'success', title: 'Asignación ha sido completada' });
+
+        // ✅ Agregar la máquina guardada a `listaMantenimientoMaquinaGhost` para que no se vuelva a guardar
+        this.listaMantenimientoMaquinaGhost.push(element);
+      },
+      error: (e) => {
+        console.error("❌ Error al guardar:", e);
+        Toast.fire({ icon: 'error', title: 'No se ha podido completar la asignación' });
+      },
+      complete: () => {
+        this.obtenerMantenimiento();
+        this.manteniminetocount = 0;
+        this.selectAll = false;
+        setTimeout(() => {
+          this.encontrarMaquinasFaltantes();
+        }, 500);
+      },
+    });
   });
 
+  // 🔥 Ya NO limpiamos `this.listaMantenimientoMaquinaGhost`, para evitar perder las máquinas guardadas
   setTimeout(() => {
     this.listaManetnimientoMaquinas = [];
     console.log("🗑 Lista vaciada después de guardar:", this.listaManetnimientoMaquinas);
-}, 1000);
+  }, 1000);
 }
+
 
 
 
@@ -548,7 +557,7 @@ if (this.listaManetnimientoMaquinas.length === 0) {
   filtroTecnico:any;
   fitrarTecnicos() {
     
-    console.log(this.filtroTecnico)
+    // console.log(this.filtroTecnico)
     this.resTecnicosFiltrados = this.lisTecnicos.filter( (item:any) => 
     item.nombre.toLowerCase()
                .includes( this.filtroTecnico.toLowerCase() ))
@@ -860,85 +869,87 @@ if (this.listaManetnimientoMaquinas.length === 0) {
     this.listaManetnimientoMaquinas = [];
     this.codCrono = codcrono;
     this.agenciaChoiceManten = codagencia;
-    console.log("🔄 Antes de abrir vista - Estado actual de listaManetnimientoMaquinas:", this.listaManetnimientoMaquinas);
-
-    console.log('listaaaaaaaaaaaaaaaaaaaaaaa',this.listaMantenimientoMaquinaGhost);
+  
+    console.log("🔄 Ejecutando obtenerCronoUnit...");
     
     this.crono.obtenerDetalleCronoUnit(2, codagencia, mes, dia).subscribe({
-        next: (x) => {
-            this.listadetalleCronoUnit = x;
-            this.resultadosFiltrados = x;
-            console.warn('✅ Crono Unit obtenido:', this.listadetalleCronoUnit);
-            this.modelUnitCronoDetalle = this.listadetalleCronoUnit[0];
-        },
-        complete: () => {
-            //this.obtenerMaquinaAsignada(codagencia);
-            //this.obtenerMantenimiento();
-            console.log("🔍 Después de obtenerMantenimiento - listaManetnimientoMaquinas:", this.listaManetnimientoMaquinas);
+      next: (x) => {
+        this.listadetalleCronoUnit = x;
+        this.resultadosFiltrados = x;
+        console.warn('✅ Crono Unit obtenido:', this.listadetalleCronoUnit);
+        this.modelUnitCronoDetalle = this.listadetalleCronoUnit[0];
+      },
+      complete: () => {
+        this.obtenerMaquinaAsignada(codagencia);
+        this.obtenerMantenimiento();
+  
+        setTimeout(() => {
+          this.encontrarMaquinasFaltantes();
+  
+          console.log("📌 Antes de filtrar - Maquinas asignadas:", this.listaMaquinariaAsignada);
+  
+          //✅ Filtrar máquinas que ya fueron guardadas antes de hacer cualquier otra operación
+// ✅ Filtrar máquinas que ya fueron guardadas antes de hacer cualquier otra operación
+this.listaMaquinariaAsignada = this.listaMaquinariaAsignada.filter(
+  (maquina: any) => !this.listaMantenimientoMaquinaGhost.some(
+    (m: any) => m.codmaquina === maquina.codmaquina  // 🛠 Corregimos la comparación
+  )
+);
 
-
-            setTimeout(() => {
-                this.encontrarMaquinasFaltantes();
-
-                // ✅ Verificar si solo hay una máquina disponible
-                if (this.listaMaquinariaAsignada.length === 1) {
-                    console.log("✅ Solo hay una máquina, se asignará automáticamente.");
-
-                    // 🔹 Obtener la única máquina
-                    const maquinaUnica = this.listaMaquinariaAsignada[0];
-
-                    // 🔹 Verificar si la máquina ya está asignada en `listaManetnimientoMaquinas`
-                    const maquinaYaAsignada = this.listaManetnimientoMaquinas.find(
-                        (m: any) => m.codprod === maquinaUnica.codmaquina
-                    );
-
-                    if (maquinaYaAsignada) {
-                        console.warn("⚠️ La máquina ya está asignada, no se volverá a guardar.");
-                        return; // 🚫 Salimos de la función y no seguimos con la asignación
-                    }
-
-                    // 🔹 Buscar técnico ASOCIADO antes de asignar la máquina
-                    console.log("🔍 Buscando técnico asignado...");
-                    const tecnicoAsociado = this.resultadosFiltrados[0];
-
-                    if (tecnicoAsociado) {
-                        this.getTecnico(tecnicoAsociado);
-                    }
-
-                    // ⏳ Esperar 500ms para asegurarnos de que `this.tecnicoObtenido` tiene datos antes de asignar
-                    setTimeout(() => {
-                        console.log("🛠 Técnico obtenido antes de asignar máquina:", this.tecnicoObtenido);
-
-                        if (!this.tecnicoObtenido || Object.keys(this.tecnicoObtenido).length === 0) {
-                            console.warn("⚠️ No hay técnico asignado, pero se asignará la máquina de todas formas.");
-                        }
-
-                        // 🔹 Marcar la máquina en la lista para que la UI la seleccione
-                        maquinaUnica.selected = true;
-
-                        // 🔹 Asignar la máquina automáticamente
-                        this.addMaquinaManetenimiento({ target: { checked: true } }, maquinaUnica.codmaquina);
-
-                        // 🔹 Forzar actualización en la UI
-                        setTimeout(() => this.cdRef.detectChanges(), 0);
-
-                        // 🔹 ✅ Guardar mantenimiento automáticamente después de la asignación
-                        setTimeout(() => {
-                            console.log("💾 Guardando mantenimiento automáticamente...");
-                            this.guardarMantenimiento();
-                        }, 1000);
-                    }, 500);
-                }
-            }, 1000);
-
-            if (this.modelUnitCronoDetalle.length > 0) {
-                this.modelUnitCronoDetalle.forEach((x: any) => {
-                    if (x.imagen == null || x.imagen == undefined) x.imagen = '';
-                });
+  
+          console.log("📌 Después de filtrar - Maquinas asignadas:", this.listaMaquinariaAsignada);
+  
+          // 🚨 Si no quedan máquinas después del filtrado, terminamos la función
+          if (this.listaMaquinariaAsignada.length === 0) {
+            console.warn("⚠️ Todas las máquinas ya están asignadas. No hay nuevas para procesar.");
+            return;
+          }
+  
+          // ✅ Verificar si solo hay una máquina disponible
+          if (this.listaMaquinariaAsignada.length === 1) {
+            const maquinaUnica = this.listaMaquinariaAsignada[0];
+  
+            console.log("🔍 Máquina única encontrada:", maquinaUnica);
+  
+            const tecnicoAsociado = this.resultadosFiltrados[0];
+            if (tecnicoAsociado) {
+              console.log("🛠 Técnico asociado encontrado:", tecnicoAsociado);
+              this.getTecnico(tecnicoAsociado);
             }
+  
+            setTimeout(() => {
+              if (!this.tecnicoObtenido || Object.keys(this.tecnicoObtenido).length === 0) {
+                console.warn("⚠️ No hay técnico asignado, pero se asignará la máquina de todas formas.");
+              }
+  
+              maquinaUnica.selected = true;
+              this.addMaquinaManetenimiento({ target: { checked: true } }, maquinaUnica.codmaquina);
+              setTimeout(() => this.cdRef.detectChanges(), 0);
+  
+              console.log("💾 Intentando guardar mantenimiento...");
+              setTimeout(() => {
+                if (this.listaMaquinariaAsignada.length === 0) {
+                  console.warn("🚫 No hay máquinas nuevas, NO se ejecutará guardarMantenimiento().");
+                  return;
+                }
+                console.log("✅ Procediendo a guardar mantenimiento...");
+                this.guardarMantenimiento();
+              }, 1000);
+            }, 500);
+          }
+        }, 1000);
+  
+        if (this.modelUnitCronoDetalle.length > 0) {
+          this.modelUnitCronoDetalle.forEach((x: any) => {
+            if (x.imagen == null || x.imagen == undefined) x.imagen = '';
+          });
         }
+      },
     });
-}
+  }
+  
+  
+  
 
 
 
@@ -958,7 +969,7 @@ if (this.listaManetnimientoMaquinas.length === 0) {
       next: (maquinaAsignada) => {
         this.listaMaquinariaAsignada = maquinaAsignada;
         console.warn('NO ASIGNADOS');
-        console.log(this.listaMaquinariaAsignada);
+        // console.log(this.listaMaquinariaAsignada);
       },
       error: (e) => {
         console.error(e);
@@ -996,10 +1007,10 @@ if (this.listaManetnimientoMaquinas.length === 0) {
     );
   
     this.resmaquinas = maquinasFaltantes;
-    console.log('Maquinas asignadas al mantenimiento:', this.resmaquinas);
+    // console.log('Maquinas asignadas al mantenimiento:', this.resmaquinas);
     
     this.listaMaquinariaAsignadaGhost = this.resmaquinas;
-    console.log('Maquinas Restantes para el mantenimiento:', this.listaMaquinariaAsignadaGhost);
+    // console.log('Maquinas Restantes para el mantenimiento:', this.listaMaquinariaAsignadaGhost);
 
   }
 
@@ -1018,7 +1029,7 @@ if (this.listaManetnimientoMaquinas.length === 0) {
     );
 
     this.maquinasEnviadasMantenimiento = codMaquinasRepetidas
-    console.log('Máquinas que se repiten:', this.maquinasEnviadasMantenimiento);
+    // console.log('Máquinas que se repiten:', this.maquinasEnviadasMantenimiento);
   }
   
   

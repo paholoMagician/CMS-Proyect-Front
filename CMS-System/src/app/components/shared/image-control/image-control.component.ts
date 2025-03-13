@@ -61,7 +61,7 @@ export class ImageControlComponent implements OnInit, OnChanges  {
             this.validateaccion(this.datalisten.accion);
           }
           else if ( this.datalisten.state == 2 ) {
-            console.log('Va a leer la imagen');
+            // console.log('Va a leer la imagen');
             this.codigoMaquina = this.datalisten.codmaquina;
             this.tipomaquina   = this.datalisten.modulo;
             this.obtenerImagen(this.codigoMaquina, this.tipomaquina );
@@ -153,7 +153,7 @@ export class ImageControlComponent implements OnInit, OnChanges  {
     this.guardarImgFileDB();
     this.fileserv.uploadFile(this.file, this.nameFile).subscribe({
       next: (x) => {
-        console.log(x);
+        // console.log(x);
       }, error: (e) => {
         console.error(e);
       }, complete: () => {
@@ -210,8 +210,8 @@ export class ImageControlComponent implements OnInit, OnChanges  {
           tipo:       this.datalisten.modulo
         }
 
-        // console.log('ESTE ES EL MODELO A GUARDAR');
-        console.log(this.imagenModel);
+        // // console.log('ESTE ES EL MODELO A GUARDAR');
+        // console.log(this.imagenModel);
 
         break;
       case 'Perfil':
@@ -229,7 +229,7 @@ export class ImageControlComponent implements OnInit, OnChanges  {
     
     this.fileserv.guardarImgFile( this.imagenModel ).subscribe({
       next: (x) => {
-        // console.log('LA IMAGEN GUARDADO')
+        // // console.log('LA IMAGEN GUARDADO')
         this._show_spinner = false;
         Swal.fire(
           'Imagen agregada',
@@ -266,8 +266,8 @@ export class ImageControlComponent implements OnInit, OnChanges  {
           imagen:     this._IMGE,
           tipo:       this.datalisten.modulo
         }
-        // console.log('ESTE ES EL MODELO A EDITAR');
-        console.log(this.imagenModel);
+        // // console.log('ESTE ES EL MODELO A EDITAR');
+        // console.log(this.imagenModel);
         break;
         case 'Perfil':
           // alert('Estas enviando una imagen de Perfil')
@@ -276,7 +276,7 @@ export class ImageControlComponent implements OnInit, OnChanges  {
             imagen:     this._IMGE,
             tipo:       this.datalisten.modulo
           }
-          console.log(this.imagenModel);
+          // console.log(this.imagenModel);
         break;
 
     }

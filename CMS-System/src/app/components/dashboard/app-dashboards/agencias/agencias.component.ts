@@ -152,11 +152,11 @@ export class AgenciasComponent implements OnInit {
     
     if( this.agenciaForm.controls['codcliente'].value == undefined || this.agenciaForm.controls['codcliente'].value == null || this.agenciaForm.controls['codcliente'].value == '' ) {
       this._show_form_agency = false;
-      // console.log(this._show_form_agency)
+      // // console.log(this._show_form_agency)
     }
     else {
       this._show_form_agency = true
-      // console.log(this._show_form_agency)
+      // // console.log(this._show_form_agency)
     }
 
   }
@@ -168,15 +168,15 @@ export class AgenciasComponent implements OnInit {
         switch(cod) {
           case 'TP1':
             this.tipoAgenciaLista = data;
-            // console.log(this.tipoAgenciaLista);
+            // // console.log(this.tipoAgenciaLista);
             break;
         case 'PRV00':
           this.provinciaLista = data;
-          // console.log(this.provinciaLista);
+          // // console.log(this.provinciaLista);
           break;
         case 'TF':
           this.frecuenciaList = data;
-          // console.log(this.frecuenciaList);
+          // // console.log(this.frecuenciaList);
           break;
         }
       }
@@ -185,8 +185,8 @@ export class AgenciasComponent implements OnInit {
 
   getCantones() {
 
-    // console.log('PROVINCIA CODIGO');
-    // console.log(this.agenciaForm.controls['codProv'].value);
+    // // console.log('PROVINCIA CODIGO');
+    // // console.log(this.agenciaForm.controls['codProv'].value);
 
     this.DataMaster.getDataMaster(this.agenciaForm.controls['codProv'].value).subscribe({
       next: (cantones) => {
@@ -240,9 +240,9 @@ export class AgenciasComponent implements OnInit {
       this.agenciaForm.controls['codProv']       .setValue(data.codProv.trim());
       this.getCantones();
       this.agenciaForm.controls['codCanton']    .setValue(data.codCanton.trim());
-      // console.log( 'CODIGO CANTON' )
-      // console.log( this.agenciaForm.controls['codCanton'].value )
-      // console.log( data.codCanton.trim() )
+      // // console.log( 'CODIGO CANTON' )
+      // // console.log( this.agenciaForm.controls['codCanton'].value )
+      // // console.log( data.codCanton.trim() )
       this.agenciaForm.controls['horarioatencion1'].setValue(h1[0]);
       this.agenciaForm.controls['horarioatencion2'].setValue(h1[1]);
       this.agenciaForm.controls['horarioatencion3'].setValue(h2[0]);
@@ -265,7 +265,7 @@ export class AgenciasComponent implements OnInit {
     this.client.obtenerClientes(this.ccia, 2).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
-        // console.log(this.listaClientes)
+        // // console.log(this.listaClientes)
       },
       error: (e) => {
         console.error(e);
@@ -438,8 +438,8 @@ export class AgenciasComponent implements OnInit {
       if (result.isConfirmed) {
         this._show_spinner = true;  
 
-        console.log(data.codcliente)
-        console.log(this.ccia)
+        // console.log(data.codcliente)
+        // console.log(this.ccia)
 
         this.client.eliminarAgencias( data.codagencia, this.ccia ).subscribe({
           next: (x) => {
@@ -474,7 +474,7 @@ export class AgenciasComponent implements OnInit {
     this.client.obtenerAgencias(this.ccia, 'void', 'void').subscribe({
       next: (agencias) => {
         this.listAgencias = agencias;
-        console.log(this.listAgencias);      
+        // console.log(this.listAgencias);      
       },
       
       error: (e) => {

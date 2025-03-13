@@ -23,7 +23,7 @@ export class HubService {
     this.hubConnection
       .start()
       .then(() => {
-        console.log('HUB CONNECTION');
+        // console.log('HUB CONNECTION');
       })
       .catch(err => console.error('ERROR WHILE CONNECTION', err));
   }

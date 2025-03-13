@@ -213,7 +213,7 @@ export class ModalProvicComponent implements OnInit {
     this.DataMaster.getDataMaster(data.codigo).subscribe({
       next: ( cantones ) => {
         this.listCantones = cantones;
-        console.log(this.listCantones);
+        // console.log(this.listCantones);
         if( this.listCantones.length > 0 ) this._dis_button = false;
       }, error: (e) => {
         console.error('ERROR AL TRAER LOS CANTONES');
@@ -234,7 +234,7 @@ export class ModalProvicComponent implements OnInit {
       return !this.listtecnicoProvincia.some((item2:any) => item2.nombreCanton.trim() === item1.nombre.trim());
     });
     
-    console.log(faltantes);
+    // console.log(faltantes);
     this.listCantones = faltantes;
     if (this.listCantones.length <= 0) this._dis_button = true;
 

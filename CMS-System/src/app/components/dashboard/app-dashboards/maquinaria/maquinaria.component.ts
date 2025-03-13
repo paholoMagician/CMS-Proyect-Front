@@ -126,7 +126,7 @@ export class MaquinariaComponent implements OnInit {
         this._show_spinner = false;
         if (Array.isArray(x)) {
           this.listaClientes = x;
-          console.log(this.listaClientes);
+          // console.log(this.listaClientes);
 
           this.listaClientes.filter((element:any)=>{            
               let arr = {
@@ -138,7 +138,7 @@ export class MaquinariaComponent implements OnInit {
         }
 
       }, complete: () => {
-        // console.log(this.agenciaForm.controls['codagencia'].value);
+        // // console.log(this.agenciaForm.controls['codagencia'].value);
         this.filteredAgencias = [];
         // this.filtered = [];
         this.agencia = [];
@@ -165,7 +165,7 @@ export class MaquinariaComponent implements OnInit {
 
     this.filteredcliente = filtered;
     console.warn(this.filteredcliente)
-    // console.log(this.filteredcliente);
+    // // console.log(this.filteredcliente);
   
   }
 
@@ -291,7 +291,7 @@ export class MaquinariaComponent implements OnInit {
   /** OBTENER MARCA */
   codtipomaquinaValue:any;
   getGrupos() {
-    console.log("📌 Se ejecutó getGrupos()");
+    // console.log("📌 Se ejecutó getGrupos()");
   
     this.grupolista = [];
     this.sgrupolista = [];
@@ -302,11 +302,11 @@ export class MaquinariaComponent implements OnInit {
   
     this.codtipomaquinaValue = this.maquinariaForm.controls['codtipomaquina'].value?.trim();
   
-    console.log("📌 Código de maquinaria seleccionado:", this.codtipomaquinaValue);
+    // console.log("📌 Código de maquinaria seleccionado:", this.codtipomaquinaValue);
   
     this.DataMaster.getDataMasterGrupo(this.codtipomaquinaValue).subscribe({
         next: (grupo) => {
-            console.log("📌 Respuesta del servidor:", grupo);
+            // console.log("📌 Respuesta del servidor:", grupo);
             this.grupolista = grupo;
   
             // 🔹 Si hay elementos en grupolista, selecciona el primero automáticamente
@@ -314,10 +314,12 @@ export class MaquinariaComponent implements OnInit {
                 this.maquinariaForm.controls['marca'].setValue(this.grupolista[0].codmarca);
             }
   
-            console.log("📌 Marcas en grupolista:", this.grupolista);
+            // console.log("📌 Marcas en grupolista:", this.grupolista);
         },
         error: (err) => console.error("❌ Error en getDataMasterGrupo:", err),
-        complete: () => { console.log("✅ getGrupos() completado"); }
+        complete: () => { 
+          // console.log("✅ getGrupos() completado"); 
+          }
     });
   }
 
@@ -328,12 +330,12 @@ export class MaquinariaComponent implements OnInit {
     let grupo: any = this.codtipomaquinaValue;
     let subgrupo: any = this.maquinariaForm.controls['marca'].value;
   
-    console.log("📌 getSubgrupos() ejecutado");
-    console.log("📌 Grupo:", grupo, "Subgrupo:", subgrupo);
+    // console.log("📌 getSubgrupos() ejecutado");
+    // console.log("📌 Grupo:", grupo, "Subgrupo:", subgrupo);
   
     this.DataMaster.getDataMasterSubGrupo(grupo.trim(), subgrupo.trim()).subscribe({
         next: (sgrupo) => {
-            console.log("📌 Modelos recibidos:", sgrupo);
+            // console.log("📌 Modelos recibidos:", sgrupo);
             this.sgrupolista = sgrupo;
   
             // 🔹 Si hay modelos en la lista, seleccionar el primero automáticamente
@@ -343,7 +345,7 @@ export class MaquinariaComponent implements OnInit {
         },
         error: (err) => console.error("❌ Error en getDataMasterSubGrupo:", err),
         complete: () => {
-          console.log("✅ getSubgrupos() completado")
+          // console.log("✅ getSubgrupos() completado")
           // this.obtenerCodigoModelo(  )
           this.obtenerImagen()
         }
@@ -357,7 +359,7 @@ export class MaquinariaComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value; // Obtiene el valor del modelo seleccionado
   
-    console.log("Modelo seleccionado:", selectedValue);
+    // console.log("Modelo seleccionado:", selectedValue);
   
     if (!selectedValue) {
       console.warn("⚠ Modelo vacío, no se puede asignar.");
@@ -380,7 +382,7 @@ export class MaquinariaComponent implements OnInit {
     // Concatenar el código
     this.codec = `${tipoMaquina.toString().trim()}-${marca.toString().trim()}-${modelo.toString().trim()}`;
   
-    console.log("Código generado para la imagen:", this.codec);
+    // console.log("Código generado para la imagen:", this.codec);
   
     // Verifica que el modelo no sea vacío antes de llamar a la API
     if (!modelo) {
@@ -633,8 +635,8 @@ export class MaquinariaComponent implements OnInit {
 
       })
 
-        console.log('LISTA MAQUINARIA GUARDADO');
-        console.log(this.maquinariaLista);
+        // console.log('LISTA MAQUINARIA GUARDADO');
+        // console.log(this.maquinariaLista);
 
       },
       error: (e) => {
@@ -646,13 +648,13 @@ export class MaquinariaComponent implements OnInit {
         this.maquinariaLista.filter ((element:any)=>{
           if ( element.estado == 0 ) {
             element.colorEstadoObsoleto = 'transparent';
-            // console.log(element.estado);
-            // console.log(element.colorEstadoObsoleto);
+            // // console.log(element.estado);
+            // // console.log(element.colorEstadoObsoleto);
           }
           else if (element.estado == 1) {
             element.colorEstadoObsoleto = 'orange';
-            // console.log(element.estado);
-            // console.log(element.colorEstadoObsoleto);
+            // // console.log(element.estado);
+            // // console.log(element.colorEstadoObsoleto);
           }
         })
 
@@ -773,7 +775,9 @@ export class MaquinariaComponent implements OnInit {
   estadoMaquina:any;
   catchData(data: any) {    
 
-    console.log(data)
+    //alert('accediendo a la edicion')
+
+    // console.log(data)
 
     this.maquinariaForm.controls['codtipomaquina'].setValue(data.codtipomaquina.trim());
 
@@ -805,7 +809,7 @@ export class MaquinariaComponent implements OnInit {
     //   this.maquinariaForm.controls['estado'].setValue(true);
     // }
     console.warn('******************************************')
-    console.log(this.maquinariaForm.controls['estado'].value)
+    // console.log(this.maquinariaForm.controls['estado'].value)
     console.warn('******************************************')
 
     this.obtenerImagen();
@@ -858,7 +862,7 @@ export class MaquinariaComponent implements OnInit {
   // 🔹 Nueva función para asignar el primer modelo
   asignarPrimerModelo() {
     if (this.sgrupolista && this.sgrupolista.length > 0) {
-      console.log("Asignando modelo:", this.sgrupolista[0].codmodelo); // ✅ Para depuración
+      // console.log("Asignando modelo:", this.sgrupolista[0].codmodelo); // ✅ Para depuración
       this.maquinariaForm.controls['codmodelo'].setValue(this.sgrupolista[0].codmodelo);
     } else {
       console.warn("⚠ No hay modelos disponibles para asignar.");

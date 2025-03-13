@@ -104,7 +104,7 @@ export class CrearBodegasComponent implements OnInit {
   ccli:any;
   catchData(data:any) {
 
-    console.log(data);
+    // console.log(data);
 
     this.bodegaForm.controls['nombrebodega'].setValue(data.nombrebodega);
     this.bodegaForm.controls['descripcion'].setValue(data.descripcion);

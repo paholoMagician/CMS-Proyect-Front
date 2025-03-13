@@ -81,7 +81,7 @@ export class ModalClientesComponent implements OnInit {
   }
 
   updateBodegaCliente(data:any) {
-    console.log(data);
+    // console.log(data);
     this.cbodcli.updateProdCliBodegas( data.codcliente, this.data.id ).subscribe({
       next: (x) => {
         Swal.fire(

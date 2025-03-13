@@ -63,7 +63,7 @@ export class AsignModUserComponent implements OnInit {
         this.listaModulosUsuario = modulo;
         // Establecer el nivel de permisos del primer módulo como el nivelPermisos
         this.nivelPermisos = modulo[0].permisos;
-        console.log(this.nivelPermisos)
+        // console.log(this.nivelPermisos)
       },
       error: (e) => {
         console.error(e);

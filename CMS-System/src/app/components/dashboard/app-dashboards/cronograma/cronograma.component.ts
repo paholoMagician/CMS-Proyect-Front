@@ -184,7 +184,7 @@ export class CronogramaComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.agenciaForm.value);
+    // console.log(this.agenciaForm.value);
   }
 
   applyFilter(event: Event) {
@@ -348,8 +348,8 @@ cronograma(anio: number, mes: string) {
         }
       });
 
-      console.log(this.listacrono);
-      console.log(this.diasPorSemana);
+      // console.log(this.listacrono);
+      // console.log(this.diasPorSemana);
     }
   });
 }
@@ -380,12 +380,12 @@ cronograma(anio: number, mes: string) {
     this.dia  = fechas[1].trim();
     this.mes  = fechas[0].trim();
     this.anio = fechas[2].trim();
-    console.log(fecha)
-    console.log(fechSplit)
-    console.log(fechas)
-    console.log(this.dia)
-    console.log(this.mes)
-    console.log(this.anio)
+    // console.log(fecha)
+    // console.log(fechSplit)
+    // console.log(fechas)
+    // console.log(this.dia)
+    // console.log(this.mes)
+    // console.log(this.anio)
   }
 
   existCli() {
@@ -425,7 +425,7 @@ cronograma(anio: number, mes: string) {
     const milisegundosPorDia: number = 24 * 60 * 60 * 1000;
     const diasRestantes: number = Math.round((ultimoDiaAnio.getTime() - fechaActual.getTime()) / milisegundosPorDia);
     this.calcularDiasFinales = diasRestantes;
-    console.log(this.calcularDiasFinales);
+    // console.log(this.calcularDiasFinales);
   }
 
   openDialog(): void {
@@ -461,7 +461,7 @@ cronograma(anio: number, mes: string) {
       {
         next: (agencias) => {
           this.listAgencias = agencias;
-          console.log(this.listAgencias);
+          // console.log(this.listAgencias);
         },
         error: (e) => {
           console.error(e);
@@ -497,7 +497,7 @@ cronograma(anio: number, mes: string) {
       "maquinasmanuales":   this.numero_maquina
     }
 
-    console.log(this.modelCrono);
+    // console.log(this.modelCrono);
 
     this.crono.guardarCronos(this.modelCrono).subscribe({
       next: (x) => {
@@ -554,7 +554,7 @@ cronograma(anio: number, mes: string) {
     this.us.obtenerUsuarios(this.ccia).subscribe({
       next: (usuarios) => {
         this.listUsuarios = usuarios;
-        // console.log(this.listUsuarios)
+        // // console.log(this.listUsuarios)
       }, error: (e) => {
         console.error(e);
       },complete: () => {

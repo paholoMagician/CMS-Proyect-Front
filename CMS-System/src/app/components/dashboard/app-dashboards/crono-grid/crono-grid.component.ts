@@ -135,7 +135,7 @@ export class CronoGridComponent implements OnInit {
         next: (x: any) => {
           if (Array.isArray(x)) {
             this.UsuarioTecnico = x;
-            console.log(this.UsuarioTecnico);
+            // console.log(this.UsuarioTecnico);
 
             this.UsuarioTecnico.filter((element:any) => {
               if ( element.tipo == '003' ) {
@@ -247,7 +247,7 @@ export class CronoGridComponent implements OnInit {
       next: (x) => {
         if (Array.isArray(x)) {
           this.listaClientes = x;
-          console.log(this.listaClientes);
+          // console.log(this.listaClientes);
 
           this.listaClientes.filter((element:any)=>{            
               let arr = {
@@ -259,7 +259,7 @@ export class CronoGridComponent implements OnInit {
         }
 
       }, complete: () => {
-        // console.log(this.agenciaForm.controls['codagencia'].value);
+        // // console.log(this.agenciaForm.controls['codagencia'].value);
       }
     })
   }
@@ -272,8 +272,8 @@ export class CronoGridComponent implements OnInit {
 
   validatesettings() {
 
-    console.log(this.idLocalidad);
-    console.log(this.mes);
+    // console.log(this.idLocalidad);
+    // console.log(this.mes);
 
     if ( (this.idLocalidad == undefined || this.idLocalidad == null) || (this.mes == undefined || this.mes == null) ) {
       this._dis_btn_setts = true;
@@ -478,7 +478,7 @@ export class CronoGridComponent implements OnInit {
 
   obtenerCrono(anio:any, mes:number) {
 
-    console.log('Obteniendo datos: ' + anio + ' / ' +mes)
+    // console.log('Obteniendo datos: ' + anio + ' / ' +mes)
 
     let x = this.idLocalidad;
     this.sumatoriaFilter = 0;
@@ -501,8 +501,8 @@ export class CronoGridComponent implements OnInit {
   actualizarCrono() {
     this.crono.editarCrnograma(this.codCrono, this.modelUnitCrono).subscribe({
       next: (x) => {
-        console.log('SE ESTA EDITANDO')
-        console.log(x)
+        // console.log('SE ESTA EDITANDO')
+        // console.log(x)
       },
       error: (e) => {
         // console.error(e)
@@ -580,8 +580,8 @@ export class CronoGridComponent implements OnInit {
 
     this.filteredAgencias = filtered;
 
-    console.log(filtered);
-    console.log(this.filteredAgencias);
+    // console.log(filtered);
+    // console.log(this.filteredAgencias);
 
 }
 
@@ -597,7 +597,7 @@ export class CronoGridComponent implements OnInit {
 
     this.filteredusers = filtered;
 
-    console.log(this.filteredusers)
+    // console.log(this.filteredusers)
 
   }
 
@@ -635,7 +635,7 @@ export class CronoGridComponent implements OnInit {
 
     this.filteredlocalidad = filtered;
 
-    console.log(this.filteredlocalidad)
+    // console.log(this.filteredlocalidad)
 
   }
 
@@ -652,7 +652,7 @@ export class CronoGridComponent implements OnInit {
     }
   
     this.filteredcliente = filtered;
-    // console.log(this.filteredcliente);
+    // // console.log(this.filteredcliente);
   }
 
 
@@ -961,10 +961,10 @@ export class CronoGridComponent implements OnInit {
     this.mantenimineto.guardarMantenimiento(element).subscribe ({
         next:(x) => {
           Toast.fire({ icon: 'success', title: 'Asignación ha sido completada' })
-          console.log(x);
+          // console.log(x);
         }, error: (e) => {
           Toast.fire({ icon: 'error', title: 'No se ha podido completar la asignación' })
-          console.log(e);
+          // console.log(e);
         }, complete: () => {
           this.obtenerMantenimiento();
           this.manteniminetocount = 0;
@@ -1050,7 +1050,7 @@ export class CronoGridComponent implements OnInit {
       next: (maquinaAsignada) => {
         this.listaMaquinariaAsignada = maquinaAsignada;
         console.warn('NO ASIGNADOS');
-        console.log(this.listaMaquinariaAsignada);
+        // console.log(this.listaMaquinariaAsignada);
       },
       error: (e) => {
         console.error(e);
@@ -1087,10 +1087,10 @@ export class CronoGridComponent implements OnInit {
     );
   
     this.resmaquinas = maquinasFaltantes;
-    console.log('Maquinas asignadas al mantenimiento:', this.resmaquinas);
+    // console.log('Maquinas asignadas al mantenimiento:', this.resmaquinas);
     
     this.listaMaquinariaAsignadaGhost = this.resmaquinas;
-    console.log('Maquinas Restantes para el mantenimiento:', this.listaMaquinariaAsignadaGhost);
+    // console.log('Maquinas Restantes para el mantenimiento:', this.listaMaquinariaAsignadaGhost);
 
   }
 
@@ -1109,7 +1109,7 @@ export class CronoGridComponent implements OnInit {
     );
 
     this.maquinasEnviadasMantenimiento = codMaquinasRepetidas
-    console.log('Máquinas que se repiten:', this.maquinasEnviadasMantenimiento);
+    // console.log('Máquinas que se repiten:', this.maquinasEnviadasMantenimiento);
   }
   
   

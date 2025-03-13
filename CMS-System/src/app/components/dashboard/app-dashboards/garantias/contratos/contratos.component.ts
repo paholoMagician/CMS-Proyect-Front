@@ -167,7 +167,7 @@ export class ContratosComponent implements OnInit {
     let anio = controlFecha.getFullYear();
     let diaActual = anio+'-'+mes.toString().padStart(2, '0')+'-'+dia.toString().padStart(2,'0');
     
-    // console.log(diaActual)
+    // // console.log(diaActual)
 
     this.listaContrato = [];
     this.listaContratoGhost = [];

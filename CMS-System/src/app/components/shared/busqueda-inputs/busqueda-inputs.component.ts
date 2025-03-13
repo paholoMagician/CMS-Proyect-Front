@@ -129,10 +129,10 @@ export class BusquedaInputsComponent implements OnInit {
     this.mantenimineto.guardarMantenimiento(element).subscribe({
         next:(x) => {
           Toast.fire({ icon: 'success', title: 'Asignación ha sido completada' })
-          console.log(x);
+          // console.log(x);
         }, error: (e) => {
           Toast.fire({ icon: 'error', title: 'No se ha podido completar la asignación' })
-          console.log(e);
+          // console.log(e);
         }, complete: () => {
           this.obtenerMantenimiento();
         }
@@ -188,7 +188,7 @@ export class BusquedaInputsComponent implements OnInit {
       next: (maquinaAsignada) => {
         this.listaMaquinariaAsignada = maquinaAsignada;
         console.warn('NO ASIGNADOS');
-        console.log(this.listaMaquinariaAsignada);
+        // console.log(this.listaMaquinariaAsignada);
       },
       error: (e) => {
         console.error(e);
@@ -225,10 +225,10 @@ export class BusquedaInputsComponent implements OnInit {
     );
   
     this.resmaquinas = maquinasFaltantes;
-    console.log('Maquinas asignadas al mantenimiento:', this.resmaquinas);
+    // console.log('Maquinas asignadas al mantenimiento:', this.resmaquinas);
     
     this.listaMaquinariaAsignadaGhost = this.resmaquinas;
-    console.log('Maquinas Restantes para el mantenimiento:', this.listaMaquinariaAsignadaGhost);
+    // console.log('Maquinas Restantes para el mantenimiento:', this.listaMaquinariaAsignadaGhost);
 
   }
 
@@ -247,7 +247,7 @@ export class BusquedaInputsComponent implements OnInit {
     );
 
     this.maquinasEnviadasMantenimiento = codMaquinasRepetidas
-    console.log('Máquinas que se repiten:', this.maquinasEnviadasMantenimiento);
+    // console.log('Máquinas que se repiten:', this.maquinasEnviadasMantenimiento);
   }
   
   

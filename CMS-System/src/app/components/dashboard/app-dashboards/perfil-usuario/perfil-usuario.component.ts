@@ -102,7 +102,7 @@ export class PerfilUsuarioComponent implements OnInit, OnChanges {
         console.error(e);
       }, complete: () => {
         this.usuarioPerfil.filter( (element:any) => {
-          console.log(element);
+          // console.log(element);
           this.userForm.controls['Email'].setValue(element.email);
           this.userForm.controls['Nombre'].setValue(element.nombre);
           this.userForm.controls['Apellido'].setValue(element.apellido);
@@ -149,7 +149,7 @@ export class PerfilUsuarioComponent implements OnInit, OnChanges {
     if(this.userForm.controls['Contrasenia'].value.length > 4 ) {
       this.pass = this.userForm.controls['Contrasenia'].value;
 
-      console.log(this.userForm.controls['Contrasenia'].value.length)
+      // console.log(this.userForm.controls['Contrasenia'].value.length)
       this._show_btn = false;
       this.colortext = 'text-success';
       this.descrip = 'Normal';

@@ -83,7 +83,7 @@ export class ModalDetalleCronoComponent implements OnInit {
       next: (x) => {
         if (Array.isArray(x)) {
           this.listaClientes = x;
-          console.log(this.listaClientes);
+          // console.log(this.listaClientes);
 
           this.listaClientes.filter((element:any)=>{            
               let arr = {
@@ -95,7 +95,7 @@ export class ModalDetalleCronoComponent implements OnInit {
         }
 
       }, complete: () => {
-        // console.log(this.agenciaForm.controls['codagencia'].value);
+        // // console.log(this.agenciaForm.controls['codagencia'].value);
       }
     })
   }
@@ -113,7 +113,7 @@ export class ModalDetalleCronoComponent implements OnInit {
     }
 
     this.filteredusers = filtered;
-    console.log(this.filteredusers)
+    // console.log(this.filteredusers)
 
   }
 
@@ -124,7 +124,7 @@ export class ModalDetalleCronoComponent implements OnInit {
         next: (x: any) => {
           if (Array.isArray(x)) {
             this.UsuarioTecnico = x;
-            console.log(this.UsuarioTecnico);
+            // console.log(this.UsuarioTecnico);
 
             this.UsuarioTecnico.filter((element:any) => {
               if ( element.tipo == '003' ) {
@@ -170,12 +170,12 @@ export class ModalDetalleCronoComponent implements OnInit {
           "Estado":             1
         }   
 
-        console.log(this.modelUnitCrono);
+        // console.log(this.modelUnitCrono);
       
         this.crono.editarCrnograma(this.data.codcrono, this.modelUnitCrono).subscribe({
           next: (x) => {
-            console.log('SE ESTA EDITANDO')
-            console.log(x)
+            // console.log('SE ESTA EDITANDO')
+            // console.log(x)
             Toast.fire({ icon: 'success', title: 'Data editada con éxito' })
           },
           error: (e) => {
@@ -269,7 +269,7 @@ export class ModalDetalleCronoComponent implements OnInit {
     }
   
     this.filteredcliente = filtered;
-    console.log(this.filteredcliente);
+    // console.log(this.filteredcliente);
   }
 
   filterAgencia(event: AutoCompleteCompleteEvent) {

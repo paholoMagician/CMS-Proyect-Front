@@ -70,11 +70,11 @@ export class GarantiasComponent implements OnInit {
         switch(cod) {         
           case 'TF':
             this.frecuenciaList = data;
-            console.log(this.frecuenciaList);
+            // console.log(this.frecuenciaList);
             break;
           case 'TM':
             this.tipomatenimientoList = data;
-            console.log(this.tipomatenimientoList);
+            // console.log(this.tipomatenimientoList);
             break;
           }
         }

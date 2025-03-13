@@ -146,7 +146,7 @@ export class ClientesComponent implements OnInit {
         switch(cod) {
           case 'TP':
             this.tipoEmpresaLista = data;
-            console.log(this.tipoEmpresaLista);
+            // console.log(this.tipoEmpresaLista);
             break;
         }
       }
@@ -178,7 +178,7 @@ export class ClientesComponent implements OnInit {
       
       fileReader.onloadend = () => {
         this._IMGE = fileReader.result;
-        console.log(this._IMGE)
+        // console.log(this._IMGE)
         this.validarImagen()
       };
 
@@ -229,7 +229,7 @@ export class ClientesComponent implements OnInit {
 crearCuentaHelpDesk(codCliente: string, codCia:string, R:string, Nombre:string, Apellido: string) {
   this.client.crearCuentaHelpDesk(codCliente, codCia, R, Nombre, Apellido).subscribe({
     next: (x) => {
-      console.log(x);
+      // console.log(x);
       Swal.fire(
         'Cuenta Help Desk generada',
         'info'
@@ -330,7 +330,7 @@ crearCuentaHelpDesk(codCliente: string, codCia:string, R:string, Nombre:string, 
     this.client.obtenerClientes(this.ccia, 2).subscribe({
       next: (clientes) => {
         this.listaClientes = clientes;
-        console.log(this.listaClientes)
+        // console.log(this.listaClientes)
 
         this.listaClientes.filter( (cli:any) => {
           console.warn(this.env + cli.imagen)
@@ -377,8 +377,8 @@ crearCuentaHelpDesk(codCliente: string, codCia:string, R:string, Nombre:string, 
       if (result.isConfirmed) {
         this._show_spinner = true;  
 
-        console.log(data.codcliente)
-        console.log(this.ccia)
+        // console.log(data.codcliente)
+        // console.log(this.ccia)
 
         this.client.eliminarClientes( data.codcliente, this.ccia ).subscribe({
           next: (x) => {

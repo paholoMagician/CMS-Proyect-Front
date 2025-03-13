@@ -77,10 +77,10 @@ export class ModalAsignMaqtecnicoComponent implements OnInit {
     this.mantenimineto.guardarMantenimiento(array).subscribe({
       next:(x) => {
         Toast.fire({ icon: 'success', title: 'Asignación ha sido completada' })
-        console.log(x);
+        // console.log(x);
       }, error: (e) => {
         Toast.fire({ icon: 'error', title: 'No se ha podido completar la asignación' })
-        console.log(e);
+        // console.log(e);
       }, complete: () => {
         this.obtenerMantenimiemnto();
       }

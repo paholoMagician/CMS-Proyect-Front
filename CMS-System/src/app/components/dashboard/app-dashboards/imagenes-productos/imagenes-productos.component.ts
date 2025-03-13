@@ -153,7 +153,7 @@ export class ImagenesProductosComponent implements OnInit {
     this.maq.guardarImagenMaquinaria(this.maquimg).subscribe(
       {
         next: (x) => {
-          console.log(x);
+          // console.log(x);
           Toast.fire({ icon: 'success', title: 'Imagen generada exitosamente' })
         },
         error: (e) => {
@@ -178,7 +178,7 @@ export class ImagenesProductosComponent implements OnInit {
     this.maq.guardarImagenMaquinaria(this.maquimg).subscribe(
       {
         next: (x) => {
-          console.log(x);
+          // console.log(x);
           Toast.fire({ icon: 'success', title: 'Imagen generada exitosamente' })
         },
         error: (e) => {
@@ -225,7 +225,7 @@ export class ImagenesProductosComponent implements OnInit {
       };
       fileReader.onloadend = () => {
         this._IMGE = fileReader.result;
-        console.log(this._IMGE);
+        // console.log(this._IMGE);
         this.validarImagen();
       };
       fileReader.readAsDataURL(this.fileId[0]);
@@ -253,7 +253,7 @@ export class ImagenesProductosComponent implements OnInit {
       };
       fileReader.onloadend = () => {
         this._IMGE_REP = fileReader.result;
-        console.log(this._IMGE_REP);
+        // console.log(this._IMGE_REP);
         this.validarImagen();
       };
       fileReader.readAsDataURL(this.fileId[0]);
@@ -294,7 +294,7 @@ export class ImagenesProductosComponent implements OnInit {
   
   onFileSelectedRepuestos(event: any): void {
     this.file_rep = event.target.files[0];
-    console.log(this.file_rep);
+    // console.log(this.file_rep);
     setTimeout(() => {
       this.validarImagen_rep()
     }, 500);

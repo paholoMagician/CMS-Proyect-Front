@@ -132,8 +132,8 @@ selectedOption: any;
       next:(bodegas) => {
         this._show_spinner = false
         this.listBodegas = bodegas;
-        // console.log('---BODEGAS OBTENIDAS---')
-        // console.log(this.listBodegas)
+        // // console.log('---BODEGAS OBTENIDAS---')
+        // // console.log(this.listBodegas)
         this.listBodegas.filter((element:any)=>{ 
           narray = {
               "cantidadItems": element.cantidadItems,
@@ -223,7 +223,7 @@ selectedOption: any;
       
         );
 
-      console.log(this.filteredBodegas);
+      // console.log(this.filteredBodegas);
 
       this.filterbodegaghost.filter((element:any)=>{
 
@@ -288,7 +288,7 @@ selectedOption: any;
 
   filterMaquinariasPreransfer() {
     
-    console.log(this.bodegasFormTransfer.controls['pretransferencia'].value);
+    // console.log(this.bodegasFormTransfer.controls['pretransferencia'].value);
 
     if (this.bodegasFormTransfer.controls['pretransferencia'].value != '') {
       this.itemsBodegaTransferencia = this.itemsBodegaTransferenciaGhost.filter((maquina:any) =>
@@ -319,8 +319,8 @@ selectedOption: any;
       next: (maquinas) => {
         this.maquinariaLista = maquinas;
         this.maquinariaListaGhost = maquinas;
-        console.log('LISTA MAQUINARIA GUARDADO');
-        console.log(this.maquinariaLista);
+        // console.log('LISTA MAQUINARIA GUARDADO');
+        // console.log(this.maquinariaLista);
         this._show_spinner = false;
       },
       error: (e) => {
@@ -491,20 +491,20 @@ selectedOption: any;
   //       maquina.tipoMaquinas.toLowerCase() 
   //              .includes(searchTerm.toLowerCase())
   //     );
-  //     // console.log('listaMaquinaBodegas filtrando');
-  //     // console.log(this.listaMaquinaBodegas);
+  //     // // console.log('listaMaquinaBodegas filtrando');
+  //     // // console.log(this.listaMaquinaBodegas);
   //   } else {      
   //     this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost;
-  //     // console.log('listaMaquinaBodegas devuelve todo');
-  //     // console.log(this.listaMaquinaBodegas);
+  //     // // console.log('listaMaquinaBodegas devuelve todo');
+  //     // // console.log(this.listaMaquinaBodegas);
   //   }
   // }
 
 
   filterMaquinariasBodegas(searchTerm: string) {    
 
-    console.log(searchTerm)
-    console.log(this.listaMaquinaBodegasGhost)
+    // console.log(searchTerm)
+    // console.log(this.listaMaquinaBodegasGhost)
     if (searchTerm) {      
       this.listaMaquinaBodegas = this.listaMaquinaBodegasGhost.filter( (maquina:any) =>
         maquina.nombremaquina.toLowerCase()
@@ -608,7 +608,7 @@ selectedOption: any;
   itemsBodegaTransferenciaGhost: any = [];
   obtenerItemsBodTransferencia() {
     this._show_spinner = true;
-    console.log(this.codigobodegaselect);
+    // console.log(this.codigobodegaselect);
 
     if( this.itemsBodegaTransferencia.length < 1 ) {
 
@@ -686,7 +686,7 @@ selectedOption: any;
   openMenu(event: MouseEvent, item: any): void {
     event.preventDefault();
     this.codmaquinaria = item.codmaquinaria
-    console.log( this.codmaquinaria );
+    // console.log( this.codmaquinaria );
     // Cerrar los menús desplegables de los demás elementos
     this.listaMaquinaBodegas.forEach((elemento:any) => {
 

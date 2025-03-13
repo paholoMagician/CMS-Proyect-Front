@@ -236,7 +236,7 @@ export class AsignacionProvinciasComponent implements OnInit {
   filtroTextoCentro: string = '';
   filtrarElementosCentro() {
 
-    // console.log(this.filtroTextoCentro)
+    // // console.log(this.filtroTextoCentro)
 
     this.resultadosFiltradosCentro = this.zlist3.filter((item:any) =>
       item.nombreAgencia.toLowerCase().includes(this.filtroTextoCentro.toLowerCase()) ||
@@ -275,7 +275,7 @@ export class AsignacionProvinciasComponent implements OnInit {
           next:(x) => {
             this.listaAgenciasRes = x;
             this.resultadosFiltrados = x;
-            // console.log(this.listaAgenciasRes);
+            // // console.log(this.listaAgenciasRes);
           }, complete: () => {
 
             if ( this.listaZonificacion != null || this.listaZonificacion != undefined || this.listaZonificacion != '' ){
@@ -299,7 +299,7 @@ export class AsignacionProvinciasComponent implements OnInit {
       {
         next: (clientes) => {
           this.listaClientes = clientes;
-          // // console.log(this.listaClientes)
+          // // // console.log(this.listaClientes)
         },
         error: (e) => {
           // console.error(e);
@@ -329,7 +329,7 @@ export class AsignacionProvinciasComponent implements OnInit {
     this.codAgencia = data.codAgencia;
     this.nombrelocalizacion = data.nombrelocalizacion;
     this.idlocalidad = data.idlocalidad;
-    // console.log(this.idlocalidad);
+    // // console.log(this.idlocalidad);
   }
 
   modelZonificacion:any = [];

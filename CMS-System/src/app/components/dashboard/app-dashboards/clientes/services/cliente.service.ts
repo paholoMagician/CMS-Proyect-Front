@@ -26,7 +26,7 @@ export class ClienteService {
 
     // Suscribirse al evento "NuevoClienteCreado" del hub
     this.hubConnection.on('NuevoClienteCreado', (cliente: any) => {
-      console.log('Nuevo cliente creado:', cliente);
+      // console.log('Nuevo cliente creado:', cliente);
       // Realizar las acciones necesarias con el nuevo cliente en tu aplicación
     });
   }
