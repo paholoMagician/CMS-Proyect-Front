@@ -10,6 +10,8 @@ import { Console, error, warn } from 'console';
 import { ImagecontrolService } from 'src/app/components/shared/image-control/services/imagecontrol.service';
 import { ClienteService } from '../clientes/services/cliente.service';
 import { ProductosBodegaService } from '../bodegas/productos-bodega/services/productos-bodega.service';
+import { ValidacionPasswordModalComponent } from 'src/app/components/shared/validacion-password-modal/validacion-password-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 const Toast = Swal.mixin({
   toast: true,
@@ -33,7 +35,7 @@ interface AutoCompleteCompleteEvent {
 @Component({
   selector: 'app-maquinaria',
   templateUrl: './maquinaria.component.html',
-  styleUrls: ['./maquinaria.component.scss']
+  styleUrls: ['./maquinaria.component.scss'],
 })
 export class MaquinariaComponent implements OnInit {
 
@@ -92,7 +94,7 @@ export class MaquinariaComponent implements OnInit {
     estado:                      new FormControl(),
   })
 
-  constructor(  private maqbodega: ProductosBodegaService, private client: ClienteService, private DataMaster: SharedService, private fileserv: ImagecontrolService, private maquinaria: MaquinariaService ) { }
+  constructor(  public dialog: MatDialog, private maqbodega: ProductosBodegaService, private client: ClienteService, private DataMaster: SharedService, private fileserv: ImagecontrolService, private maquinaria: MaquinariaService ) { }
   xuser: any = '';
   ngOnInit(): void {
     this.xuser = sessionStorage.getItem('UserCod');
@@ -101,10 +103,28 @@ export class MaquinariaComponent implements OnInit {
     this.obtenerMaquinaria();
   }
 
+  openDialog(): Promise<boolean> {
+    return new Promise((resolve) => {
+      const dialogRef = this.dialog.open(ValidacionPasswordModalComponent, {
+        data: { password: sessionStorage.getItem('password') } // 🔥 Usamos la contraseña guardada
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          console.log('✅ Contraseña correcta, se procede con la eliminación');
+          resolve(true); // ✅ Se validó correctamente
+        } else {
+          console.log('❌ Eliminación cancelada por contraseña incorrecta');
+          resolve(false); // ❌ No se validó
+        }
+      });
+    });
+  }
+
   _showcliente:boolean = false;
   validateEstadoasignMaquina() {
     // console.warn(this._maquinaAgencia);
-    if(this._maquinaAgencia) {
+    if(this._maquinaAgencia) { 
       this._showcliente = true;
       setTimeout(() => {
         this.obtenerCliente();
@@ -816,10 +836,18 @@ export class MaquinariaComponent implements OnInit {
 
   }
 
-  eliminarMaquinaria(data:any) {
+  async eliminarMaquinaria(data: any) {
+    const passwordValida = await this.openDialog(); // ✅ Esperamos la validación
+  
+    if (!passwordValida) {
+      console.log("❌ Eliminación cancelada por contraseña incorrecta.");
+      return; // 🔥 Si la contraseña es incorrecta, salimos
+    }
+  
+    // ✅ Si la contraseña es correcta, ahora sí mostramos el Swal de confirmación
     Swal.fire({
-      title: 'Estás seguro?',
-      text: "Esta acción es irreversible y podría provocar perdida de datos en otros procesos!",
+      title: '¿Estás seguro?',
+      text: "Esta acción es irreversible y podría provocar pérdida de datos en otros procesos.",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -827,31 +855,36 @@ export class MaquinariaComponent implements OnInit {
       confirmButtonText: 'Sí, eliminar!'
     }).then((result) => {
       if (result.isConfirmed) {
-        this._show_spinner = true;  
-        
-        this.maquinaria.eliminarMaquinaria( data.codmaquina ).subscribe({
-          next: (x) => {
+        this._show_spinner = true;
+  
+        // 🔥 Llamamos al servicio para eliminar la máquina
+        this.maquinaria.eliminarMaquinaria(data.codmaquina).subscribe({
+          next: () => {
             this._show_spinner = false;
             Swal.fire(
-              'Deleted!',
-              'Máquina: '+ data.nombretipomaquina +' eliminado',
+              'Eliminado!',
+              `Máquina: ${data.nombretipomaquina} eliminada correctamente`,
               'success'
-            )
-          }, error: (e) => {
+            );
+          },
+          error: (e) => {
             console.error(e);
             this._show_spinner = false;
             Swal.fire(
-              'Upps!',
+              '¡Upps!',
               'No hemos podido eliminar esta máquina',
               'error'
-            )
-          }, complete: () => {
+            );
+          },
+          complete: () => {
             this.obtenerMaquinaria();
-          } 
-        })
+          }
+        });
       }
-    })
+    });
   }
+  
+  
   onMaquinariaChange(event: any) {
     this.getGrupos();
     setTimeout(() => {

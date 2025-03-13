@@ -56,10 +56,13 @@ import { DashboardmodsModule } from './components/dashboard/dashboardmods/dashbo
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorServices } from './components/shared/http-interceptor/http-interceptor-services';
 
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
   ],
   imports: [
     //#region 
@@ -112,6 +115,7 @@ import { HttpInterceptorServices } from './components/shared/http-interceptor/ht
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
+    
     BrowserAnimationsModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,

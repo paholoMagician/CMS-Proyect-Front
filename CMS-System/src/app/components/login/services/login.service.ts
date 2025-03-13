@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment.prod';
+import Swal from 'sweetalert2'
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +36,5 @@ export class LoginService {
     localStorage.removeItem('imgperfil');
     localStorage.removeItem('codcia');
     this.validate();
-  }
-
+  }  
 }

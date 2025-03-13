@@ -53,12 +53,13 @@ import { ImageControlComponent } from '../image-control/image-control.component'
 import { BusquedaInputsComponent } from '../busqueda-inputs/busqueda-inputs.component';
 import { MachineDetailsAllComponent } from '../machine-details-all/machine-details-all.component';
 
+
 @NgModule({
   declarations: [
     NavsideComponent,
     ImageControlComponent,
     BusquedaInputsComponent,
-    MachineDetailsAllComponent
+    MachineDetailsAllComponent,
   ],
   imports: [
     CommonModule,
@@ -116,7 +117,7 @@ import { MachineDetailsAllComponent } from '../machine-details-all/machine-detai
     NavsideComponent,
     ImageControlComponent,
     BusquedaInputsComponent,
-    MachineDetailsAllComponent
+    MachineDetailsAllComponent,
   ]
 })
 

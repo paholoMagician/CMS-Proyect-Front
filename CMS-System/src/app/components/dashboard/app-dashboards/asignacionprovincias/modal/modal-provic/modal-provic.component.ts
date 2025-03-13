@@ -47,7 +47,10 @@ export class ModalProvicComponent implements OnInit {
   _prov_sel: string = '';
   _dis_button: boolean = true;
 
-  constructor( private DataMaster: SharedService, private asprov: AsignacionprovinciasService, public dialogRef: MatDialogRef<AsignacionProvinciasComponent>,
+  constructor(  
+    private asprov: AsignacionprovinciasService,
+    private DataMaster: SharedService, 
+    public dialogRef: MatDialogRef<AsignacionProvinciasComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any ) { }
 
   @ViewChild(MatPaginator)

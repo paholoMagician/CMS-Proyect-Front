@@ -92,9 +92,11 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ModalAsignMaqtecnicoComponent } from '../crono-grid/modal-asign-maqtecnico/modal-asign-maqtecnico.component';
 import { RepuestosComponent } from '../repuestos/repuestos.component';
 import { CreadorMarcaRepuestoComponent } from '../repuestos/creador-marca-repuesto/creador-marca-repuesto.component';
+import { ValidacionPasswordModalComponent } from 'src/app/components/shared/validacion-password-modal/validacion-password-modal.component';
 
 @NgModule({
   declarations: [
+    ValidacionPasswordModalComponent,
     UsuarioComponent,
     AsignacionProvinciasComponent,
     ModalProvicComponent,
