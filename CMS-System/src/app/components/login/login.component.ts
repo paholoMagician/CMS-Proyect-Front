@@ -68,6 +68,7 @@ export class LoginComponent implements OnInit {
         sessionStorage.setItem('email',    this.user.email);
         sessionStorage.setItem('tipo',     this.user.tipo);
         sessionStorage.setItem('UserName', this.user.nombre);
+        sessionStorage.setItem('password', this.loginForm.value.contrasenia); 
         this.log.validate();
       }
     })

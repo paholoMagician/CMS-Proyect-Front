@@ -104,22 +104,18 @@ export class MaquinariaComponent implements OnInit {
   }
 
   openDialog(): Promise<boolean> {
-    return new Promise((resolve) => {
+    return new Promise<boolean>((resolve) => {
       const dialogRef = this.dialog.open(ValidacionPasswordModalComponent, {
-        data: { password: sessionStorage.getItem('password') } // 🔥 Usamos la contraseña guardada
+        data: { password: sessionStorage.getItem('password') } // 🔥 Pasamos la contraseña almacenada
       });
   
       dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          console.log('✅ Contraseña correcta, se procede con la eliminación');
-          resolve(true); // ✅ Se validó correctamente
-        } else {
-          console.log('❌ Eliminación cancelada por contraseña incorrecta');
-          resolve(false); // ❌ No se validó
-        }
+        resolve(result === true); // ✅ Retorna "true" si la contraseña fue validada
       });
     });
   }
+  
+
 
   _showcliente:boolean = false;
   validateEstadoasignMaquina() {
@@ -836,15 +832,25 @@ export class MaquinariaComponent implements OnInit {
 
   }
 
-  async eliminarMaquinaria(data: any) {
-    const passwordValida = await this.openDialog(); // ✅ Esperamos la validación
+  eliminarMaquinaria(data: any) {
+    const tipoUsuario = sessionStorage.getItem('tipo');
   
-    if (!passwordValida) {
-      console.log("❌ Eliminación cancelada por contraseña incorrecta.");
-      return; // 🔥 Si la contraseña es incorrecta, salimos
+    if (tipoUsuario === '002') {
+      this.openDialog().then((passwordValida) => {
+        if (!passwordValida) {
+          console.log("❌ Eliminación cancelada por contraseña incorrecta.");
+          return;
+        }
+        this.confirmarEliminacion(data);
+      });
+    } else {
+      // ✅ Si el usuario NO es tipo 002, eliminamos directamente
+      this.confirmarEliminacion(data);
     }
+  }
   
-    // ✅ Si la contraseña es correcta, ahora sí mostramos el Swal de confirmación
+  // ✅ Función que maneja la confirmación con Swal
+  confirmarEliminacion(data: any) {
     Swal.fire({
       title: '¿Estás seguro?',
       text: "Esta acción es irreversible y podría provocar pérdida de datos en otros procesos.",
@@ -857,7 +863,6 @@ export class MaquinariaComponent implements OnInit {
       if (result.isConfirmed) {
         this._show_spinner = true;
   
-        // 🔥 Llamamos al servicio para eliminar la máquina
         this.maquinaria.eliminarMaquinaria(data.codmaquina).subscribe({
           next: () => {
             this._show_spinner = false;
@@ -883,6 +888,7 @@ export class MaquinariaComponent implements OnInit {
       }
     });
   }
+  
   
   
   onMaquinariaChange(event: any) {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject, Output } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -10,25 +10,21 @@ export class ValidacionPasswordModalComponent {
   passwordIngresada: string = '';
   error: string = '';
 
-  @Output() onPasswordValidated = new EventEmitter<boolean>();
-
-  // 🔥 Contraseña quemada (para pruebas)
-  private passwordHardcoded = 'jose';
-
   constructor(
-    public dialogRef: MatDialogRef<ValidacionPasswordModalComponent>, 
+    public dialogRef: MatDialogRef<ValidacionPasswordModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
   validar() {
+    const passwordGuardada = sessionStorage.getItem('password');
+
     if (!this.passwordIngresada) {
       this.error = 'Debe ingresar una contraseña';
       return;
     }
 
-    if (this.passwordIngresada === this.passwordHardcoded) {
-      this.onPasswordValidated.emit(true); // ✅ Contraseña correcta
-      this.dialogRef.close(true); // 🔥 Cerrar modal enviando "true"
+    if (passwordGuardada && this.passwordIngresada === passwordGuardada) {
+      this.dialogRef.close(true); // ✅ Cerrar modal enviando "true"
     } else {
       this.error = 'Contraseña incorrecta';
     }
