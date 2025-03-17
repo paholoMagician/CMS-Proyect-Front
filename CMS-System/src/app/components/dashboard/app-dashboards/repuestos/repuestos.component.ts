@@ -10,6 +10,7 @@ import { CreadorMarcaRepuestoComponent } from './creador-marca-repuesto/creador-
 import Swal from 'sweetalert2'
 import { MarcarepService } from './creador-marca-repuesto/services/marcarep.service';
 import { CrearBodegasService } from '../bodegas/crear-bodegas/services/crear-bodegas.service';
+import { ValidacionPasswordModalComponent } from 'src/app/components/shared/validacion-password-modal/validacion-password-modal.component';
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -421,42 +422,92 @@ export class RepuestosComponent implements OnInit, OnChanges {
   }
   }
 
+  openDialogrep(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      const dialogRef = this.dialog.open(ValidacionPasswordModalComponent, {
+        data: { password: sessionStorage.getItem('password') } // 🔥 Pasamos la contraseña almacenada
+      });
   
-  eliminarRepuestos(data:any) {
-    Swal.fire({
-      title: 'Estás seguro?',
-      text: "Esta acción es irreversible y podría provocar perdida de datos en otros procesos!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminar!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this._show_spinner = true;          
-        this.rep.eliminarRepuestos( data.codrep, this.xuser ).subscribe({
-          next: (x) => {
-            this._show_spinner = false;
-            Swal.fire(
-              'Deleted!',
-              'Repuesto: '+ data.nombreRep +' eliminado',
-              'success'
-            )
-          }, error: (e) => {
-            console.error(e);
-            this._show_spinner = false;
-            Swal.fire(
-              'Upps!',
-              'No hemos podido eliminar esta máquina',
-              'error'
-            )
-          }, complete: () => {
-            this.obtenerRepuestos();
-          }
-        })
-      }
-    })
+      dialogRef.afterClosed().subscribe(result => {
+        resolve(result === true); // ✅ Retorna "true" si la contraseña fue validada
+      });
+    });
   }
+
+  
+  eliminarRepuestos(data: any) {
+    const tipoUsuario = sessionStorage.getItem('tipo');
+  
+    if (tipoUsuario === '002') {
+      this.openDialogrep().then((passwordValida) => {
+        if (!passwordValida) {
+          console.log("❌ Eliminación cancelada por contraseña incorrecta.");
+          return;
+        }
+        this.confirmarEliminacion(data);
+      });
+    } else {
+      // ✅ Si el usuario NO es tipo 002, eliminamos directamente
+      this.confirmarEliminacion(data);
+    }
+  }
+
+    eliminarMaquinaria(data: any) {
+      const tipoUsuario = sessionStorage.getItem('tipo');
+    
+      if (tipoUsuario === '002') {
+        this.openDialogrep().then((passwordValida) => {
+          if (!passwordValida) {
+            console.log("❌ Eliminación cancelada por contraseña incorrecta.");
+            return;
+          }
+          this.confirmarEliminacion(data);
+        });
+      } else {
+        // ✅ Si el usuario NO es tipo 002, eliminamos directamente
+        this.confirmarEliminacion(data);
+      }
+    }
+    
+    // ✅ Función que maneja la confirmación con Swal
+    confirmarEliminacion(data: any) {
+      Swal.fire({
+        title: '¿Estás seguro?',
+        text: "Esta acción es irreversible y podría provocar pérdida de datos en otros procesos.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this._show_spinner = true;
+    
+          this.rep.eliminarRepuestos(data.codrep, this.xuser).subscribe({
+            next: () => {
+              this._show_spinner = false;
+              Swal.fire(
+                'Eliminado!',
+                `Máquina: ${data.nombretipomaquina} eliminada correctamente`,
+                'success'
+              );
+            },
+            error: (e) => {
+              console.error(e);
+              this._show_spinner = false;
+              Swal.fire(
+                '¡Upps!',
+                'No hemos podido eliminar esta máquina',
+                'error'
+              );
+            },
+            complete: () => {
+              this.obtenerRepuestos();
+            }
+          });
+        }
+      });
+    }
 
   obtenerRepuestos() {
     this._show_spinner = true;

@@ -103,18 +103,6 @@ export class MaquinariaComponent implements OnInit {
     this.obtenerMaquinaria();
   }
 
-  openDialog(): Promise<boolean> {
-    return new Promise<boolean>((resolve) => {
-      const dialogRef = this.dialog.open(ValidacionPasswordModalComponent, {
-        data: { password: sessionStorage.getItem('password') } // 🔥 Pasamos la contraseña almacenada
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        resolve(result === true); // ✅ Retorna "true" si la contraseña fue validada
-      });
-    });
-  }
-  
 
 
   _showcliente:boolean = false;
@@ -830,6 +818,19 @@ export class MaquinariaComponent implements OnInit {
 
     this.obtenerImagen();
 
+  }
+
+
+  openDialog(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      const dialogRef = this.dialog.open(ValidacionPasswordModalComponent, {
+        data: { password: sessionStorage.getItem('password') } // 🔥 Pasamos la contraseña almacenada
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        resolve(result === true); // ✅ Retorna "true" si la contraseña fue validada
+      });
+    });
   }
 
   eliminarMaquinaria(data: any) {
