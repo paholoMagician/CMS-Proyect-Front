@@ -34,8 +34,9 @@ export class LoginComponent implements OnInit {
   });
 
   constructor( private log: LoginService ) { }
-
+  datenow:any;
   ngOnInit(): void {
+    this.datenow = new Date()
     setTimeout(() => {
       this._show = true;
       this.mostrarLetrasPorConsola()

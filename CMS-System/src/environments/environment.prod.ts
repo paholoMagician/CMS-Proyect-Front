@@ -4,13 +4,13 @@ export const environment = {
   // deploy_url: 'http://localhost:5130/api/',
   
   /** DEPLOY */
-  //deploy_url: 'http://192.168.55.28:5130/api/',
   deploy_url: 'http://192.168.55.28:5130/api/',
+  //deploy_url: 'http://192.168.55.37:4645/api/',
   
   /**LOCAL DEV */
-  // image_url: 'http://localhost:5130/icon-cliente/'
+   image_url: 'http://192.168.55.28:4645/icon-cliente/'
   /** */
   /** DEPLOY */
-  image_url: 'http://192.168.55.28:4645/icon-cliente/'
+  //image_url: 'http://192.168.55.37:4645/icon-cliente/'
 
 };
